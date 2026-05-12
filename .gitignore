@@ -1,0 +1,31 @@
+# =====================
+# LaTeX build artifacts
+# =====================
+*.aux
+*.lof
+*.log
+*.lot
+*.out
+*.toc
+*.synctex.gz
+*.synctex(busy)
+*.fdb_latexmk
+*.fls
+*.blg
+*.bbl
+*.bcf
+*.run.xml
+*.dvi
+*.ps
+*.fls
+*.xdv
+
+# Archivos temporales del editor
+*.swp
+*~
+.DS_Store
+
+# El PDF compilado SÍ se sube al repo
+# (así tu compañero puede ver la última versión sin compilar)
+# Si prefieres no subirlo, descomenta la línea siguiente:
+# main.pdf

@@ -1,0 +1,201 @@
+\documentclass[a4paper,12pt]{article}
+
+% ── Paquetes ─────────────────────────────────────────────────────────────────
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{float}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{listings}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{parskip}
+\usepackage{setspace}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\usepackage{tabularx}
+\usepackage{multirow}
+% \usepackage{tikz}  % descomentar si se añaden diagramas TikZ
+
+% ── Configuración de márgenes ────────────────────────────────────────────────
+\geometry{left=2.5cm, right=2.5cm, top=2.5cm, bottom=2.5cm}
+\setlength{\headheight}{14pt}
+
+% ── Interlineado ─────────────────────────────────────────────────────────────
+\setstretch{1.15}
+
+% ── Colores ──────────────────────────────────────────────────────────────────
+\definecolor{codeblue}{RGB}{46, 117, 182}
+\definecolor{codegray}{RGB}{245, 245, 245}
+\definecolor{codered}{RGB}{192, 0, 0}
+
+% ── Configuración de listings ────────────────────────────────────────────────
+\lstset{
+  backgroundcolor=\color{codegray},
+  basicstyle=\ttfamily\small,
+  breakatwhitespace=false,
+  breaklines=true,
+  captionpos=b,
+  frame=single,
+  rulecolor=\color{gray!40},
+  showstringspaces=false,
+  tabsize=2,
+  numbers=left,
+  numberstyle=\tiny\color{gray},
+  xleftmargin=1.5em,
+  framexleftmargin=1.5em
+}
+
+% ── Configuración de hyperref ────────────────────────────────────────────────
+\hypersetup{
+  colorlinks=false,
+  linkbordercolor=white,
+  urlbordercolor=white,
+  citebordercolor=white,
+  pdftitle={OmniLitter — Sistema multiplataforma para la gestión y análisis de datos de contaminación por residuos},
+  pdfauthor={Alejandro Castilla, Ignacio Martínez Díaz}
+}
+
+% ── Cabecera y pie de página ─────────────────────────────────────────────────
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small OmniLitter — Monitorización de residuos}
+\fancyhead[R]{\small Universidad de Sevilla}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+% ── Formato de títulos ───────────────────────────────────────────────────────
+\titleformat{\section}
+  {\large\bfseries}
+  {\thesection.}{0.5em}{}[\titlerule]
+
+\titleformat{\subsection}
+  {\normalsize\bfseries}
+  {\thesubsection.}{0.5em}{}
+
+\titleformat{\subsubsection}
+  {\normalsize\bfseries}
+  {\thesubsubsection.}{0.5em}{}
+
+% ── Captions de tablas y figuras ─────────────────────────────────────────────
+\captionsetup[table]{labelfont=bf, position=above}
+\captionsetup[figure]{labelfont=bf, position=below}
+
+% ═════════════════════════════════════════════════════════════════════════════
+\begin{document}
+
+% ── PORTADA ──────────────────────────────────────────────────────────────────
+\begin{titlepage}
+  \centering
+  \vspace*{1cm}
+  
+  {\LARGE \textbf{OmniLitter} \par}
+  \vspace{0.4cm}  
+  {\Large Sistema multiplataforma para la gestión y análisis de datos de contaminación por residuos \par}
+
+  \vspace{2.5cm}
+
+  \includegraphics[width=0.72\textwidth]{figures/logo-ETSII-US-Vertical-Negro.png} \par
+
+  \vfill
+
+  \begin{minipage}{0.9\textwidth}
+
+    {\large \textbf{Trabajo Fin de Grado} \par}
+    \vspace{0.2cm}
+    {\large \textbf{Grado:} Ingeniería Informática - Ingeniería del Software \par}
+    \vspace{0.2cm}
+    {\large \textbf{Centro:} ETSII — Universidad de Sevilla \par}
+    \vspace{0.2cm}
+    {\large \textbf{Curso académico:} 2025/26 \par}
+    \vspace{0.5cm}
+
+    \textbf{Autores:} \par
+    \vspace{0.1cm}
+    \begin{itemize}[leftmargin=1.5em]
+      \item Alejandro Castilla — alecasbar@alum.us.es
+      \item Ignacio Martínez Díaz — ignmardia1@alum.us.es
+    \end{itemize}
+
+    \vspace{0.3cm}
+    {\large \textbf{Tutor académico:} Cruz Mata, Fermín \par}
+    \vspace{0.2cm}
+    {\large \textbf{Cotutor:} Ortega Rodríguez, Francisco Javier \par}
+    \vspace{0.2cm}
+    {\large \textbf{Cliente / entidad colaboradora:} Daniel González Fernández / Universidad de Cádiz \par}
+
+    % Opcional:
+    % \vspace{0.3cm}
+    % {\large \textbf{Repositorio:} \href{URL}{\texttt{URL}} \par}
+
+  \end{minipage}
+
+\end{titlepage}
+
+% ── ÍNDICES ──────────────────────────────────────────────────────────────────
+\tableofcontents
+\newpage
+
+\listoftables
+\newpage
+
+\listoffigures
+\newpage
+
+% ── CAPÍTULOS PRINCIPALES ────────────────────────────────────────────────────
+\input{chapters/01_introduccion}
+\newpage
+
+\input{chapters/02_objetivos}
+\newpage
+
+\input{chapters/03_apps_relacionadas}
+\newpage
+
+\input{chapters/04_tecnologias_desarrollo}
+\newpage
+
+\input{chapters/05_planificacion_gestion}
+\newpage
+
+\input{chapters/06_requisitos}
+\newpage
+
+\input{chapters/07_diseno_sistema}
+\newpage
+
+\input{chapters/08_implementacion_desarrollo}
+\newpage
+
+\input{chapters/09_pruebas_calidad}
+\newpage
+
+\input{chapters/10_conclusiones_trabajo_futuro}
+\newpage
+
+% ── REFERENCIAS ──────────────────────────────────────────────────────────────
+\input{chapters/11_referencias}
+\newpage
+
+% ── ANEXOS ───────────────────────────────────────────────────────────────────
+\appendix
+\renewcommand{\thesection}{\Alph{section}}
+
+\input{annexes/A_manual_despliegue}
+\newpage
+
+\input{annexes/B_uso_ia}
+\newpage
+
+\input{annexes/C_requisitos_detallados}
+\newpage
+
+\input{annexes/D_mockups}
+
+\end{document}

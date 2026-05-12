@@ -1,0 +1,131 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000">
+  <defs>
+    <style>
+      .bg { fill: #f4f9ff; }
+      .zone { fill: #ffffff; stroke: #b8d7f0; stroke-width: 2; }
+      .zone-title { fill: #1e3a5f; font-family: Arial, Helvetica, sans-serif; font-size: 28px; font-weight: 700; }
+      .box { fill: #ffffff; stroke: #4a90e2; stroke-width: 3; }
+      .box-soft { fill: #e8f4fd; stroke: #4a90e2; stroke-width: 2.5; }
+      .box-dark { fill: #1e3a5f; stroke: #1e3a5f; stroke-width: 3; }
+      .box-green { fill: #edf8f1; stroke: #1e8449; stroke-width: 2.5; }
+      .box-amber { fill: #fff7e6; stroke: #f39c12; stroke-width: 2.5; }
+      .text { fill: #1e3a5f; font-family: Arial, Helvetica, sans-serif; font-size: 22px; font-weight: 700; }
+      .subtext { fill: #4b6f8f; font-family: Arial, Helvetica, sans-serif; font-size: 18px; }
+      .small { fill: #4b6f8f; font-family: Arial, Helvetica, sans-serif; font-size: 16px; }
+      .white-text { fill: #ffffff; font-family: Arial, Helvetica, sans-serif; font-size: 22px; font-weight: 700; }
+      .white-subtext { fill: #d9ecfb; font-family: Arial, Helvetica, sans-serif; font-size: 17px; }
+      .arrow { stroke: #2e86c1; stroke-width: 4; fill: none; marker-end: url(#arrowhead); }
+      .arrow-sync { stroke: #1e8449; stroke-width: 4; fill: none; marker-end: url(#arrowhead-green); stroke-dasharray: 10 8; }
+      .arrow-photo { stroke: #f39c12; stroke-width: 4; fill: none; marker-end: url(#arrowhead-amber); }
+      .label { fill: #1e3a5f; font-family: Arial, Helvetica, sans-serif; font-size: 16px; font-weight: 700; }
+    </style>
+    <marker id="arrowhead" markerWidth="12" markerHeight="8" refX="11" refY="4" orient="auto">
+      <polygon points="0 0, 12 4, 0 8" fill="#2e86c1"/>
+    </marker>
+    <marker id="arrowhead-green" markerWidth="12" markerHeight="8" refX="11" refY="4" orient="auto">
+      <polygon points="0 0, 12 4, 0 8" fill="#1e8449"/>
+    </marker>
+    <marker id="arrowhead-amber" markerWidth="12" markerHeight="8" refX="11" refY="4" orient="auto">
+      <polygon points="0 0, 12 4, 0 8" fill="#f39c12"/>
+    </marker>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="1600" height="1000"/>
+
+  <text x="800" y="58" text-anchor="middle" class="zone-title" style="font-size: 34px;">Arquitectura general de OmniLitter</text>
+  <text x="800" y="92" text-anchor="middle" class="subtext">Portal web, aplicacion movil offline-first, API central y persistencia cientifica</text>
+
+  <rect class="zone" x="60" y="135" width="380" height="735" rx="24"/>
+  <text x="250" y="180" text-anchor="middle" class="zone-title">Clientes</text>
+
+  <rect class="box" x="105" y="220" width="290" height="150" rx="18"/>
+  <text x="250" y="270" text-anchor="middle" class="text">Portal web</text>
+  <text x="250" y="306" text-anchor="middle" class="subtext">React + TypeScript</text>
+  <text x="250" y="334" text-anchor="middle" class="small">Dashboards, mapas, usuarios</text>
+
+  <rect class="box" x="105" y="430" width="290" height="190" rx="18"/>
+  <text x="250" y="480" text-anchor="middle" class="text">Aplicacion movil</text>
+  <text x="250" y="516" text-anchor="middle" class="subtext">React Native + Expo</text>
+  <text x="250" y="544" text-anchor="middle" class="small">GPS, camara, sesiones</text>
+  <text x="250" y="572" text-anchor="middle" class="small">Captura en campo</text>
+
+  <rect class="box-green" x="105" y="675" width="290" height="130" rx="18"/>
+  <text x="250" y="724" text-anchor="middle" class="text">Almacenamiento local</text>
+  <text x="250" y="758" text-anchor="middle" class="subtext">WatermelonDB / SQLite</text>
+  <text x="250" y="786" text-anchor="middle" class="small">Sync queue + UUID locales</text>
+
+  <rect class="zone" x="540" y="135" width="520" height="735" rx="24"/>
+  <text x="800" y="180" text-anchor="middle" class="zone-title">Backend y servicios</text>
+
+  <rect class="box-dark" x="610" y="225" width="380" height="135" rx="18"/>
+  <text x="800" y="275" text-anchor="middle" class="white-text">API REST</text>
+  <text x="800" y="312" text-anchor="middle" class="white-subtext">Node.js + Express + TypeScript</text>
+
+  <rect class="box-soft" x="585" y="415" width="190" height="110" rx="16"/>
+  <text x="680" y="456" text-anchor="middle" class="text">Auth</text>
+  <text x="680" y="488" text-anchor="middle" class="small">JWT + refresh</text>
+  <text x="680" y="512" text-anchor="middle" class="small">bcrypt</text>
+
+  <rect class="box-soft" x="825" y="415" width="190" height="110" rx="16"/>
+  <text x="920" y="456" text-anchor="middle" class="text">Permisos</text>
+  <text x="920" y="488" text-anchor="middle" class="small">Roles por grupo</text>
+  <text x="920" y="512" text-anchor="middle" class="small">RBAC</text>
+
+  <rect class="box-green" x="585" y="575" width="190" height="120" rx="16"/>
+  <text x="680" y="616" text-anchor="middle" class="text">Sync service</text>
+  <text x="680" y="650" text-anchor="middle" class="small">POST batch</text>
+  <text x="680" y="674" text-anchor="middle" class="small">GET changes</text>
+
+  <rect class="box-soft" x="825" y="575" width="190" height="120" rx="16"/>
+  <text x="920" y="616" text-anchor="middle" class="text">Exportacion</text>
+  <text x="920" y="650" text-anchor="middle" class="small">CSV / Excel</text>
+  <text x="920" y="674" text-anchor="middle" class="small">Diccionario datos</text>
+
+  <rect class="box-amber" x="705" y="735" width="190" height="90" rx="16"/>
+  <text x="800" y="774" text-anchor="middle" class="text">Audit log</text>
+  <text x="800" y="807" text-anchor="middle" class="small">Trazabilidad</text>
+
+  <rect class="zone" x="1160" y="135" width="380" height="735" rx="24"/>
+  <text x="1350" y="180" text-anchor="middle" class="zone-title">Persistencia</text>
+
+  <rect class="box" x="1205" y="240" width="290" height="170" rx="18"/>
+  <text x="1350" y="292" text-anchor="middle" class="text">PostgreSQL</text>
+  <text x="1350" y="328" text-anchor="middle" class="subtext">Prisma ORM</text>
+  <text x="1350" y="356" text-anchor="middle" class="small">Usuarios, grupos, sesiones</text>
+  <text x="1350" y="382" text-anchor="middle" class="small">observaciones y taxonomia</text>
+
+  <rect class="box-amber" x="1205" y="485" width="290" height="145" rx="18"/>
+  <text x="1350" y="534" text-anchor="middle" class="text">Storage de fotos</text>
+  <text x="1350" y="568" text-anchor="middle" class="subtext">Local / S3 compatible</text>
+  <text x="1350" y="596" text-anchor="middle" class="small">Metadatos EXIF en BD</text>
+
+  <rect class="box-soft" x="1205" y="705" width="290" height="115" rx="18"/>
+  <text x="1350" y="748" text-anchor="middle" class="text">Backups y logs</text>
+  <text x="1350" y="782" text-anchor="middle" class="small">Retencion configurable</text>
+
+  <path class="arrow" d="M 395 295 C 470 295, 520 292, 610 292"/>
+  <text x="500" y="268" text-anchor="middle" class="label">HTTPS / JSON</text>
+
+  <path class="arrow" d="M 395 525 C 470 525, 520 292, 610 292"/>
+  <text x="500" y="420" text-anchor="middle" class="label">API autenticada</text>
+
+  <path class="arrow-sync" d="M 395 740 C 485 740, 500 635, 585 635"/>
+  <text x="488" y="705" text-anchor="middle" class="label">offline-first</text>
+
+  <path class="arrow" d="M 990 292 C 1075 292, 1125 325, 1205 325"/>
+  <text x="1098" y="282" text-anchor="middle" class="label">Prisma</text>
+
+  <path class="arrow-photo" d="M 990 292 C 1090 292, 1110 557, 1205 557"/>
+  <text x="1098" y="518" text-anchor="middle" class="label">fotos</text>
+
+  <path class="arrow" d="M 800 360 L 800 415"/>
+  <path class="arrow" d="M 800 360 C 800 385, 680 390, 680 415"/>
+  <path class="arrow" d="M 800 360 C 800 385, 920 390, 920 415"/>
+  <path class="arrow-sync" d="M 680 525 L 680 575"/>
+  <path class="arrow" d="M 920 525 L 920 575"/>
+  <path class="arrow" d="M 800 695 L 800 735"/>
+
+  <text x="800" y="935" text-anchor="middle" class="small">
+    Captura local en campo -> cola de sincronizacion -> API REST -> validacion, permisos y persistencia central
+  </text>
+</svg>
