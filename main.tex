@@ -23,6 +23,12 @@
 \usepackage{multirow}
 % \usepackage{tikz}  % descomentar si se añaden diagramas TikZ
 
+% ── Profundidad del índice ───────────────────────────────────────────────────
+% Se muestran secciones y subsecciones. Las subsubsecciones se numeran en el texto,
+% pero no aparecen en el índice para evitar que quede demasiado denso.
+\setcounter{tocdepth}{2}
+\setcounter{secnumdepth}{3}
+
 % ── Configuración de márgenes ────────────────────────────────────────────────
 \geometry{left=2.5cm, right=2.5cm, top=2.5cm, bottom=2.5cm}
 \setlength{\headheight}{14pt}
@@ -139,14 +145,20 @@
 \end{titlepage}
 
 % ── ÍNDICES ──────────────────────────────────────────────────────────────────
+\pagenumbering{roman}
+\pagestyle{plain}
+
 \tableofcontents
-\newpage
+\clearpage
 
 \listoftables
-\newpage
+\clearpage
 
 \listoffigures
-\newpage
+\clearpage
+
+\pagenumbering{arabic}
+\pagestyle{fancy}
 
 % ── CAPÍTULOS PRINCIPALES ────────────────────────────────────────────────────
 \input{chapters/01_introduccion}

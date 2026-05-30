@@ -1,1 +1,180 @@
-\section{API REST del Backend}
+% ============================================================
+%  Capítulo 6 -- Requisitos
+% ============================================================
+
+\section{Requisitos}
+
+Este capítulo recoge el proceso seguido para obtener, contrastar y refinar los
+requisitos de OmniLitter. Dado que el proyecto parte de una necesidad real
+planteada por un cliente experto en el dominio, la definición de requisitos no se
+limitó a una fase inicial cerrada, sino que evolucionó a partir de reuniones de
+toma de requisitos, validación de mockups y revisión de los flujos propuestos.
+
+\subsection{Proceso de toma de requisitos}
+
+La toma de requisitos se realizó en dos fases principales:
+
+\begin{enumerate}
+  \item \textbf{Reunión inicial de toma de requisitos.} En esta primera reunión se
+    presentó el problema: renovar y ampliar una herramienta existente de
+    monitorización de residuos, incorporando nuevos entornos de muestreo, gestión
+    de usuarios y grupos, funcionamiento sin conexión y un portal web de consulta.
+  \item \textbf{Reunión de contraste con mockups.} Tras construir los primeros
+    prototipos interactivos del portal web y de la aplicación móvil, se revisó con
+    el cliente si los flujos propuestos cubrían los requisitos inicialmente
+    identificados. Esta reunión sirvió para validar el enfoque general y detectar
+    qué partes debían priorizarse o explicarse con mayor detalle en el diseño.
+\end{enumerate}
+
+Esta forma de trabajo permitió reducir la incertidumbre del proyecto: primero se
+recogieron las necesidades de alto nivel y posteriormente se contrastaron con
+pantallas navegables antes de abordar la implementación definitiva.
+
+\subsection{Reunión inicial con el cliente}
+
+En la reunión inicial se identificaron las necesidades fundamentales del sistema.
+El cliente planteó que la nueva solución debía superar el alcance de la aplicación
+existente, centrada principalmente en residuos flotantes, para permitir la captura
+de datos en distintos entornos naturales.
+
+Los puntos principales extraídos de esta reunión fueron:
+
+\begin{itemize}
+  \item El sistema debe estar formado por una \textbf{aplicación móvil} para trabajo
+    de campo y un \textbf{portal web} para consulta, gestión y análisis.
+  \item La aplicación móvil debe permitir registrar observaciones de residuos en
+    entornos acuáticos y terrestres, incluyendo ríos, mares, playas y bosques.
+  \item Cada observación debe guardar, siempre que sea posible, posición GPS, fecha,
+    hora, tipo de residuo, cantidad y fotografía.
+  \item La aplicación debe funcionar sin conexión, ya que el trabajo de campo puede
+    realizarse en zonas con cobertura limitada.
+  \item El sistema debe permitir trabajar con grupos de investigación y roles de
+    usuario, evitando que los datos de un grupo sean visibles por otros grupos.
+  \item El portal web debe permitir visualizar los datos mediante listados, mapas y
+    métricas agregadas.
+  \item La taxonomía de residuos debe estar organizada de forma navegable y ser
+    suficientemente flexible para ampliarse en el futuro.
+\end{itemize}
+
+\subsection{Reunión de validación de mockups}
+
+Una vez generados los mockups funcionales, se realizó una segunda reunión para
+contrastar con el cliente si los flujos planteados respondían correctamente a sus
+necesidades. En esta revisión se comprobó que los prototipos permitían representar
+los procesos principales del sistema: autenticación, selección de grupo, creación de
+sesiones de muestreo, registro de observaciones, consulta de mapas y visualización
+de datos desde el portal.
+
+La reunión no introdujo una lista cerrada de nuevos requisitos funcionales, pero sí
+sirvió para confirmar la importancia de tres aspectos que debían mantenerse en el
+diseño final:
+
+\begin{itemize}
+  \item La aplicación móvil debía seguir siendo prioritaria para el trabajo de campo
+    y conservar el enfoque \textit{offline-first}.
+  \item El portal web debía mantener una separación clara entre datos de distintos
+    grupos de investigación.
+  \item La captura de datos debía preservar metadatos científicos suficientes para
+    que las observaciones pudieran analizarse posteriormente.
+\end{itemize}
+
+\subsection{Requisitos funcionales principales}
+
+Los requisitos funcionales definen el comportamiento esperado del sistema. A
+continuación se resumen los más relevantes para el alcance del proyecto:
+
+\begin{table}[H]
+  \centering
+  \caption{Resumen de requisitos funcionales principales.}
+  \label{tab:req_funcionales_resumen}
+  \begin{tabularx}{\textwidth}{lXl}
+    \toprule
+    \textbf{ID} & \textbf{Descripción} & \textbf{Prioridad} \\
+    \midrule
+    RF-001 & Inicio de sesión en portal web y aplicación móvil. & Crítica \\
+    RF-002 & Cierre de sesión y revocación de sesión local. & Alta \\
+    RF-004 & Soporte de roles y control de acceso por grupo. & Crítica \\
+    RF-005 & Creación de grupos y asociación de usuarios a grupos. & Crítica \\
+    RF-006 & Selección de grupo activo para filtrar datos y acciones. & Alta \\
+    RF-007 & Trabajo por sesiones de muestreo en la aplicación móvil. & Crítica \\
+    RF-008 & Captura de coordenadas GPS al iniciar sesiones de muestreo y observaciones. & Crítica \\
+    RF-010 & Adjuntar fotografías a una observación. & Alta \\
+    RF-012 & Navegación por taxonomía jerárquica de residuos. & Crítica \\
+    RF-015 & Registro de cantidad observada como entero positivo. & Crítica \\
+    RF-020 & Revisión de sesión antes de finalizarla. & Alta \\
+    RF-022 & Funcionamiento sin conexión durante la captura de campo. & Crítica \\
+    RF-023 & Cola de sincronización y subida automática al recuperar conectividad. & Crítica \\
+    RF-027 & Listado de sesiones y observaciones con filtros en el portal. & Alta \\
+    RF-028 & Visualización de observaciones en mapa. & Alta \\
+    RF-030 & Dashboard con métricas agregadas. & Media \\
+    RF-032 & Gestión de usuarios desde el portal. & Alta \\
+    RF-033 & Gestión de grupos y membresías desde el portal. & Alta \\
+    RF-035 & Soporte de interfaz en español e inglés. & Media \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\subsection{Requisitos no funcionales}
+
+Los requisitos no funcionales recogen restricciones de calidad, seguridad y
+operación. Los más relevantes son:
+
+\begin{itemize}
+  \item \textbf{Seguridad:} toda la comunicación entre clientes y backend debe
+    realizarse mediante HTTPS/TLS.
+  \item \textbf{Aislamiento de datos:} los usuarios solo podrán acceder a datos de
+    los grupos a los que pertenecen.
+  \item \textbf{Offline-first:} las operaciones de captura en campo no deben depender
+    de conectividad.
+  \item \textbf{Fiabilidad de sincronización:} los datos no deben perderse ante
+    cortes de red o cierres inesperados de la aplicación.
+  \item \textbf{Usabilidad:} la aplicación móvil debe estar optimizada para uso en
+    campo, con botones claros, formularios rápidos y navegación simple.
+  \item \textbf{Trazabilidad:} el sistema debe mantener logs de operaciones
+    relevantes y relacionar requisitos con pruebas.
+\end{itemize}
+
+\subsection{Requisitos de datos científicos}
+
+Al tratarse de una herramienta para captura y análisis de datos científicos, el
+sistema debe preservar suficiente información contextual para que los datos sean
+interpretables y reproducibles. En particular:
+
+\begin{itemize}
+  \item La taxonomía debe presentarse de forma jerárquica sin perder el código
+    identificador de cada tipo de residuo.
+  \item Las sesiones deben almacenar metadatos de muestreo como entorno, ancho de
+    transecto, duración, protocolo, versión de aplicación y versión de taxonomía.
+  \item Las fotografías deben conservar metadatos relevantes cuando estén
+    disponibles, como fecha de captura, dimensiones o coordenadas EXIF.
+  \item Los datos exportados deben incluir campos suficientes para análisis
+    posteriores y, cuando sea posible, un diccionario de columnas y unidades.
+  \item La versión de taxonomía utilizada debe quedar asociada a las sesiones y
+    observaciones para garantizar reproducibilidad.
+\end{itemize}
+
+\subsection{Trazabilidad entre reuniones y requisitos}
+
+La tabla~\ref{tab:trazabilidad_reuniones} resume la relación entre las reuniones con
+el cliente y los requisitos derivados.
+
+\begin{table}[H]
+  \centering
+  \caption{Trazabilidad entre reuniones con el cliente y requisitos.}
+  \label{tab:trazabilidad_reuniones}
+  \begin{tabularx}{\textwidth}{p{3cm}X p{3cm}}
+    \toprule
+    \textbf{Fuente} & \textbf{Necesidad identificada} & \textbf{Requisitos relacionados} \\
+    \midrule
+    Reunión inicial & Aplicación móvil de campo y portal web de gestión. & RF-001, RF-027, RF-030 \\
+    Reunión inicial & Captura de observaciones con GPS, fecha, tipo de residuo, cantidad y fotografía. & RF-008, RF-010, RF-012, RF-015 \\
+    Reunión inicial & Funcionamiento sin conexión y sincronización posterior. & RF-022, RF-023, fiabilidad de sincronización \\
+    Reunión inicial & Gestión de grupos, usuarios y privacidad de datos. & RF-004, RF-005, RF-006, RF-032, RF-033, aislamiento de datos \\
+    Validación de mockups & Confirmación del enfoque \textit{offline-first} y de la captura por sesiones. & RF-007, RF-020, RF-022, RF-023 \\
+    Validación de mockups & Confirmación de la separación por grupos y la trazabilidad científica. & RF-004, RF-006, requisitos de datos científicos \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+El detalle ampliado de requisitos y de su validación con mockups se
+incluye en el Anexo~\ref{sec:anexo_requisitos_detallados}.

@@ -1,5 +1,151 @@
-\section{Modelo de Datos en CouchDB}
+% ============================================================
+%  Capítulo 4 -- Tecnologías de Desarrollo
+% ============================================================
 
-\subsection{Base de datos}
+\section{Tecnologías de Desarrollo}
 
-\subsection{Documento de película}
+En este capítulo se describen las tecnologías seleccionadas para el desarrollo de
+OmniLitter y la justificación de su elección. La selección se ha realizado teniendo
+en cuenta tres restricciones principales: el alcance de un Trabajo de Fin de Grado
+desarrollado por dos personas, la necesidad de disponer de una aplicación móvil
+capaz de trabajar sin conexión y la conveniencia de mantener un stack homogéneo
+basado en TypeScript.
+
+\subsection{Criterios de selección}
+
+Los criterios utilizados para seleccionar las tecnologías han sido los siguientes:
+
+\begin{itemize}
+  \item \textbf{Homogeneidad tecnológica:} se prioriza el uso de TypeScript tanto
+    en el frontend como en el backend para reducir el cambio de contexto durante
+    el desarrollo.
+  \item \textbf{Capacidad offline:} la aplicación móvil debe poder crear sesiones,
+    observaciones y fotografías sin depender de la conexión a internet.
+  \item \textbf{Madurez del ecosistema:} se eligen tecnologías ampliamente usadas,
+    con documentación suficiente y comunidad activa.
+  \item \textbf{Facilidad de despliegue:} el sistema debe poder desplegarse en
+    servicios accesibles para un proyecto académico, como Vercel, Render, Railway
+    o una máquina virtual sencilla.
+  \item \textbf{Escalabilidad razonable:} aunque el proyecto no persigue una escala
+    industrial, el diseño debe permitir incorporar nuevos grupos, campañas y datos
+    de campo sin rehacer la arquitectura.
+\end{itemize}
+
+\subsection{Tecnologías empleadas en los mockups}
+
+Durante la fase inicial se han construido dos prototipos funcionales con datos en
+memoria: un portal web y una simulación de aplicación móvil en navegador. Ambos
+prototipos permiten validar flujos de usuario con el cliente antes de desarrollar
+la versión final.
+
+\begin{table}[H]
+  \centering
+  \caption{Tecnologías empleadas en los mockups funcionales.}
+  \label{tab:stack_mockups}
+  \begin{tabularx}{\textwidth}{lX}
+    \toprule
+    \textbf{Tecnología} & \textbf{Uso en el proyecto} \\
+    \midrule
+    React 18 & Construcción de interfaces de usuario para el portal web y el mockup móvil. \\
+    TypeScript & Tipado estático de componentes, rutas, estado y datos de ejemplo. \\
+    Vite & Servidor de desarrollo y empaquetado rápido de los prototipos. \\
+    Tailwind CSS & Sistema de estilos utilitario para construir pantallas responsive. \\
+    React Router & Definición de rutas públicas, rutas protegidas y navegación entre pantallas. \\
+    Recharts & Gráficas y visualizaciones estadísticas del dashboard del portal web. \\
+    Lucide React / Material Icons & Iconografía de la interfaz. \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\subsection{Portal web}
+
+El portal web definitivo se plantea como una aplicación \textit{Single Page
+Application} desarrollada con React, TypeScript y Vite. Su responsabilidad principal
+será permitir a investigadores y administradores consultar observaciones, gestionar
+usuarios y grupos, visualizar mapas y exportar datos.
+
+\begin{table}[H]
+  \centering
+  \caption{Stack previsto para el portal web.}
+  \label{tab:stack_web}
+  \begin{tabularx}{\textwidth}{lX}
+    \toprule
+    \textbf{Tecnología} & \textbf{Responsabilidad} \\
+    \midrule
+    React & Construcción de componentes reutilizables y pantallas del portal. \\
+    TypeScript & Definición de tipos de dominio, respuestas de API y props de componentes. \\
+    Vite & Compilación, servidor de desarrollo y generación del bundle final. \\
+    Tailwind CSS & Sistema visual responsive y consistente con los mockups. \\
+    React Router & Gestión de rutas públicas y protegidas. \\
+    Axios / Fetch API & Comunicación con la API REST del backend. \\
+    Leaflet / React Leaflet & Visualización geográfica de observaciones en mapas interactivos. \\
+    Recharts & Dashboards, rankings y tendencias temporales. \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\subsection{Aplicación móvil}
+
+La aplicación móvil se plantea con React Native y Expo, utilizando SQLite mediante
+el paquete \texttt{expo-sqlite} como base de datos local. El objetivo es que el
+usuario pueda completar una jornada de muestreo aunque el dispositivo no tenga
+conexión a internet.
+
+\begin{table}[H]
+  \centering
+  \caption{Stack previsto para la aplicación móvil.}
+  \label{tab:stack_mobile}
+  \begin{tabularx}{\textwidth}{lX}
+    \toprule
+    \textbf{Tecnología} & \textbf{Responsabilidad} \\
+    \midrule
+    React Native & Desarrollo multiplataforma para Android e iOS. \\
+    Expo & Toolchain de desarrollo, compilación y acceso a módulos nativos. \\
+    TypeScript & Tipado de pantallas, servicios, modelos locales y respuestas de API. \\
+    \texttt{expo-sqlite} / SQLite & Persistencia local de sesiones, observaciones, fotografías pendientes y cola de sincronización. \\
+    expo-location & Captura de coordenadas GPS asociadas a sesiones y observaciones. \\
+    expo-camera & Captura de fotografías y obtención de metadatos cuando sea posible. \\
+    expo-task-manager / expo-background-task & Ejecución de tareas de sincronización en segundo plano cuando el sistema operativo lo permita. \\
+    React Navigation & Navegación entre pantallas principales y flujos de captura. \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\subsection{Backend y persistencia}
+
+El backend centralizará la lógica de negocio, la autenticación, el control de acceso
+por grupo y la sincronización de datos procedentes de dispositivos móviles. Se
+plantea como una API REST desarrollada con Node.js, Express y TypeScript.
+
+\begin{table}[H]
+  \centering
+  \caption{Stack previsto para backend y persistencia.}
+  \label{tab:stack_backend}
+  \begin{tabularx}{\textwidth}{lX}
+    \toprule
+    \textbf{Tecnología} & \textbf{Responsabilidad} \\
+    \midrule
+    Node.js & Entorno de ejecución del backend. \\
+    Express & Definición de rutas, middlewares y controladores REST. \\
+    TypeScript & Tipado de servicios, DTOs, entidades y errores. \\
+    PostgreSQL & Base de datos relacional principal del sistema. \\
+    Prisma & ORM para modelar entidades, migraciones y acceso a datos. \\
+    JWT & Autenticación mediante tokens de acceso y refresco. \\
+    bcrypt & Almacenamiento seguro de contraseñas mediante hash. \\
+    multer / almacenamiento de ficheros & Recepción y almacenamiento de fotografías asociadas a observaciones. \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\subsection{Justificación de SQLite frente a WatermelonDB}
+
+Aunque inicialmente se valoró WatermelonDB como solución local \textit{offline-first},
+se ha decidido emplear SQLite directamente para ajustar mejor el alcance del TFG.
+SQLite permite cubrir los requisitos principales de la aplicación móvil: almacenar
+sesiones, observaciones, fotografías pendientes y una cola de sincronización local.
+
+La decisión reduce la complejidad técnica, evita depender de una capa adicional de
+sincronización y facilita que los autores controlen de forma explícita el esquema
+local y el flujo de subida de datos. El patrón \textit{offline-first} se mantiene,
+pero se implementa mediante una tabla local de cola de sincronización y servicios
+propios de lectura/escritura sobre SQLite.

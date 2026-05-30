@@ -1,3 +1,56 @@
-\section{Funcionalidades de la Aplicación}
+% ============================================================
+%  Capítulo 5 -- Planificación y Gestión
+% ============================================================
 
-\subsection{Búsqueda de películas}
+\section{Planificación y Gestión}
+
+El desarrollo de OmniLitter se ha planteado de forma iterativa, combinando tareas
+de análisis, diseño, prototipado e implementación. Esta aproximación resulta
+adecuada para un proyecto con cliente real, ya que permite validar decisiones antes
+de invertir esfuerzo en una implementación definitiva.
+
+\subsection{Metodología de trabajo}
+
+La metodología seguida se basa en ciclos cortos de trabajo:
+
+\begin{enumerate}
+  \item Recogida de necesidades con el cliente y tutores.
+  \item Definición de requisitos funcionales, no funcionales y de datos científicos.
+  \item Elaboración de mockups funcionales para validar flujos de usuario.
+  \item Revisión con el cliente y refinamiento del prototipo.
+  \item Diseño de la arquitectura, base de datos y componentes del sistema.
+  \item Implementación progresiva de las partes finales del proyecto.
+\end{enumerate}
+
+Aunque no se ha aplicado una metodología ágil formal completa, el proyecto adopta
+una forma de trabajo incremental: cada avance genera un artefacto revisable
+(documento de requisitos, mockup, diagrama, módulo de código o capítulo de memoria)
+que se contrasta antes de continuar.
+
+\subsection{Gestión de reuniones}
+
+Las reuniones con el cliente han tenido un papel central en la definición del
+alcance. La primera reunión permitió identificar el problema y las funcionalidades
+esperadas. Posteriormente, una segunda reunión sirvió para revisar los mockups,
+confirmar la cobertura de los flujos principales y reforzar prioridades como el
+funcionamiento sin conexión, la separación por grupos y la trazabilidad científica.
+
+Estas reuniones se documentan en el Capítulo~6 y en el Anexo~\ref{sec:anexo_requisitos_detallados},
+donde se relacionan las necesidades detectadas con los requisitos del sistema.
+
+\subsection{Gestión del alcance}
+
+El alcance se ha dividido en dos niveles:
+
+\begin{itemize}
+  \item \textbf{Alcance funcional validado mediante mockups:} portal web y aplicación
+    móvil con flujos navegables, datos de ejemplo, roles simulados y pantallas
+    principales implementadas.
+  \item \textbf{Alcance de implementación final:} backend REST, base de datos,
+    autenticación, sincronización offline, persistencia de observaciones y conexión
+    progresiva de los clientes al backend.
+\end{itemize}
+
+Esta separación permite demostrar primero la experiencia de uso y después construir
+la infraestructura técnica necesaria para convertir el prototipo en una aplicación
+real.

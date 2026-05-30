@@ -1,67 +1,90 @@
 \section{Declaración del Uso de IA}
 
-En cumplimiento con las buenas prácticas académicas y de transparencia, se declara que para la elaboración de este trabajo se ha contado con el apoyo de herramientas de Inteligencia Artificial Generativa, concretamente Claude y Claude Code, de Anthropic. El uso de dicha tecnología se ha limitado a las siguientes tareas:
+En cumplimiento con las buenas prácticas académicas y de transparencia, se declara
+que para la elaboración de este trabajo se ha contado con el apoyo de herramientas
+de Inteligencia Artificial Generativa. El uso de dichas herramientas se ha limitado
+a tareas de apoyo, contraste y revisión, manteniendo los autores la responsabilidad
+final sobre las decisiones técnicas, el código entregado y la redacción definitiva
+de la memoria.
+
+\subsection{Usos realizados}
+
+Las herramientas de IA se han utilizado principalmente en las siguientes tareas:
 
 \begin{itemize}[leftmargin=1.5em]
-  \item \textbf{Scaffolding inicial del proyecto.} Se ha utilizado Claude Code para generar la estructura base del proyecto, incluyendo la configuración del servidor Express, las rutas de la API REST y los componentes React iniciales. Este código fue revisado, ejecutado y modificado por los autores durante el desarrollo.
-  \item \textbf{Diseño del modelo de datos.} Se ha empleado Claude como herramienta de consulta para contrastar decisiones de diseño sobre el esquema de documentos en CouchDB, la definición de las vistas MapReduce y la elección entre índices Mango y vistas para cada tipo de consulta.
-  \item \textbf{Soporte técnico durante el desarrollo.} Se ha recurrido a la IA como apoyo en la resolución de problemas concretos surgidos durante la implementación, principalmente relacionados con la configuración de autenticación en CouchDB y la integración con la API de TMDB.
-  \item \textbf{Revisión de texto.} Se ha realizado una revisión de la redacción de esta memoria con apoyo de IA para mejorar la fluidez y coherencia del texto. Este proceso se ha aplicado siempre sobre contenido escrito originalmente por los autores, manteniendo íntegras las decisiones técnicas, argumentaciones y conclusiones del trabajo.
+  \item \textbf{Organización inicial del trabajo.} Apoyo para estructurar la memoria,
+    ordenar capítulos y decidir qué artefactos documentales eran necesarios.
+  \item \textbf{Contraste de stack tecnológico.} Comparación de alternativas para el
+    portal web, la aplicación móvil, el backend, la base de datos y el mecanismo de
+    sincronización offline.
+  \item \textbf{Prototipado de interfaces.} Ayuda en la generación y ajuste de
+    mockups funcionales del portal web y de la aplicación móvil.
+  \item \textbf{Diseño de arquitectura.} Apoyo en la elaboración de diagramas,
+    separación de componentes, flujo de sincronización y modelo de datos.
+  \item \textbf{Revisión de texto.} Reformulación y mejora de redacción de apartados
+    de la memoria, siempre sobre contenido revisado por los autores.
 \end{itemize}
 
-El Cuadro~\ref{tab:uso-ia} resume las partes del trabajo donde se utilizó IA y con qué propósito.
+El Cuadro~\ref{tab:uso-ia} resume las partes del trabajo donde se utilizó IA y con
+qué propósito.
 
 \begin{table}[H]
   \centering
-  \caption{Detalle del uso de IA por parte del trabajo.}
+  \caption{Detalle del uso de IA en el trabajo.}
   \label{tab:uso-ia}
   \begin{tabularx}{\textwidth}{llX}
     \toprule
     \textbf{Parte del trabajo} & \textbf{Herramienta} & \textbf{Propósito} \\
     \midrule
-    Elección del tema y stack   & Claude (chat)  & Evaluar opciones y decidir tecnologías. \\
-    Generación del código base  & Claude Code    & Scaffolding inicial de los 30 ficheros del proyecto. \\
-    Diseño del modelo CouchDB   & Claude (chat)  & Definir esquema de documentos y vistas MapReduce. \\
-    Depuración de configuración & Claude (chat)  & Resolver problemas de autenticación con CouchDB. \\
-    Redacción de la memoria     & Claude (chat)  & Apoyo en la estructura y revisión del texto. \\
+    Estructura de memoria & Claude / Codex & Proponer organización de capítulos y anexos. \\
+    Stack tecnológico & Claude / Codex & Comparar alternativas y razonar decisiones técnicas. \\
+    Mockups funcionales & Claude / Codex & Apoyar la generación y corrección de pantallas React. \\
+    Diseño del sistema & Claude / Codex & Redactar borradores, diagramas y tablas técnicas. \\
+    Revisión de redacción & Claude / Codex & Mejorar claridad, coherencia y estilo académico. \\
     \bottomrule
   \end{tabularx}
 \end{table}
 
-\subsection{Prompts utilizados}
+\subsection{Ejemplos de prompts utilizados}
 
-A continuación se recogen los prompts empleados en las conversaciones con Claude, formulados para obtener orientación y apoyo sin delegar la toma de decisiones ni la implementación final en la herramienta.
+A continuación se recogen ejemplos representativos de prompts empleados durante el
+proyecto. No se incluyen todas las conversaciones, sino aquellos tipos de consulta
+que reflejan el uso realizado.
 
-\subsubsection*{Elección del tema y del stack}
+\subsubsection*{Elección del stack}
 \begin{quote}
-\textit{Estoy valorando usar CouchDB para un proyecto académico de catálogo personal de películas. Antes de decidirme, quiero entender qué ventajas e inconvenientes tiene frente a un enfoque relacional clásico en este contexto concreto, y qué stack web tendría sentido usar: qué tecnologías encajan bien con CouchDB, por qué, y qué sacrificaría con cada opción. No quiero que tomes la decisión por mí, sino que me des los argumentos para tomarla yo.}
+\textit{Estamos diseñando una aplicación móvil de campo que debe funcionar sin
+conexión, capturar GPS y fotos, y sincronizar observaciones con un backend cuando
+recupere conectividad. Compara alternativas para la base de datos local y razona si
+tiene sentido usar SQLite directamente en este contexto.}
 \end{quote}
 
-\subsubsection*{Scaffolding del proyecto}
+\subsubsection*{Diseño de arquitectura}
 \begin{quote}
-\textit{Necesito organizar la estructura de carpetas y ficheros de una aplicación con frontend y backend separados antes de empezar a implementar. Dime qué estructura tiene sentido, qué responsabilidad debería tener cada parte y cómo separarlas bien desde el principio. No hace falta que desarrolles el código, solo que me orientes sobre cómo plantearlo.}
+\textit{Necesito plantear el capítulo de diseño de la solución para una plataforma
+formada por portal web, app móvil offline-first y backend REST. Propone una
+estructura para explicar arquitectura, componentes, base de datos y sincronización.}
 \end{quote}
 
-\subsubsection*{Modelo de datos en CouchDB}
+\subsubsection*{Revisión de requisitos}
 \begin{quote}
-\textit{Estoy diseñando el modelo de datos de un catálogo de películas en CouchDB. Necesito decidir qué campos debería tener un documento de película y por qué tiene sentido representarlo así en un modelo documental. Ayúdame a razonar la estructura, señalando qué encaja bien en un documento JSON y qué habría que repensar, pero sin escribirme la solución entera.}
+\textit{Tenemos requisitos obtenidos en reuniones con el cliente y los hemos
+contrastado mediante mockups. Ayúdame a organizarlos en requisitos funcionales, no
+funcionales y de datos científicos, manteniendo trazabilidad con las reuniones.}
 \end{quote}
 
-\subsubsection*{Vistas MapReduce}
+\subsubsection*{Revisión de redacción}
 \begin{quote}
-\textit{Quiero implementar vistas MapReduce en CouchDB para agregar datos del catálogo: cuántas películas hay por género, cuántas por estado y cuál es la valoración media por categoría. Explícame cómo enfocar este tipo de consultas en CouchDB, qué hace la función map y qué papel juega el reduce en cada caso, pero déjame a mí escribir la implementación final.}
-\end{quote}
-
-\subsubsection*{Depuración de errores}
-\begin{quote}
-\textit{Tengo un problema con CouchDB en mi proyecto: el servidor arranca pero no consigue conectar con la base de datos y devuelve un error de autenticación. Necesito entender qué puede estar fallando. Dime qué comprobaciones haría para diagnosticar esto: dónde mirar, qué revisar y en qué orden, sin limitarte a darme una solución cerrada.}
-\end{quote}
-
-\subsubsection*{Redacción de la memoria}
-\begin{quote}
-\textit{He redactado varios apartados de la memoria y quiero que suenen más claros y técnicamente correctos. Te paso el texto y necesito que me ayudes a reorganizarlo y reformularlo para que tenga un tono más académico y sea más fácil de leer. El contenido y las conclusiones son míos y no deben cambiar; solo quiero mejorar cómo están expresados.}
+\textit{He redactado un apartado de la memoria y quiero que suene más claro y
+técnicamente correcto. Reformula el texto manteniendo el contenido y las decisiones
+tomadas por el equipo.}
 \end{quote}
 
 \subsection{Autoría y revisión crítica}
 
-Los autores declaran conocer y poder explicar en detalle todo el código y el contenido entregado. Las respuestas obtenidas de Claude se trataron en todo momento como material orientativo, revisado críticamente antes de incorporarse al proyecto. La selección del dominio, el diseño del modelo de datos, la implementación, la ejecución de pruebas, el análisis de resultados y la redacción definitiva de la memoria fueron responsabilidad de los autores.
+Los autores declaran conocer y poder explicar el contenido incorporado al trabajo.
+Las respuestas obtenidas de las herramientas de IA se trataron como material de
+apoyo y fueron revisadas críticamente antes de su inclusión. La selección del
+dominio, la validación con el cliente, la toma de decisiones, la implementación
+final, la ejecución de pruebas y la entrega definitiva son responsabilidad de los
+autores.
