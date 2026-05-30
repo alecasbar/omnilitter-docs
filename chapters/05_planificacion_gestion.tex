@@ -1,8 +1,9 @@
 % ============================================================
-%  Capítulo 5 -- Planificación y Gestión
+%  Capítulo 6 -- Planificación y Gestión
 % ============================================================
 
 \section{Planificación y Gestión}
+\label{sec:planificacion_gestion}
 
 El desarrollo de OmniLitter se ha planteado de forma iterativa, combinando tareas
 de análisis, diseño, prototipado e implementación. Esta aproximación resulta
@@ -27,6 +28,15 @@ una forma de trabajo incremental: cada avance genera un artefacto revisable
 (documento de requisitos, mockup, diagrama, módulo de código o capítulo de memoria)
 que se contrasta antes de continuar.
 
+Para trasladar esta aproximación a la ejecución diaria del proyecto se ha utilizado
+un backlog funcional agrupado por sprints. Cada elemento del backlog representa una
+capacidad observable del sistema y se ha ordenado según sus dependencias técnicas y
+funcionales. De este modo, las tareas iniciales no se han tratado como actividades
+aisladas, sino como una secuencia de construcción progresiva: primero se establece
+la infraestructura común de autenticación y permisos, después se consolida la
+navegación de los clientes y, finalmente, se habilitan los primeros flujos de
+captura y persistencia de datos.
+
 \subsection{Gestión de reuniones}
 
 Las reuniones con el cliente han tenido un papel central en la definición del
@@ -35,7 +45,7 @@ esperadas. Posteriormente, una segunda reunión sirvió para revisar los mockups
 confirmar la cobertura de los flujos principales y reforzar prioridades como el
 funcionamiento sin conexión, la separación por grupos y la trazabilidad científica.
 
-Estas reuniones se documentan en el Capítulo~6 y en el Anexo~\ref{sec:anexo_requisitos_detallados},
+Estas reuniones se documentan en la Sección~\ref{sec:requisitos} y en el Anexo~\ref{sec:anexo_requisitos_detallados},
 donde se relacionan las necesidades detectadas con los requisitos del sistema.
 
 \subsection{Gestión del alcance}
@@ -54,3 +64,251 @@ El alcance se ha dividido en dos niveles:
 Esta separación permite demostrar primero la experiencia de uso y después construir
 la infraestructura técnica necesaria para convertir el prototipo en una aplicación
 real.
+
+\subsection{Backlog funcional y organización por sprints}
+
+La planificación del desarrollo se ha estructurado mediante un backlog funcional
+priorizado. Este backlog recoge las funcionalidades necesarias para transformar los
+requisitos validados en la Sección~\ref{sec:requisitos} en incrementos implementables,
+manteniendo la coherencia con la arquitectura de tres capas definida para OmniLitter:
+portal web, aplicación móvil y backend REST con persistencia relacional.
+
+El primer bloque de trabajo corresponde al Sprint 1 y concentra las tareas T01 a
+T10. Estas tareas constituyen la base inicial del sistema, ya que introducen la
+configuración funcional común, la autenticación, el control de acceso por grupos,
+la navegación del portal web, la administración inicial, el modelo de sesiones de
+muestreo, la taxonomía y el flujo básico de creación de observaciones desde la
+aplicación móvil. Su selección responde a una decisión de planificación: antes de
+incorporar módulos analíticos, exportaciones avanzadas o sincronización completa,
+era necesario disponer de una estructura mínima que conectara usuarios, grupos,
+sesiones, observaciones y clientes.
+
+\begin{table}[H]
+  \centering
+  \caption{Resumen del backlog inicial integrado en el Sprint 1.}
+  \label{tab:backlog_sprint1_resumen}
+  \begin{tabularx}{\textwidth}{lXlX}
+    \toprule
+    \textbf{ID} & \textbf{Funcionalidad} & \textbf{Área} & \textbf{Dependencias} \\
+    \midrule
+    T01 & Login y logout común en app y portal & Backend, web y app & Ninguna \\
+    T02 & Roles, permisos y grupo activo & Backend y web & T01 \\
+    T03 & Portal web: layout, navegación y rutas protegidas & Web & T01, T02 \\
+    T04 & Portal admin: usuarios, grupos y membresías & Web y backend & T02, T03 \\
+    T05 & Campañas y sesiones de muestreo en backend & Backend & T02 \\
+    T06 & App móvil: navegación principal y perfil & App móvil & T01 \\
+    T07 & App móvil: taxonomía jerárquica, búsqueda y favoritos & App móvil y backend & T06, T01 \\
+    T08 & App móvil: creación de sesión de muestreo & App móvil y backend & T05, T06 \\
+    T09 & API de observaciones y adjuntos para captura de campo & Backend & T05, T07 \\
+    T10 & App móvil: formulario de observación & App móvil & T07, T08, T09 \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+La tabla anterior se incluye únicamente como síntesis de orientación. La
+planificación real del proyecto se entiende a partir de la relación entre las
+tareas, sus dependencias y el impacto que tienen en el producto final, como se
+describe en los apartados siguientes.
+
+\subsubsection{T01 -- Login y logout común en app y portal}
+
+La primera tarea tiene como objetivo funcional establecer un mecanismo común de
+inicio y cierre de sesión para los dos clientes del sistema: el portal web y la
+aplicación móvil. Su papel dentro del backlog es fundacional, ya que permite
+identificar al usuario antes de aplicar permisos, seleccionar grupos de trabajo o
+registrar datos científicos asociados a una persona concreta.
+
+En el estado actual documentado del proyecto, esta tarea se materializa en los
+flujos de autenticación representados en los mockups y en el diseño de la API REST,
+donde se prevén los puntos de entrada de autenticación, renovación de sesión y
+cierre de sesión mediante tokens JWT. En el portal web se contempla la existencia
+de rutas públicas y protegidas, mientras que en la aplicación móvil el acceso al
+perfil y a las pantallas principales parte igualmente de una sesión activa. La
+dependencia de esta tarea es nula, por lo que actúa como punto de arranque del
+resto del Sprint 1.
+
+Su impacto en el producto final es directo: proporciona la base de seguridad
+necesaria para que OmniLitter pueda diferenciar usuarios, asociar observaciones a
+investigadores concretos y mantener una experiencia coherente entre web y móvil.
+Además, permite que las tareas posteriores no dupliquen lógica de identificación
+en cada capa.
+
+\subsubsection{T02 -- Roles, permisos y grupo activo}
+
+La segunda tarea persigue introducir el modelo de autorización basado en roles y
+grupos. Su objetivo funcional es que el sistema no solo conozca qué usuario ha
+iniciado sesión, sino también qué permisos tiene dentro de cada grupo de
+investigación y cuál es el grupo activo sobre el que se filtran las operaciones.
+
+La descripción implementada en la memoria se corresponde con el modelo de
+membresías definido en el diseño de datos, donde el rol no pertenece directamente
+al usuario, sino a su relación con un grupo determinado. Esta decisión permite que
+una misma persona pueda actuar como administradora en un grupo y como colaboradora
+en otro. En el portal web, el concepto de grupo activo condiciona la información
+mostrada en el dashboard y en los listados, mientras que las secciones de
+administración se reservan a perfiles con permisos suficientes.
+
+La tarea depende de T01, porque la asignación de permisos solo puede aplicarse a
+usuarios autenticados. Su impacto es especialmente relevante para el producto final:
+garantiza el aislamiento de datos entre equipos de investigación, permite cumplir
+los requisitos de privacidad por grupo y prepara la base para la administración de
+usuarios, campañas y sesiones.
+
+\subsubsection{T03 -- Portal web: layout, navegación y rutas protegidas}
+
+Esta tarea tiene como objetivo funcional construir la estructura navegable del
+portal web. En términos de planificación, representa el paso desde la autenticación
+y el control de acceso hacia una interfaz organizada, capaz de separar las páginas
+públicas de las secciones internas del sistema.
+
+El desarrollo documentado contempla un portal web de tipo \textit{Single Page
+Application} con React, TypeScript, Vite y React Router. La navegación se organiza
+mediante rutas públicas, como la página de inicio y el formulario de acceso, y rutas
+protegidas bajo el área interna de la aplicación. Estas rutas protegidas verifican
+la existencia de una sesión activa y redirigen al usuario si no dispone de acceso.
+El layout general integra elementos persistentes, como barra lateral, cabecera y
+selector de grupo activo, que sirven de soporte para las pantallas posteriores.
+
+T03 depende de T01 y T02, ya que la navegación protegida necesita autenticación y
+debe adaptarse a los permisos del usuario. Su impacto en el producto final consiste
+en proporcionar una experiencia web consistente, extensible y preparada para alojar
+el dashboard, los listados, la administración y los módulos de análisis que se
+incorporen en etapas posteriores.
+
+\subsubsection{T04 -- Portal admin: usuarios, grupos y membresías}
+
+La cuarta tarea amplía el portal web con capacidades administrativas. Su objetivo
+funcional es permitir la gestión de usuarios, grupos de investigación y membresías,
+de forma que la estructura organizativa del sistema pueda mantenerse desde el
+propio portal sin intervención directa sobre la base de datos.
+
+La implementación documentada se apoya en el modelo de datos formado por usuarios,
+grupos y membresías, así como en el diseño de endpoints de la API para listar,
+crear, actualizar o archivar grupos y gestionar miembros. En la interfaz web, estas
+funciones se vinculan al rol de administrador y se ocultan a usuarios colaboradores,
+manteniendo la separación de responsabilidades dentro del sistema.
+
+Esta tarea depende de T02, porque la administración solo tiene sentido una vez
+definido el modelo de roles, y de T03, porque necesita integrarse dentro de la
+navegación protegida del portal. Su impacto final es permitir que OmniLitter sea
+operable por equipos reales, facilitando la incorporación de investigadores, la
+creación de grupos y la asignación de permisos sin romper el aislamiento de datos.
+
+\subsubsection{T05 -- Campañas y sesiones de muestreo en backend}
+
+La quinta tarea introduce en el backend las entidades que estructuran la actividad
+científica del sistema: campañas y sesiones de muestreo. Su objetivo funcional es
+representar el contexto en el que se capturan las observaciones, diferenciando el
+proyecto o campaña de investigación de cada salida concreta de campo.
+
+En la documentación actual, esta tarea se refleja en el modelo relacional mediante
+las entidades \texttt{CAMPAIGN} y \texttt{SURVEY\_SESSION}, y en el contrato de API
+previsto para crear, consultar y actualizar sesiones. Las sesiones almacenan
+metadatos relevantes como entorno, parámetros de muestreo, posición inicial,
+duración, versión de taxonomía y estado de sincronización. Esta información resulta
+necesaria para que los datos registrados sean interpretables y reproducibles.
+
+T05 depende de T02, ya que las campañas y sesiones deben quedar asociadas a grupos
+y usuarios con permisos adecuados. Su impacto en el producto final es central:
+convierte la captura de residuos en un proceso científicamente contextualizado y
+prepara las dependencias necesarias para la creación de observaciones y adjuntos.
+
+\subsubsection{T06 -- App móvil: navegación principal y perfil}
+
+La sexta tarea traslada la base de autenticación a la aplicación móvil. Su objetivo
+funcional es establecer la navegación principal de la app y una pantalla de perfil
+que represente al usuario autenticado, sirviendo como punto de entrada para las
+funcionalidades de campo.
+
+El diseño documentado plantea una aplicación móvil con React Native y Expo,
+organizada mediante navegación de primer nivel y flujos de pila. Las secciones
+principales se estructuran alrededor de la actividad de campo: inicio, sesiones,
+mapa, sincronización y perfil. Esta organización permite separar las acciones de
+captura de datos de las pantallas informativas y de configuración, manteniendo una
+interfaz adecuada para su uso en condiciones reales de muestreo.
+
+T06 depende de T01 porque la navegación móvil parte de una sesión válida. Su impacto
+en el producto final consiste en proporcionar una estructura estable para que el
+usuario pueda iniciar sesiones, consultar su estado y acceder posteriormente a la
+taxonomía, la captura de observaciones y la sincronización.
+
+\subsubsection{T07 -- App móvil: taxonomía jerárquica, búsqueda y favoritos}
+
+La séptima tarea tiene como objetivo funcional incorporar en la aplicación móvil la
+taxonomía de residuos de forma navegable, con soporte para búsqueda y elementos
+favoritos. Esta funcionalidad resulta crítica porque la selección del tipo de
+residuo es uno de los datos principales de cada observación.
+
+La memoria describe una taxonomía jerárquica basada en códigos estables y preparada
+para funcionar sin conexión. En el diseño de la aplicación móvil, dicha taxonomía
+se presenta mediante una navegación por categorías y elementos, complementada por
+mecanismos que agilizan la captura en campo, como favoritos. En el backend, la
+taxonomía queda modelada mediante la entidad \texttt{TAXONOMY\_ITEM} y endpoints de
+consulta, de modo que pueda descargarse y asociarse a sesiones y observaciones con
+su versión correspondiente.
+
+T07 depende de T06, porque se integra en la navegación móvil, y de T01, porque la
+descarga o disponibilidad de la taxonomía se vincula al contexto del usuario. Su
+impacto en el producto final es doble: mejora la usabilidad durante el trabajo de
+campo y refuerza la calidad científica de los datos al mantener una clasificación
+controlada y trazable.
+
+\subsubsection{T08 -- App móvil: creación de sesión de muestreo}
+
+La octava tarea permite iniciar desde la aplicación móvil una nueva sesión de
+muestreo. Su objetivo funcional es que el investigador pueda registrar el contexto
+de la salida de campo antes de introducir observaciones individuales.
+
+El desarrollo documentado define un flujo de creación de sesión en el que se
+recogen datos como nombre, tipo de entorno, parámetros del transecto y coordenadas
+de inicio cuando estén disponibles. Esta información se relaciona con el diseño de
+persistencia local mediante SQLite, pensado para que las sesiones puedan crearse
+sin conexión y sincronizarse posteriormente con el backend. En la arquitectura
+general, la sesión actúa como contenedor de las observaciones generadas durante una
+jornada o tramo de muestreo.
+
+T08 depende de T05, porque necesita el modelo backend de campañas y sesiones, y de
+T06, porque se integra dentro de la navegación móvil. Su impacto en el producto
+final es esencial: habilita el trabajo de campo de forma ordenada y permite asociar
+cada observación a un contexto metodológico claro.
+
+\subsubsection{T09 -- API de observaciones y adjuntos para captura de campo}
+
+La novena tarea se centra en la capa backend y tiene como objetivo funcional
+proporcionar la API necesaria para registrar observaciones y asociarles adjuntos,
+principalmente fotografías tomadas durante la captura de campo.
+
+En el diseño actual, esta tarea se refleja en las entidades \texttt{OBSERVATION} y
+\texttt{PHOTO}, así como en los endpoints previstos para crear observaciones,
+listar observaciones de una sesión y subir fotografías mediante peticiones
+multipart. Las observaciones incluyen el tipo de residuo, cantidad, atributos
+descriptivos, coordenadas, fecha, comentarios, versión de taxonomía y estado de
+sincronización. Los adjuntos se modelan como recursos independientes para conservar
+metadatos y permitir una gestión posterior más flexible.
+
+T09 depende de T05, porque toda observación debe pertenecer a una sesión, y de T07,
+porque el tipo de residuo procede de la taxonomía. Su impacto en el producto final
+es convertir el backend en receptor de los datos científicos de campo, preparando
+la posterior visualización en el portal, la sincronización y las exportaciones.
+
+\subsubsection{T10 -- App móvil: formulario de observación}
+
+La décima tarea completa el primer flujo funcional de campo al incorporar en la
+aplicación móvil el formulario de observación. Su objetivo funcional es permitir
+que el usuario registre cada residuo observado con los datos mínimos necesarios
+para su análisis posterior.
+
+La memoria recoge este flujo como una secuencia en la que el investigador selecciona
+un elemento de la taxonomía, introduce cantidad y atributos complementarios, añade
+comentarios y, cuando procede, incorpora una fotografía geolocalizada. El formulario
+se apoya en la navegación y en la sesión activa de la app móvil, y se relaciona con
+el backend a través de la API de observaciones y adjuntos. En un escenario
+\textit{offline-first}, los registros se almacenan localmente y se preparan para su
+sincronización diferida.
+
+T10 depende de T07, T08 y T09, ya que necesita taxonomía, sesión activa y una API de
+persistencia para consolidar los datos. Su impacto en el producto final es
+especialmente visible: representa el punto en el que OmniLitter pasa de ser una
+estructura de gestión a una herramienta efectiva de captura de datos científicos en
+campo, dejando preparada la base para módulos posteriores como mapas, análisis,
+exportación y sincronización avanzada.
