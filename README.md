@@ -16,8 +16,8 @@ Repositorio con el código fuente LaTeX de la memoria del Trabajo de Fin de Grad
 │   ├── 02_objetivos.tex
 │   ├── 03_apps_relacionadas.tex
 │   ├── 04_tecnologias_desarrollo.tex
-│   ├── 05_planificacion_gestion.tex
-│   ├── 06_requisitos.tex
+│   ├── 05_requisitos.tex
+│   ├── 06_planificacion_gestion.tex
 │   ├── 07_diseno_sistema.tex
 │   ├── 08_implementacion_desarrollo.tex
 │   ├── 09_pruebas_calidad.tex
