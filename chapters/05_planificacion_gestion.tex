@@ -5,6 +5,7 @@
 \section{Planificación y Gestión}
 \label{sec:planificacion_gestion}
 
+
 El desarrollo de OmniLitter se ha planteado de forma iterativa, combinando tareas
 de análisis, diseño, prototipado e implementación. Esta aproximación resulta
 adecuada para un proyecto con cliente real, ya que permite validar decisiones antes
@@ -72,6 +73,8 @@ priorizado. Este backlog recoge las funcionalidades necesarias para transformar 
 requisitos validados en la Sección~\ref{sec:requisitos} en incrementos implementables,
 manteniendo la coherencia con la arquitectura de tres capas definida para OmniLitter:
 portal web, aplicación móvil y backend REST con persistencia relacional.
+
+\subsubsection{Sprint 1: Infraestructura, autenticación y flujo básico de captura}
 
 El primer bloque de trabajo corresponde al Sprint 1 y concentra las tareas T01 a
 T10. Estas tareas constituyen la base inicial del sistema, ya que introducen la
@@ -312,3 +315,208 @@ especialmente visible: representa el punto en el que OmniLitter pasa de ser una
 estructura de gestión a una herramienta efectiva de captura de datos científicos en
 campo, dejando preparada la base para módulos posteriores como mapas, análisis,
 exportación y sincronización avanzada.
+
+\subsubsection{Sprint 2: Captura avanzada de observaciones y flujo offline}
+
+Durante el segundo sprint se abordaron las funcionalidades necesarias para completar
+el flujo de trabajo de campo en la aplicación móvil y permitir la posterior explotación
+de los datos desde el portal web. Este sprint se centró especialmente en la captura
+precisa de observaciones, el soporte offline, la gestión de fotografías y la validación
+de la información registrada.
+
+\begin{table}[H]
+  \centering
+  \caption{Resumen del backlog del Sprint 2: captura avanzada y flujo offline.}
+  \label{tab:backlog_sprint2_resumen}
+  \begin{tabularx}{\textwidth}{lXlX}
+    \toprule
+    \textbf{ID} & \textbf{Funcionalidad} & \textbf{Área} & \textbf{Dependencias} \\
+    \midrule
+    T11 & App móvil: GPS en sesión y observación & App móvil & T08, T10 \\
+    T12 & App móvil: fotos por observación y metadatos & App móvil y backend & T09, T10, T11 \\
+    T13 & App móvil: revisión, edición y eliminación antes de sincronizar & App móvil & T08, T10, T12 \\
+    T14 & Backend: validación científica y permisos de observaciones & Backend & T09, T10, T11, T12 \\
+    T15 & App móvil: persistencia offline del flujo de campo & App móvil & T07, T08, T10, T11, T12 \\
+    T16 & Portal web: listado de sesiones y observaciones con filtros & Web y backend & T04, T05, T09, T14 \\
+    T17 & Portal web: ficha de observación con fotos & Web & T12, T16 \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+\begin{tcolorbox}[title=T11 -- GPS en sesión y observación,colback=gray!5,colframe=black!70,fonttitle=\bfseries]
+
+\begin{tabularx}{\textwidth}{lX}
+\textbf{Área} & App móvil \\
+\textbf{Responsable} & Ignacio Martínez Díaz \\
+\textbf{Prioridad} & Crítica \\
+\textbf{Dependencias} & T08, T10 \\
+\end{tabularx}
+
+\vspace{0.2cm}
+
+\textbf{Objetivo}
+
+Integrar la captura de coordenadas GPS dentro del flujo de sesiones y observaciones,
+permitiendo registrar la localización exacta tanto del inicio de la sesión de
+muestreo como de cada observación individual.
+
+\vspace{0.15cm}
+
+\textbf{Valor aportado}
+
+Permite georreferenciar la información científica recopilada y facilita su análisis
+posterior mediante herramientas cartográficas.
+
+\end{tcolorbox}
+
+\begin{tcolorbox}[title=T12 -- Fotos por observación y metadatos,colback=gray!5,colframe=black!70,fonttitle=\bfseries]
+
+\begin{tabularx}{\textwidth}{lX}
+\textbf{Área} & App móvil + Backend \\
+\textbf{Responsable} & Ignacio Martínez Díaz \\
+\textbf{Prioridad} & Alta \\
+\textbf{Dependencias} & T09, T10, T11 \\
+\end{tabularx}
+
+\vspace{0.2cm}
+
+\textbf{Objetivo}
+
+Permitir la captura y asociación de fotografías a cada observación registrada,
+almacenando además metadatos relevantes como tamaño, formato, dimensiones,
+fecha de captura y otra información técnica asociada.
+
+\vspace{0.15cm}
+
+\textbf{Valor aportado}
+
+Aporta evidencia visual a las observaciones y mejora los procesos de validación
+científica posteriores.
+
+\end{tcolorbox}
+
+\begin{tcolorbox}[title=T13 -- Revisión, edición y eliminación antes de sincronizar,colback=gray!5,colframe=black!70,fonttitle=\bfseries]
+
+\begin{tabularx}{\textwidth}{lX}
+\textbf{Área} & App móvil \\
+\textbf{Responsable} & Ignacio Martínez Díaz \\
+\textbf{Prioridad} & Alta \\
+\textbf{Dependencias} & T08, T10, T12 \\
+\end{tabularx}
+
+\vspace{0.2cm}
+
+\textbf{Objetivo}
+
+Permitir al usuario revisar las observaciones almacenadas localmente antes de
+sincronizarlas con el servidor, incorporando capacidades de edición y eliminación.
+
+\vspace{0.15cm}
+
+\textbf{Valor aportado}
+
+Mejora la calidad de los datos enviados al sistema central y reduce errores
+producidos durante la captura en campo.
+
+\end{tcolorbox}
+
+\begin{tcolorbox}[title=T14 -- Validación científica y permisos de observaciones,colback=gray!5,colframe=black!70,fonttitle=\bfseries]
+
+\begin{tabularx}{\textwidth}{lX}
+\textbf{Área} & Backend \\
+\textbf{Responsable} & Alejandro \\
+\textbf{Prioridad} & Crítica \\
+\textbf{Dependencias} & T09, T10, T11, T12 \\
+\end{tabularx}
+
+\vspace{0.2cm}
+
+\textbf{Objetivo}
+
+Implementar mecanismos de validación y autorización que garanticen la consistencia
+de los datos científicos y el cumplimiento de los permisos definidos para cada rol.
+
+\vspace{0.15cm}
+
+\textbf{Valor aportado}
+
+Protege la integridad de la información registrada y evita modificaciones no
+autorizadas dentro del sistema.
+
+\end{tcolorbox}
+
+\begin{tcolorbox}[title=T15 -- Persistencia offline del flujo de campo,colback=gray!5,colframe=black!70,fonttitle=\bfseries]
+
+\begin{tabularx}{\textwidth}{lX}
+\textbf{Área} & App móvil \\
+\textbf{Responsable} & Ignacio Martínez Díaz \\
+\textbf{Prioridad} & Crítica \\
+\textbf{Dependencias} & T07, T08, T10, T11, T12 \\
+\end{tabularx}
+
+\vspace{0.2cm}
+
+\textbf{Objetivo}
+
+Garantizar el funcionamiento completo de la aplicación móvil en ausencia de
+conectividad mediante almacenamiento local de sesiones, observaciones,
+fotografías y coordenadas GPS.
+
+\vspace{0.15cm}
+
+\textbf{Valor aportado}
+
+Permite utilizar OmniLitter en entornos remotos donde no existe cobertura de red
+estable, manteniendo la continuidad del trabajo de campo.
+
+\end{tcolorbox}
+
+\begin{tcolorbox}[title=T16 -- Listado de sesiones y observaciones con filtros,colback=gray!5,colframe=black!70,fonttitle=\bfseries]
+
+\begin{tabularx}{\textwidth}{lX}
+\textbf{Área} & Web + Backend \\
+\textbf{Responsable} & Alejandro \\
+\textbf{Prioridad} & Alta \\
+\textbf{Dependencias} & T04, T05, T09, T14 \\
+\end{tabularx}
+
+\vspace{0.2cm}
+
+\textbf{Objetivo}
+
+Desarrollar una interfaz web que permita consultar sesiones y observaciones
+registradas mediante filtros y mecanismos de búsqueda avanzados.
+
+\vspace{0.15cm}
+
+\textbf{Valor aportado}
+
+Facilita el acceso a la información recopilada y mejora las capacidades de
+análisis por parte de investigadores y administradores.
+
+\end{tcolorbox}
+
+\begin{tcolorbox}[title=T17 -- Ficha de observación con fotografías,colback=gray!5,colframe=black!70,fonttitle=\bfseries]
+
+\begin{tabularx}{\textwidth}{lX}
+\textbf{Área} & Web \\
+\textbf{Responsable} & Alejandro \\
+\textbf{Prioridad} & Alta \\
+\textbf{Dependencias} & T12, T16 \\
+\end{tabularx}
+
+\vspace{0.2cm}
+
+\textbf{Objetivo}
+
+Implementar una vista detallada de observación en el portal web que permita
+consultar todos los atributos registrados junto con las fotografías asociadas.
+
+\vspace{0.15cm}
+
+\textbf{Valor aportado}
+
+Facilita la validación visual de los registros y completa el ciclo de captura,
+sincronización y revisión de observaciones.
+
+\end{tcolorbox}
