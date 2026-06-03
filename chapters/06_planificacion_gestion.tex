@@ -88,9 +88,13 @@ sesiones, observaciones y clientes.
 
 \begin{table}[H]
   \centering
+  \small
   \caption{Resumen del backlog inicial integrado en el Sprint 1.}
   \label{tab:backlog_sprint1_resumen}
-  \begin{tabularx}{\textwidth}{lXlX}
+  \begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{1.1cm}
+                                >{\raggedright\arraybackslash}X
+                                >{\raggedright\arraybackslash}p{3.0cm}
+                                >{\raggedright\arraybackslash}p{3.0cm}}
     \toprule
     \textbf{ID} & \textbf{Funcionalidad} & \textbf{Área} & \textbf{Dependencias} \\
     \midrule
@@ -113,7 +117,7 @@ planificación real del proyecto se entiende a partir de la relación entre las
 tareas, sus dependencias y el impacto que tienen en el producto final, como se
 describe en los apartados siguientes.
 
-\subsubsection{T01 -- Login y logout común en app y portal}
+\subsubsection*{T01 -- Login y logout común en app y portal}
 
 La primera tarea tiene como objetivo funcional establecer un mecanismo común de
 inicio y cierre de sesión para los dos clientes del sistema: el portal web y la
@@ -136,14 +140,14 @@ investigadores concretos y mantener una experiencia coherente entre web y móvil
 Además, permite que las tareas posteriores no dupliquen lógica de identificación
 en cada capa.
 
-\subsubsection{T02 -- Roles, permisos y grupo activo}
+\subsubsection*{T02 -- Roles, permisos y grupo activo}
 
 La segunda tarea persigue introducir el modelo de autorización basado en roles y
 grupos. Su objetivo funcional es que el sistema no solo conozca qué usuario ha
 iniciado sesión, sino también qué permisos tiene dentro de cada grupo de
 investigación y cuál es el grupo activo sobre el que se filtran las operaciones.
 
-La descripción implementada en la memoria se corresponde con el modelo de
+La descripción incluida en la memoria se corresponde con el modelo de
 membresías definido en el diseño de datos, donde el rol no pertenece directamente
 al usuario, sino a su relación con un grupo determinado. Esta decisión permite que
 una misma persona pueda actuar como administradora en un grupo y como colaboradora
@@ -157,14 +161,14 @@ garantiza el aislamiento de datos entre equipos de investigación, permite cumpl
 los requisitos de privacidad por grupo y prepara la base para la administración de
 usuarios, campañas y sesiones.
 
-\subsubsection{T03 -- Portal web: layout, navegación y rutas protegidas}
+\subsubsection*{T03 -- Portal web: layout, navegación y rutas protegidas}
 
 Esta tarea tiene como objetivo funcional construir la estructura navegable del
 portal web. En términos de planificación, representa el paso desde la autenticación
 y el control de acceso hacia una interfaz organizada, capaz de separar las páginas
 públicas de las secciones internas del sistema.
 
-El desarrollo documentado contempla un portal web de tipo \textit{Single Page
+El diseño documentado contempla un portal web de tipo \textit{Single Page
 Application} con React, TypeScript, Vite y React Router. La navegación se organiza
 mediante rutas públicas, como la página de inicio y el formulario de acceso, y rutas
 protegidas bajo el área interna de la aplicación. Estas rutas protegidas verifican
@@ -178,14 +182,14 @@ en proporcionar una experiencia web consistente, extensible y preparada para alo
 el dashboard, los listados, la administración y los módulos de análisis que se
 incorporen en etapas posteriores.
 
-\subsubsection{T04 -- Portal admin: usuarios, grupos y membresías}
+\subsubsection*{T04 -- Portal admin: usuarios, grupos y membresías}
 
 La cuarta tarea amplía el portal web con capacidades administrativas. Su objetivo
 funcional es permitir la gestión de usuarios, grupos de investigación y membresías,
 de forma que la estructura organizativa del sistema pueda mantenerse desde el
 propio portal sin intervención directa sobre la base de datos.
 
-La implementación documentada se apoya en el modelo de datos formado por usuarios,
+El diseño documentado se apoya en el modelo de datos formado por usuarios,
 grupos y membresías, así como en el diseño de endpoints de la API para listar,
 crear, actualizar o archivar grupos y gestionar miembros. En la interfaz web, estas
 funciones se vinculan al rol de administrador y se ocultan a usuarios colaboradores,
@@ -197,7 +201,7 @@ navegación protegida del portal. Su impacto final es permitir que OmniLitter se
 operable por equipos reales, facilitando la incorporación de investigadores, la
 creación de grupos y la asignación de permisos sin romper el aislamiento de datos.
 
-\subsubsection{T05 -- Campañas y sesiones de muestreo en backend}
+\subsubsection*{T05 -- Campañas y sesiones de muestreo en backend}
 
 La quinta tarea introduce en el backend las entidades que estructuran la actividad
 científica del sistema: campañas y sesiones de muestreo. Su objetivo funcional es
@@ -216,7 +220,7 @@ y usuarios con permisos adecuados. Su impacto en el producto final es central:
 convierte la captura de residuos en un proceso científicamente contextualizado y
 prepara las dependencias necesarias para la creación de observaciones y adjuntos.
 
-\subsubsection{T06 -- App móvil: navegación principal y perfil}
+\subsubsection*{T06 -- App móvil: navegación principal y perfil}
 
 La sexta tarea traslada la base de autenticación a la aplicación móvil. Su objetivo
 funcional es establecer la navegación principal de la app y una pantalla de perfil
@@ -235,7 +239,7 @@ en el producto final consiste en proporcionar una estructura estable para que el
 usuario pueda iniciar sesiones, consultar su estado y acceder posteriormente a la
 taxonomía, la captura de observaciones y la sincronización.
 
-\subsubsection{T07 -- App móvil: taxonomía jerárquica, búsqueda y favoritos}
+\subsubsection*{T07 -- App móvil: taxonomía jerárquica, búsqueda y favoritos}
 
 La séptima tarea tiene como objetivo funcional incorporar en la aplicación móvil la
 taxonomía de residuos de forma navegable, con soporte para búsqueda y elementos
@@ -256,13 +260,13 @@ impacto en el producto final es doble: mejora la usabilidad durante el trabajo d
 campo y refuerza la calidad científica de los datos al mantener una clasificación
 controlada y trazable.
 
-\subsubsection{T08 -- App móvil: creación de sesión de muestreo}
+\subsubsection*{T08 -- App móvil: creación de sesión de muestreo}
 
 La octava tarea permite iniciar desde la aplicación móvil una nueva sesión de
 muestreo. Su objetivo funcional es que el investigador pueda registrar el contexto
 de la salida de campo antes de introducir observaciones individuales.
 
-El desarrollo documentado define un flujo de creación de sesión en el que se
+El diseño documentado define un flujo de creación de sesión en el que se
 recogen datos como nombre, tipo de entorno, parámetros del transecto y coordenadas
 de inicio cuando estén disponibles. Esta información se relaciona con el diseño de
 persistencia local mediante SQLite, pensado para que las sesiones puedan crearse
@@ -275,7 +279,7 @@ T06, porque se integra dentro de la navegación móvil. Su impacto en el product
 final es esencial: habilita el trabajo de campo de forma ordenada y permite asociar
 cada observación a un contexto metodológico claro.
 
-\subsubsection{T09 -- API de observaciones y adjuntos para captura de campo}
+\subsubsection*{T09 -- API de observaciones y adjuntos para captura de campo}
 
 La novena tarea se centra en la capa backend y tiene como objetivo funcional
 proporcionar la API necesaria para registrar observaciones y asociarles adjuntos,
@@ -294,7 +298,7 @@ porque el tipo de residuo procede de la taxonomía. Su impacto en el producto fi
 es convertir el backend en receptor de los datos científicos de campo, preparando
 la posterior visualización en el portal, la sincronización y las exportaciones.
 
-\subsubsection{T10 -- App móvil: formulario de observación}
+\subsubsection*{T10 -- App móvil: formulario de observación}
 
 La décima tarea completa el primer flujo funcional de campo al incorporar en la
 aplicación móvil el formulario de observación. Su objetivo funcional es permitir
