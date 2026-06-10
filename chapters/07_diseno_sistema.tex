@@ -1,8 +1,8 @@
 % ============================================================
-%  Capítulo 7 — Diseño de la Solución
+%  Capítulo -- Diseño de la solución
 % ============================================================
 
-\section{Diseño de la Solución}
+\chapter{Diseño de la solución}
 
 Este capítulo describe las decisiones de diseño adoptadas para materializar los
 requisitos funcionales y no funcionales de OmniLitter en una arquitectura concreta.
@@ -11,7 +11,7 @@ el diseño de la base de datos, el contrato de la API REST, la estructura de com
 del portal web y de la aplicación móvil, y el mecanismo de sincronización \textit{offline}.
 
 % ------------------------------------------------------------
-\subsection{Visión General de la Arquitectura}
+\section{Arquitectura general}
 % ------------------------------------------------------------
 
 OmniLitter sigue una arquitectura de \textbf{tres capas} clásica adaptada a un
@@ -53,7 +53,7 @@ con cobertura de red intermitente o nula. La decisión de embeber una base de da
 el dispositivo es, por tanto, un requisito no negociable para la viabilidad del producto.
 
 % ------------------------------------------------------------
-\subsection{Diseño de la Base de Datos}
+\section{Diseño de la base de datos}
 % ------------------------------------------------------------
 
 \subsubsection{Modelo relacional}
@@ -194,7 +194,7 @@ Esta decisión evita la proliferación de columnas opcionales con valor nulo y p
 la flexibilidad para añadir nuevos atributos sin migrar el esquema.
 
 % ------------------------------------------------------------
-\subsection{Diseño de la API REST}
+\section{Diseño de la API REST}
 % ------------------------------------------------------------
 
 La API sigue los principios REST: interfaz uniforme, comunicación sin estado,
@@ -267,7 +267,7 @@ por recurso.
 
 \end{longtable}
 
-\subsubsection{Autenticación y autorización}
+\section{Seguridad y control de acceso}
 
 El sistema se diseña con autenticación basada en JWT y dos \textit{tokens}: un
 \textbf{token de acceso} de corta duración (15 minutos) y un \textbf{token de refresco}
@@ -282,7 +282,7 @@ recurso solicitado. Esto permite que una misma persona sea administradora en un 
 y colaboradora en otro, con permisos diferentes en cada contexto.
 
 % ------------------------------------------------------------
-\subsection{Diseño del Portal Web}
+\section{Diseño del portal web}
 % ------------------------------------------------------------
 
 \subsubsection{Arquitectura de componentes}
@@ -328,7 +328,7 @@ sus propias métricas. La tabla de observaciones filtra los registros por autor 
 colaboradores y muestra todos para los administradores.
 
 % ------------------------------------------------------------
-\subsection{Diseño de la Aplicación Móvil}
+\section{Diseño de la aplicación móvil}
 % ------------------------------------------------------------
 
 \subsubsection{Stack tecnológico y estructura de pantallas}
@@ -393,7 +393,7 @@ El flujo principal de la aplicación sigue esta secuencia:
 \end{enumerate}
 
 % ------------------------------------------------------------
-\subsection{Mecanismo de Sincronización Offline}
+\section{Sincronización offline}
 % ------------------------------------------------------------
 
 \subsubsection{Patrón Outbox Queue}

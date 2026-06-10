@@ -1,4 +1,4 @@
-\documentclass[a4paper,12pt]{article}
+\documentclass[a4paper,12pt]{report}
 
 % ── Paquetes ─────────────────────────────────────────────────────────────────
 \usepackage[utf8]{inputenc}
@@ -26,9 +26,8 @@
 % \usepackage{tikz}  % descomentar si se añaden diagramas TikZ
 
 % ── Profundidad del índice ───────────────────────────────────────────────────
-% Se muestran secciones y subsecciones. Las subsubsecciones se numeran en el texto,
-% pero no aparecen en el índice para evitar que quede demasiado denso.
-\setcounter{tocdepth}{2}
+% Se muestran capítulos y secciones para que el índice mantenga una estructura clara.
+\setcounter{tocdepth}{1}
 \setcounter{secnumdepth}{3}
 
 % ── Configuración de márgenes ────────────────────────────────────────────────
@@ -79,6 +78,10 @@
 \renewcommand{\headrulewidth}{0.4pt}
 
 % ── Formato de títulos ───────────────────────────────────────────────────────
+\titleformat{\chapter}
+  {\huge\bfseries}
+  {\thechapter.}{0.8em}{}
+
 \titleformat{\section}
   {\large\bfseries}
   {\thesection.}{0.5em}{}[\titlerule]
@@ -150,13 +153,19 @@
 \pagenumbering{roman}
 \pagestyle{plain}
 
+\chapter*{Resumen}
+\clearpage
+
+\chapter*{Abstract}
+\clearpage
+
 \tableofcontents
 \clearpage
 
-\listoftables
+\listoffigures
 \clearpage
 
-\listoffigures
+\listoftables
 \clearpage
 
 \pagenumbering{arabic}
@@ -166,19 +175,19 @@
 \input{chapters/01_introduccion}
 \newpage
 
-\input{chapters/02_objetivos}
+\input{chapters/02_contexto_antecedentes}
 \newpage
 
-\input{chapters/03_apps_relacionadas}
-\newpage
-
-\input{chapters/04_tecnologias_desarrollo}
+\input{chapters/03_descripcion_proyecto}
 \newpage
 
 \input{chapters/05_requisitos}
 \newpage
 
 \input{chapters/06_planificacion_gestion}
+\newpage
+
+\input{chapters/04_tecnologias_desarrollo}
 \newpage
 
 \input{chapters/07_diseno_sistema}
@@ -190,19 +199,20 @@
 \input{chapters/09_pruebas_calidad}
 \newpage
 
+\input{chapters/10_despliegue_operacion}
+\newpage
+
 \input{chapters/10_conclusiones_trabajo_futuro}
 \newpage
 
 % ── REFERENCIAS ──────────────────────────────────────────────────────────────
-\input{chapters/11_referencias}
+\nocite{*}
+\bibliographystyle{plain}
+\bibliography{bibliografia}
 \newpage
 
 % ── ANEXOS ───────────────────────────────────────────────────────────────────
 \appendix
-\renewcommand{\thesection}{\Alph{section}}
-
-\input{annexes/A_manual_despliegue}
-\newpage
 
 \input{annexes/B_uso_ia}
 \newpage
@@ -210,6 +220,18 @@
 \input{annexes/C_requisitos_detallados}
 \newpage
 
-\input{annexes/D_mockups}
+\input{annexes/A_manual_despliegue}
+\newpage
+
+\input{annexes/E_manual_usuario}
+\newpage
+
+\input{annexes/F_pruebas_completas}
+\newpage
+
+\input{annexes/G_api_diccionario_datos}
+\newpage
+
+\input{annexes/H_backlog_completo}
 
 \end{document}

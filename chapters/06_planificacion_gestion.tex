@@ -1,17 +1,16 @@
 % ============================================================
-%  Capítulo 6 -- Planificación y Gestión
+%  Capítulo -- Planificación y gestión
 % ============================================================
 
-\section{Planificación y Gestión}
+\chapter{Planificación y gestión}
 \label{sec:planificacion_gestion}
-
 
 El desarrollo de OmniLitter se ha planteado de forma iterativa, combinando tareas
 de análisis, diseño, prototipado e implementación. Esta aproximación resulta
 adecuada para un proyecto con cliente real, ya que permite validar decisiones antes
 de invertir esfuerzo en una implementación definitiva.
 
-\subsection{Metodología de trabajo}
+\section{Metodología de trabajo}
 
 La metodología seguida se basa en ciclos cortos de trabajo:
 
@@ -29,6 +28,8 @@ una forma de trabajo incremental: cada avance genera un artefacto revisable
 (documento de requisitos, mockup, diagrama, módulo de código o capítulo de memoria)
 que se contrasta antes de continuar.
 
+\section{Herramientas de gestión}
+
 Para trasladar esta aproximación a la ejecución diaria del proyecto se ha utilizado
 un backlog funcional agrupado por sprints. Cada elemento del backlog representa una
 capacidad observable del sistema y se ha ordenado según sus dependencias técnicas y
@@ -38,35 +39,7 @@ la infraestructura común de autenticación y permisos, después se consolida la
 navegación de los clientes y, finalmente, se habilitan los primeros flujos de
 captura y persistencia de datos.
 
-\subsection{Gestión de reuniones}
-
-Las reuniones con el cliente han tenido un papel central en la definición del
-alcance. La primera reunión permitió identificar el problema y las funcionalidades
-esperadas. Posteriormente, una segunda reunión sirvió para revisar los mockups,
-confirmar la cobertura de los flujos principales y reforzar prioridades como el
-funcionamiento sin conexión, la separación por grupos y la trazabilidad científica.
-
-Estas reuniones se documentan en la Sección~\ref{sec:requisitos} y en el Anexo~\ref{sec:anexo_requisitos_detallados},
-donde se relacionan las necesidades detectadas con los requisitos del sistema.
-
-\subsection{Gestión del alcance}
-
-El alcance se ha dividido en dos niveles:
-
-\begin{itemize}
-  \item \textbf{Alcance funcional validado mediante mockups:} portal web y aplicación
-    móvil con flujos navegables, datos de ejemplo, roles simulados y pantallas
-    principales implementadas.
-  \item \textbf{Alcance de implementación final:} backend REST, base de datos,
-    autenticación, sincronización offline, persistencia de observaciones y conexión
-    progresiva de los clientes al backend.
-\end{itemize}
-
-Esta separación permite demostrar primero la experiencia de uso y después construir
-la infraestructura técnica necesaria para convertir el prototipo en una aplicación
-real.
-
-\subsection{Backlog funcional y organización por sprints}
+\section{Backlog y organización por sprints}
 
 La planificación del desarrollo se ha estructurado mediante un backlog funcional
 priorizado. Este backlog recoge las funcionalidades necesarias para transformar los
@@ -399,7 +372,7 @@ científica posteriores.
 
 \end{tcolorbox}
 
-\begin{tcolorbox}[title=T13 -- Revisión, edición y eliminación antes de sincronizar,colback=gray!5,colframe=black!70,fonttitle=\bfseries]
+\begin{tcolorbox}[title={T13 -- Revisión, edición y eliminación antes de sincronizar},colback=gray!5,colframe=black!70,fonttitle=\bfseries]
 
 \begin{tabularx}{\textwidth}{lX}
 \textbf{Área} & App móvil \\
@@ -524,3 +497,33 @@ Facilita la validación visual de los registros y completa el ciclo de captura,
 sincronización y revisión de observaciones.
 
 \end{tcolorbox}
+
+\section{Gestión de reuniones}
+
+Las reuniones con el cliente han tenido un papel central en la definición del
+alcance. La primera reunión permitió identificar el problema y las funcionalidades
+esperadas. Posteriormente, una segunda reunión sirvió para revisar los mockups,
+confirmar la cobertura de los flujos principales y reforzar prioridades como el
+funcionamiento sin conexión, la separación por grupos y la trazabilidad científica.
+
+Estas reuniones se documentan en la Sección~\ref{sec:requisitos} y en el Anexo~\ref{sec:anexo_requisitos_detallados},
+donde se relacionan las necesidades detectadas con los requisitos del sistema.
+
+\section{Gestión de riesgos}
+
+\section{Gestión del alcance}
+
+El alcance se ha dividido en dos niveles:
+
+\begin{itemize}
+  \item \textbf{Alcance funcional validado mediante mockups:} portal web y aplicación
+    móvil con flujos navegables, datos de ejemplo, roles simulados y pantallas
+    principales implementadas.
+  \item \textbf{Alcance de implementación final:} backend REST, base de datos,
+    autenticación, sincronización offline, persistencia de observaciones y conexión
+    progresiva de los clientes al backend.
+\end{itemize}
+
+Esta separación permite demostrar primero la experiencia de uso y después construir
+la infraestructura técnica necesaria para convertir el prototipo en una aplicación
+real.

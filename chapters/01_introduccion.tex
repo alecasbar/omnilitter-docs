@@ -1,3 +1,81 @@
-\section{Introducción}
+\chapter{Introducción}
 
-Llevar la cuenta de todo lo que uno ve se ha convertido en algo 
+\section{Contexto y motivación}
+
+La contaminación por residuos en entornos terrestres y acuáticos constituye uno de los principales problemas del medio ambiente a nivel mundial. La acumulación de residuos en los distintos tipos de entornos genera un gran impacto negativo sobre los ecosistemas, la biodiversidad y la calidad de vida de las personas. Con el objetivo de comprender la magnitud de los hechos y desarrollar estrategias eficaces de prevención y mitigación, ciertas organizaciones, administraciones públicas e instituciones desarrollan programas de monitorización y análisis de residuos en los distintos entornos.
+
+La obtención de datos reales y útiles requiere de la participación de diferentes personas y grupos dispuestos a realizar diversas campañas de monitorización de dichos residuos en los distintos entornos afectados, dejando patentes las observaciones de los residuos para un posterior análisis más exhaustivo. Sin embargo, hoy en día las herramientas para ello se han quedado obsoletas, se basan en capturas y registros manuales muy tediosos o, directamente, no cubren las necesidades actuales.
+
+Teniendo en cuenta lo anterior, el cliente ha planteado la necesidad de desarrollar una herramienta que solucione el problema.
+
+En respuesta a esta necesidad, se propone el desarrollo de OmniLitter. Esta plataforma incluirá tanto un portal web como una aplicación móvil, para la monitorización y registro de residuos para un posterior análisis.
+
+\section{Problema abordado}
+
+Para hacer un seguimiento de los residuos, se necesita que mucha gente colabore, hacer campañas en diferentes sitios y recoger mucha información. Luego, se procesa y analiza toda esta información. Si no se tienen herramientas especializadas, puede haber problemas con la información dispersa, la falta de orden en los registros y las dificultades para unir los datos que obtienen diferentes participantes.
+
+Generalmente, se recoge la información en la naturaleza, donde no siempre hay conexión a Internet. Esto limita el uso de aplicaciones que necesitan estar siempre conectadas a servidores remotos. Por lo tanto, es necesario tener mecanismos que permitan guardar la información en el dispositivo y sincronizarla después cuando haya conexión a la red.
+
+El proyecto también requiere el uso de clasificaciones de residuos estandarizadas, la asociación de fotos a cada observación y el registro preciso de la ubicación geográfica donde se hace cada muestreo. Hacer todo esto a mano aumenta el riesgo de errores y dificulta el uso posterior de los datos.
+
+El cliente necesita una solución de software que permita gestionar campañas de seguimiento, registrar observaciones geolocalizadas desde dispositivos móviles, operar sin conexión a Internet y centralizar toda la información recopilada en una infraestructura común accesible desde un portal web.
+
+\section{Objetivos}
+
+El objetivo principal de este Trabajo Fin de Grado es diseñar, desarrollar e implementar una plataforma software denominada OmniLitter que facilite la recogida y el posterior análisis de datos relacionados con la monitorización de residuos, de una forma sencilla, eficiente y precisa.
+
+Para alcanzar este objetivo general se establecen los siguientes objetivos específicos:
+
+\begin{enumerate}
+    \item Diseñar una arquitectura software que permita la integración de una aplicación móvil, un portal web y un backend centralizado.
+
+    \item Desarrollar una aplicación móvil destinada a la captura de observaciones durante campañas de monitorización.
+
+    \item Permitir el funcionamiento de la aplicación móvil en condiciones de conectividad limitada mediante mecanismos de almacenamiento local y sincronización diferida.
+
+    \item Registrar información geográfica asociada a cada observación utilizando los sensores de posicionamiento disponibles en los dispositivos móviles.
+
+    \item Incorporar la gestión de fotografías y metadatos como evidencias asociadas a las observaciones registradas.
+
+    \item Implementar un portal web que facilite la administración de campañas, usuarios y datos recopilados.
+
+    \item Centralizar la información obtenida en una base de datos común que garantice la integridad y consistencia de los datos.
+
+    \item Utilizar taxonomías estandarizadas para la clasificación de residuos con el fin de favorecer la calidad científica de la información registrada.
+
+    \item Aplicar metodologías y herramientas de ingeniería del software para garantizar la calidad, mantenibilidad y escalabilidad de la solución desarrollada.
+\end{enumerate}
+
+\section{Alcance del proyecto}
+
+El presente Trabajo Fin de Grado aborda el diseño, desarrollo e implementación de una plataforma software denominada OmniLitter, orientada a facilitar la monitorización y el análisis de la contaminación por residuos en distintos ecosistemas terrestres y acuáticos.
+
+La solución desarrollada está compuesta por una aplicación móvil destinada a la recogida de información en campo, un portal web para la gestión y explotación de los datos recopilados, y un backend centralizado encargado de la lógica de negocio y la persistencia de la información.
+
+Dentro del alcance del proyecto se incluyen las siguientes funcionalidades:
+
+\begin{itemize}
+    \item Diseño e implementación de la arquitectura completa del sistema, incluyendo aplicación móvil, portal web, backend y base de datos.
+    
+    \item Registro de observaciones de residuos utilizando una taxonomía jerárquica estandarizada que garantice la consistencia científica de los datos.
+    
+    \item Captura automática de información geográfica y temporal asociada a cada observación mediante los sensores disponibles en los dispositivos móviles.
+    
+    \item Gestión de fotografías y metadatos asociados a las observaciones registradas.
+    
+    \item Gestión de sesiones de muestreo, incluyendo información contextual como el entorno analizado, la duración de la sesión o las características del área estudiada.
+    
+    \item Funcionamiento en modo offline mediante almacenamiento local de la información y sincronización posterior con el servidor cuando exista conectividad.
+    
+    \item Administración de campañas, usuarios, grupos y permisos mediante un portal web de gestión.
+    
+    \item Visualización de observaciones y campañas mediante mapas interactivos y paneles informativos.
+    
+    \item Exportación de los datos recopilados en formatos adecuados para su posterior explotación y análisis científico.
+    
+    \item Implementación de mecanismos de autenticación, control de acceso y protección de la información almacenada.
+    
+    \item Elaboración de la documentación técnica y académica asociada al desarrollo del sistema.
+\end{itemize}
+
+De esta forma, el alcance del proyecto se centra en proporcionar una plataforma funcional y completa para la recogida, gestión y consulta de datos relacionados con la monitorización de residuos, estableciendo una base tecnológica que permita futuras ampliaciones y desarrollos.

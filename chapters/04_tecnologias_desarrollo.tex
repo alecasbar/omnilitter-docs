@@ -1,8 +1,8 @@
 % ============================================================
-%  Capítulo 4 -- Tecnologías de Desarrollo
+%  Capítulo -- Tecnologías utilizadas
 % ============================================================
 
-\section{Tecnologías de Desarrollo}
+\chapter{Tecnologías utilizadas}
 
 En este capítulo se describen las tecnologías seleccionadas para el desarrollo de
 OmniLitter y la justificación de su elección. La selección se ha realizado teniendo
@@ -11,7 +11,7 @@ desarrollado por dos personas, la necesidad de disponer de una aplicación móvi
 capaz de trabajar sin conexión y la conveniencia de mantener un stack homogéneo
 basado en TypeScript.
 
-\subsection{Criterios de selección}
+\section{Criterios de selección}
 
 Los criterios utilizados para seleccionar las tecnologías han sido los siguientes:
 
@@ -31,7 +31,7 @@ Los criterios utilizados para seleccionar las tecnologías han sido los siguient
     de campo sin rehacer la arquitectura.
 \end{itemize}
 
-\subsection{Tecnologías empleadas en los mockups}
+\paragraph{Tecnologías empleadas en los mockups}
 
 Durante la fase inicial se han construido dos prototipos funcionales con datos en
 memoria: un portal web y una simulación de aplicación móvil en navegador. Ambos
@@ -57,7 +57,7 @@ la versión final.
   \end{tabularx}
 \end{table}
 
-\subsection{Portal web}
+\section{Portal web}
 
 El portal web definitivo se plantea como una aplicación \textit{Single Page
 Application} desarrollada con React, TypeScript y Vite. Su responsabilidad principal
@@ -84,7 +84,7 @@ usuarios y grupos, visualizar mapas y exportar datos.
   \end{tabularx}
 \end{table}
 
-\subsection{Aplicación móvil}
+\section{Aplicación móvil}
 
 La aplicación móvil se plantea con React Native y Expo, utilizando SQLite mediante
 el paquete \texttt{expo-sqlite} como base de datos local. El objetivo es que el
@@ -111,7 +111,7 @@ conexión a internet.
   \end{tabularx}
 \end{table}
 
-\subsection{Backend y persistencia}
+\section{Backend y persistencia}
 
 El backend centralizará la lógica de negocio, la autenticación, el control de acceso
 por grupo y la sincronización de datos procedentes de dispositivos móviles. Se
@@ -137,7 +137,11 @@ plantea como una API REST desarrollada con Node.js, Express y TypeScript.
   \end{tabularx}
 \end{table}
 
-\subsection{Justificación de SQLite frente a WatermelonDB}
+\section{Despliegue y herramientas auxiliares}
+
+\section{Alternativas consideradas}
+
+\paragraph{Justificación de SQLite frente a WatermelonDB}
 
 Aunque inicialmente se valoró WatermelonDB como solución local \textit{offline-first},
 se ha decidido emplear SQLite directamente para ajustar mejor el alcance del TFG.
