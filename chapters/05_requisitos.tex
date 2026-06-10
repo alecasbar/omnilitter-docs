@@ -5,179 +5,951 @@
 \chapter{Requisitos y análisis}
 \label{sec:requisitos}
 
-Este capítulo recoge el proceso seguido para obtener, contrastar y refinar los
-requisitos de OmniLitter. Dado que el proyecto parte de una necesidad real
-planteada por un cliente experto en el dominio, la definición de requisitos no se
-limitó a una fase inicial cerrada, sino que evolucionó a partir de reuniones de
-toma de requisitos, validación de mockups y revisión de los flujos propuestos.
+% Tarjetas compactas y sobrias para requisitos consolidados.
+\newtcolorbox{requisitocard}[1]{
+  enhanced,
+  colback=gray!3,
+  colframe=black!55,
+  colbacktitle=black!70,
+  coltitle=white,
+  fonttitle=\bfseries,
+  title={#1},
+  boxrule=0.45pt,
+  arc=1.5mm,
+  left=2mm,
+  right=2mm,
+  top=1mm,
+  bottom=1mm,
+  before skip=0.9em,
+  after skip=0.9em
+}
 
-\section{Proceso de toma de requisitos}
+Este capítulo recoge el proceso seguido para obtener, contrastar y consolidar los
+requisitos de OmniLitter. Al tratarse de un proyecto desarrollado para un cliente
+real y dentro de un dominio científico específico, la definición de requisitos no
+se cerró en una única fase inicial, sino que fue evolucionando a partir de
+reuniones con el cliente, validación mediante prototipos funcionales y revisión
+del alcance del sistema.
 
-La toma de requisitos se realizó en dos fases principales:
+Por este motivo, los requisitos se presentan en dos niveles. En primer lugar, se
+describe la evolución del registro de requisitos, indicando qué requisitos estaban
+presentes en cada sesión de trabajo y qué cambios se introdujeron en cada versión.
+En segundo lugar, se recoge la versión final consolidada, relacionando cada
+requisito con el caso de uso al que da soporte cuando procede.
 
-\begin{enumerate}
-  \item \textbf{Reunión inicial de toma de requisitos.} En esta primera reunión se
-    presentó el problema: renovar y ampliar una herramienta existente de
-    monitorización de residuos, incorporando nuevos entornos de muestreo, gestión
-    de usuarios y grupos, funcionamiento sin conexión y un portal web de consulta.
-  \item \textbf{Reunión de contraste con mockups.} Tras construir los primeros
-    prototipos interactivos del portal web y de la aplicación móvil, se revisó con
-    el cliente si los flujos propuestos cubrían los requisitos inicialmente
-    identificados. Esta reunión sirvió para validar el enfoque general y detectar
-    qué partes debían priorizarse o explicarse con mayor detalle en el diseño.
-\end{enumerate}
+\section{Evolución del registro de requisitos}
 
-Esta forma de trabajo permitió reducir la incertidumbre del proyecto: primero se
-recogieron las necesidades de alto nivel y posteriormente se contrastaron con
-pantallas navegables antes de abordar la implementación definitiva.
+Durante el desarrollo de OmniLitter se manejaron tres versiones principales del
+registro de requisitos. Cada una representa un momento distinto del proyecto: la
+toma inicial de requisitos, la validación mediante mockups y la consolidación
+posterior a la última reunión de validación.
 
-\subsubsection{Reunión inicial con el cliente}
+\subsection{Versión 1: toma inicial de requisitos}
 
-En la reunión inicial se identificaron las necesidades fundamentales del sistema.
-El cliente planteó que la nueva solución debía superar el alcance de la aplicación
-existente, centrada principalmente en residuos flotantes, para permitir la captura
-de datos en distintos entornos naturales.
+\textbf{Fecha aproximada:} 09/02/2026.
 
-Los puntos principales extraídos de esta reunión fueron:
+\textbf{Estado:} primera versión del registro de requisitos.
+
+\textbf{Objetivo de la sesión:} recoger las necesidades iniciales del cliente y
+definir una primera lista de requisitos funcionales, no funcionales y científicos.
+
+En la primera reunión se identificó la necesidad de una herramienta capaz de
+registrar datos sobre residuos en distintos entornos naturales. El cliente planteó
+la importancia de capturar observaciones geolocalizadas, asociar fotografías,
+registrar metadatos del muestreo, trabajar sin conexión y sincronizar
+posteriormente los datos con un servidor. También se identificaron necesidades de
+usuarios, grupos, roles, visualización en mapa, estadísticas y exportación.
+
+{\small
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.08}
+\begin{longtable}{>{\raggedright\arraybackslash}p{1.8cm} >{\raggedright\arraybackslash}p{10.1cm} >{\raggedright\arraybackslash}p{2.1cm}}
+  \caption{Requisitos identificados en la versión 1.}
+  \label{tab:requisitos_v1} \\
+  \toprule
+  \textbf{ID} & \textbf{Descripción} & \textbf{Prioridad} \\
+  \midrule
+  \endfirsthead
+  \toprule
+  \textbf{ID} & \textbf{Descripción} & \textbf{Prioridad} \\
+  \midrule
+  \endhead
+  RF-01 & Registro de tipo de residuo a partir de tipos preestablecidos. & Crítica \\
+  RF-02 & Registro del tamaño del residuo observado. & Media \\
+  RF-03 & Geolocalización automática de cada observación mediante GPS. & Crítica \\
+  RF-04 & Registro automático de fecha y hora del avistamiento. & Alta \\
+  RF-05 & Asociación de una o varias fotografías al registro de residuo. & Alta \\
+  RF-06 & Funcionamiento sin conexión, con almacenamiento local de datos. & Crítica \\
+  RF-07 & Sincronización de datos locales con el servidor al recuperar conectividad. & Crítica \\
+  RF-08 & Selección del tipo de entorno antes de iniciar el muestreo. & Alta \\
+  RF-09 & Registro de parámetros de muestreo, como ancho de observación o duración. & Alta \\
+  RF-10 & Interfaz disponible en español e inglés. & Media \\
+  RF-11 & Creación de cuentas de usuario. & Alta \\
+  RF-12 & Creación de grupos de trabajo y asociación de usuarios. & Crítica \\
+  RF-13 & Soporte de roles de usuario. & Crítica \\
+  RF-14 & Visualización de observaciones geolocalizadas en mapa. & Alta \\
+  RF-15 & Cálculo de estadísticas básicas a partir de los datos almacenados. & Media \\
+  RF-16 & Privacidad por grupo para limitar la visibilidad de datos. & Crítica \\
+  RNF-01 & Interfaz optimizada para tablet y uso en campo. & Alta \\
+  RNF-02 & Comunicación segura entre aplicación móvil y servidor mediante HTTPS. & Crítica \\
+  RNF-03 & Compatibilidad de la aplicación móvil con Android e iOS. & Media \\
+  RDC-01 & Almacenamiento de datos según la taxonomía proporcionada por el cliente. & Crítica \\
+  RDC-02 & Exportación de datos en formato CSV para análisis científico posterior. & Alta \\
+  \bottomrule
+\end{longtable}
+}
+
+Esta versión constituye la línea base del proyecto y permite identificar los
+bloques iniciales: captura de datos, geolocalización, fotografías, funcionamiento
+offline, sincronización, usuarios, grupos, roles, mapa, estadísticas, seguridad,
+compatibilidad, taxonomía y exportación.
+
+\subsection{Versión 2: validación mediante mockups}
+
+\textbf{Estado:} versión de trabajo posterior a la toma inicial.
+
+\textbf{Objetivo de la sesión:} contrastar los requisitos iniciales con prototipos
+funcionales del portal web y de la aplicación móvil.
+
+Tras la primera toma de requisitos, se elaboraron mockups que representaban los
+principales flujos del sistema: autenticación, selección de grupo activo, creación
+de sesiones de muestreo, registro de observaciones, consulta de datos, mapa y
+sincronización. Esta revisión permitió transformar necesidades generales de la V1
+en requisitos más cercanos al funcionamiento real del sistema.
+
+{\small
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.08}
+\begin{longtable}{>{\raggedright\arraybackslash}p{1.8cm} >{\raggedright\arraybackslash}p{10.1cm} >{\raggedright\arraybackslash}p{2.1cm}}
+  \caption{Requisitos definidos en la versión 2 tras la validación con mockups.}
+  \label{tab:requisitos_v2} \\
+  \toprule
+  \textbf{ID} & \textbf{Descripción} & \textbf{Prioridad} \\
+  \midrule
+  \endfirsthead
+  \toprule
+  \textbf{ID} & \textbf{Descripción} & \textbf{Prioridad} \\
+  \midrule
+  \endhead
+  RF-001 & Inicio de sesión en portal web y aplicación móvil. & Crítica \\
+  RF-002 & Cierre de sesión y revocación de sesión local. & Alta \\
+  RF-004 & Roles y control de acceso por grupo. & Crítica \\
+  RF-005 & Creación de grupos y asociación de usuarios. & Crítica \\
+  RF-006 & Selección de grupo activo para filtrar datos y acciones. & Alta \\
+  RF-007 & Trabajo por sesiones de muestreo en la aplicación móvil. & Crítica \\
+  RF-008 & Captura de coordenadas GPS en sesiones y observaciones. & Crítica \\
+  RF-009 & Registro de metadatos de muestreo asociados a la sesión. & Alta \\
+  RF-010 & Fotografías asociadas a observaciones. & Alta \\
+  RF-012 & Navegación por taxonomía jerárquica de residuos. & Crítica \\
+  RF-015 & Registro de cantidad observada como entero positivo. & Crítica \\
+  RF-020 & Revisión de sesión antes de finalizarla. & Alta \\
+  RF-022 & Funcionamiento sin conexión durante la captura de campo. & Crítica \\
+  RF-023 & Cola de sincronización y subida posterior de datos pendientes. & Crítica \\
+  RF-027 & Listado de sesiones y observaciones con filtros en el portal. & Alta \\
+  RF-028 & Visualización de observaciones en mapa. & Alta \\
+  RF-030 & Dashboard con métricas agregadas. & Media \\
+  RF-031 & Exportación de datos para análisis externo. & Media \\
+  RF-032 & Gestión de usuarios desde el portal. & Alta \\
+  RF-033 & Gestión de grupos y membresías desde el portal. & Alta \\
+  RF-035 & Soporte de interfaz en español e inglés. & Media \\
+  RNF-001 & Seguridad en comunicaciones y acceso autenticado. & Crítica \\
+  RNF-002 & Aislamiento de datos entre grupos de investigación. & Crítica \\
+  RNF-003 & Enfoque \textit{offline-first} para la aplicación móvil. & Crítica \\
+  RNF-004 & Fiabilidad de sincronización ante cortes de red o cierres inesperados. & Crítica \\
+  RNF-005 & Usabilidad orientada al trabajo de campo. & Alta \\
+  RNF-008 & Trazabilidad entre requisitos, operaciones relevantes y pruebas. & Alta \\
+  RDC-001 & Taxonomía jerárquica con código identificador estable. & Crítica \\
+  RDC-002 & Metadatos científicos de sesión. & Crítica \\
+  RDC-003 & Metadatos técnicos de fotografías cuando estén disponibles. & Media \\
+  RDC-004 & Exportación científica con campos suficientes para análisis. & Media \\
+  RDC-005 & Versión de taxonomía asociada a sesiones y observaciones. & Alta \\
+  \bottomrule
+\end{longtable}
+}
+
+Respecto a la V1, la creación de cuentas pasa a ser un flujo de autenticación
+completo, los roles se refinan como control de acceso por grupo, los metadatos se
+organizan alrededor de sesiones de muestreo y la taxonomía deja de ser una lista
+simple para convertirse en una estructura jerárquica navegable.
+
+\subsection{Versión 3: consolidación tras la última reunión}
+
+\textbf{Fecha aproximada:} 10/06/2026.
+
+\textbf{Estado:} versión final consolidada de requisitos.
+
+\textbf{Objetivo de la sesión:} revisar el flujo real de la aplicación móvil,
+especialmente sesiones, sincronización, mapa y operación posterior del sistema.
+
+En la última reunión se revisó el funcionamiento de la aplicación móvil en
+relación con las sesiones de muestreo. Se reforzó la necesidad de consultar qué
+sesiones estaban pendientes, cuántas observaciones contenían, si una sesión seguía
+activa y cómo debía finalizarse antes de sincronizar. También se aclaró que la
+memoria debía documentar el despliegue y la administración básica, dejando el
+mantenimiento evolutivo posterior fuera del alcance académico del proyecto.
+
+{\small
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.08}
+\begin{longtable}{>{\raggedright\arraybackslash}p{1.8cm} >{\raggedright\arraybackslash}p{10.1cm} >{\raggedright\arraybackslash}p{2.1cm}}
+  \caption{Requisitos consolidados o refinados en la versión 3.}
+  \label{tab:requisitos_v3} \\
+  \toprule
+  \textbf{ID} & \textbf{Descripción} & \textbf{Prioridad} \\
+  \midrule
+  \endfirsthead
+  \toprule
+  \textbf{ID} & \textbf{Descripción} & \textbf{Prioridad} \\
+  \midrule
+  \endhead
+  RF-021 & Estado de sincronización de sesiones: sincronizada, pendiente, activa o con error. & Alta \\
+  RF-022 & Funcionamiento offline completo con sesiones, observaciones, fotografías y coordenadas locales. & Crítica \\
+  RF-023 & Sincronización automática o manual al recuperar conectividad, sin pérdida de datos. & Crítica \\
+  RF-024 & Finalización de sesiones activas antes de sincronizarlas cuando sea necesario. & Alta \\
+  RF-025 & Pantalla de sincronización con sesiones pendientes, sincronizadas y número de observaciones. & Alta \\
+  RF-028 & Visualización en mapa con filtros por entorno, campaña, sesión o localización cuando proceda. & Alta \\
+  RF-035 & Interfaz en español e inglés, sin soporte multiidioma avanzado dentro del alcance. & Media \\
+  RF-036 & Documentación técnica de instalación, despliegue y administración básica. & Alta \\
+  RF-037 & Documentación del mantenimiento posterior como actividad fuera del alcance del TFG. & Media \\
+  RNF-006 & Operabilidad mediante documentación suficiente para despliegue y administración básica. & Alta \\
+  RNF-007 & Mantenibilidad orientada a facilitar futuras modificaciones de categorías o metadatos. & Media \\
+  RDC-006 & Versionado y documentación de futuras evoluciones de categorías, taxonomías y metadatos. & Media \\
+  \bottomrule
+\end{longtable}
+}
+
+La V3 no sustituye al conjunto completo de la V2, sino que lo consolida. En
+particular, precisa el flujo \textit{offline-first}, refuerza la trazabilidad
+científica, explicita el estado de sincronización de las sesiones y acota el
+alcance operativo posterior a la entrega.
+
+\section{Casos de uso de referencia}
+
+Los casos de uso de referencia permiten relacionar los requisitos finales con
+interacciones concretas del sistema. No se pretende recoger todos los escenarios
+posibles, sino los flujos principales necesarios para validar el comportamiento de
+OmniLitter.
 
 \begin{itemize}
-  \item El sistema debe estar formado por una \textbf{aplicación móvil} para trabajo
-    de campo y un \textbf{portal web} para consulta, gestión y análisis.
-  \item La aplicación móvil debe permitir registrar observaciones de residuos en
-    entornos acuáticos y terrestres, incluyendo ríos, mares, playas y bosques.
-  \item Cada observación debe guardar, siempre que sea posible, posición GPS, fecha,
-    hora, tipo de residuo, cantidad y fotografía.
-  \item La aplicación debe funcionar sin conexión, ya que el trabajo de campo puede
-    realizarse en zonas con cobertura limitada.
-  \item El sistema debe permitir trabajar con grupos de investigación y roles de
-    usuario, evitando que los datos de un grupo sean visibles por otros grupos.
-  \item El portal web debe permitir visualizar los datos mediante listados, mapas y
-    métricas agregadas.
-  \item La taxonomía de residuos debe estar organizada de forma navegable y ser
-    suficientemente flexible para ampliarse en el futuro.
+\item \textbf{CU-01 -- Autenticarse en el sistema.} El usuario accede al portal
+web o a la aplicación móvil mediante credenciales válidas.
+
+\item \textbf{CU-02 -- Seleccionar grupo activo.} El usuario autenticado elige
+el grupo de trabajo sobre el que se filtrarán campañas, sesiones y observaciones.
+
+\item \textbf{CU-03 -- Crear sesión de muestreo.} El investigador de campo inicia
+una sesión, indicando campaña, entorno y metadatos de muestreo.
+
+\item \textbf{CU-04 -- Registrar observación.} El investigador registra un
+residuo indicando taxonomía, cantidad, GPS, fecha, comentarios y fotografía
+cuando proceda.
+
+\item \textbf{CU-05 -- Revisar y finalizar sesión.} El usuario comprueba las
+observaciones registradas en una sesión activa y la finaliza antes de
+sincronizarla.
+
+\item \textbf{CU-06 -- Sincronizar datos pendientes.} El usuario o el sistema
+sube a la base de datos principal las sesiones y observaciones pendientes cuando
+existe conexión.
+
+\item \textbf{CU-07 -- Consultar sesiones y observaciones.} El usuario autorizado
+revisa desde el portal web sesiones, observaciones, filtros, mapas y métricas
+agregadas.
+
+\item \textbf{CU-08 -- Administrar usuarios y grupos.} Un administrador gestiona
+usuarios, grupos, membresías y roles dentro del alcance implementado.
+
+\item \textbf{CU-09 -- Exportar datos.} Un usuario autorizado exporta los datos
+recopilados para su análisis posterior en herramientas externas.
+
+\item \textbf{CU-10 -- Desplegar y operar el sistema.} Una persona con perfil
+técnico utiliza la documentación del proyecto para instalar, desplegar y
+administrar la plataforma de forma básica.
 \end{itemize}
 
-\subsubsection{Reunión de validación de mockups}
+\section{Requisitos finales consolidados}
 
-Una vez generados los mockups funcionales, se realizó una segunda reunión para
-contrastar con el cliente si los flujos planteados respondían correctamente a sus
-necesidades. En esta revisión se comprobó que los prototipos permitían representar
-los procesos principales del sistema: autenticación, selección de grupo, creación de
-sesiones de muestreo, registro de observaciones, consulta de mapas y visualización
-de datos desde el portal.
+En esta sección se presenta la versión final consolidada de requisitos. Para cada
+bloque se introduce brevemente el caso de uso correspondiente y, a continuación,
+se describen los requisitos asociados mediante tarjetas.
 
-La reunión no introdujo una lista cerrada de nuevos requisitos funcionales, pero sí
-sirvió para confirmar la importancia de tres aspectos que debían mantenerse en el
-diseño final:
+\subsection{CU-01 -- Autenticarse en el sistema}
+
+Este caso de uso permite que un usuario acceda al sistema desde el portal web o
+desde la aplicación móvil. Es la base para aplicar permisos, acceder a grupos de
+trabajo y registrar actividad asociada a una cuenta concreta.
+
+\begin{requisitocard}{RF-001 -- Inicio de sesión en portal web y aplicación móvil}
+
+\textbf{Tipo:} funcional.
+
+\textbf{Prioridad:} crítica.
+
+\textbf{Caso de uso asociado:} CU-01.
+
+\textbf{Descripción:} el sistema deberá permitir el inicio de sesión de usuarios
+en el portal web y en la aplicación móvil.
+
+\textbf{Criterio de aceptación:} un usuario con credenciales válidas puede acceder
+al sistema desde ambas plataformas y visualizar las funcionalidades
+correspondientes a su perfil.
+
+\end{requisitocard}
+
+\begin{requisitocard}{RF-002 -- Cierre de sesión y revocación local}
+
+\textbf{Tipo:} funcional.
+
+\textbf{Prioridad:} alta.
+
+\textbf{Caso de uso asociado:} CU-01.
+
+\textbf{Descripción:} el sistema deberá permitir el cierre de sesión y la
+revocación de la sesión local.
+
+\textbf{Criterio de aceptación:} el usuario puede cerrar sesión y no puede acceder
+a zonas protegidas sin autenticarse de nuevo.
+
+\end{requisitocard}
+
+\subsection{CU-02 -- Seleccionar grupo activo}
+
+Este caso de uso permite que un usuario que pertenece a uno o varios grupos pueda
+trabajar sobre un contexto concreto. El grupo activo determina qué campañas,
+sesiones, observaciones, métricas y acciones están disponibles.
+
+\begin{requisitocard}{RF-004 -- Roles y control de acceso por grupo}
+
+\textbf{Tipo:} funcional.
+
+\textbf{Prioridad:} crítica.
+
+\textbf{Caso de uso asociado:} CU-02, CU-07 y CU-08.
+
+\textbf{Descripción:} el sistema deberá soportar roles y control de acceso por
+grupo, garantizando que cada usuario solo pueda acceder a las funcionalidades y
+datos permitidos dentro del grupo correspondiente.
+
+\textbf{Criterio de aceptación:} las funcionalidades visibles y las operaciones
+permitidas varían según el rol del usuario dentro del grupo activo.
+
+\end{requisitocard}
+
+\begin{requisitocard}{RF-006 -- Selección de grupo activo}
+
+\textbf{Tipo:} funcional.
+
+\textbf{Prioridad:} alta.
+
+\textbf{Caso de uso asociado:} CU-02.
+
+\textbf{Descripción:} el sistema deberá permitir seleccionar un grupo activo para
+filtrar datos y acciones.
+
+\textbf{Criterio de aceptación:} las campañas, sesiones, observaciones y métricas
+mostradas se corresponden con el grupo activo seleccionado.
+
+\end{requisitocard}
+
+\subsection{CU-03 -- Crear sesión de muestreo}
+
+Este caso de uso representa el inicio del trabajo de campo. Antes de registrar
+observaciones individuales, el investigador crea una sesión de muestreo que
+almacena el contexto de la actividad, como campaña, entorno, parámetros de
+muestreo, ubicación inicial y metadatos asociados.
+
+\begin{requisitocard}{RF-007 -- Trabajo por sesiones de muestreo}
+
+\textbf{Tipo:} funcional.
+
+\textbf{Prioridad:} crítica.
+
+\textbf{Caso de uso asociado:} CU-03.
+
+\textbf{Descripción:} la aplicación móvil deberá organizar el trabajo de campo
+mediante sesiones de muestreo.
+
+\textbf{Criterio de aceptación:} el usuario puede crear una sesión y asociar a
+ella las observaciones registradas durante el muestreo.
+
+\end{requisitocard}
+
+\begin{requisitocard}{RF-008 -- Captura de coordenadas GPS}
+
+\textbf{Tipo:} funcional.
+
+\textbf{Prioridad:} crítica.
+
+\textbf{Caso de uso asociado:} CU-03 y CU-04.
+
+\textbf{Descripción:} la aplicación móvil deberá capturar coordenadas GPS al
+iniciar sesiones de muestreo y al registrar observaciones.
+
+\textbf{Criterio de aceptación:} las sesiones y observaciones almacenan latitud y
+longitud cuando el dispositivo dispone de permisos y señal GPS suficiente.
+
+\end{requisitocard}
+
+\begin{requisitocard}{RF-009 -- Metadatos de muestreo}
+
+\textbf{Tipo:} funcional.
+
+\textbf{Prioridad:} alta.
+
+\textbf{Caso de uso asociado:} CU-03.
+
+\textbf{Descripción:} el sistema deberá permitir registrar metadatos de muestreo,
+como entorno, parámetros del transecto, duración o protocolo utilizado.
+
+\textbf{Criterio de aceptación:} la sesión queda asociada a los metadatos
+necesarios para interpretar correctamente los datos recopilados.
+
+\end{requisitocard}
+
+\subsection{CU-04 -- Registrar observación}
+
+Este caso de uso constituye el flujo principal de la aplicación móvil. Durante una
+sesión de muestreo, el investigador registra un residuo observado, seleccionando
+su tipo dentro de la taxonomía, indicando cantidad y asociando información de
+ubicación, fecha, comentarios y fotografías cuando proceda.
+
+\begin{requisitocard}{RF-010 -- Fotografías asociadas a observaciones}
+
+\textbf{Tipo:} funcional.
+
+\textbf{Prioridad:} alta.
+
+\textbf{Caso de uso asociado:} CU-04.
+
+\textbf{Descripción:} la aplicación móvil deberá permitir adjuntar fotografías a
+una observación.
+
+\textbf{Criterio de aceptación:} el usuario puede capturar o seleccionar una
+fotografía y esta queda vinculada a la observación correspondiente.
+
+\end{requisitocard}
+
+\begin{requisitocard}{RF-012 -- Navegación por taxonomía jerárquica}
+
+\textbf{Tipo:} funcional.
+
+\textbf{Prioridad:} crítica.
+
+\textbf{Caso de uso asociado:} CU-04.
+
+\textbf{Descripción:} la aplicación móvil deberá permitir navegar por una
+taxonomía jerárquica de residuos.
+
+\textbf{Criterio de aceptación:} el usuario puede seleccionar un tipo de residuo
+desde una estructura organizada por categorías y subcategorías.
+
+\end{requisitocard}
+
+\begin{requisitocard}{RF-015 -- Cantidad observada}
+
+\textbf{Tipo:} funcional.
+
+\textbf{Prioridad:} crítica.
+
+\textbf{Caso de uso asociado:} CU-04.
+
+\textbf{Descripción:} el sistema deberá registrar la cantidad observada como un
+valor entero positivo.
+
+\textbf{Criterio de aceptación:} no se permite guardar una observación con cantidad
+vacía, negativa o igual a cero.
+
+\end{requisitocard}
+
+\subsection{CU-05 -- Revisar y finalizar sesión}
+
+Este caso de uso permite revisar la información registrada antes de cerrar una
+sesión de muestreo. La revisión es importante para detectar errores antes de
+sincronizar los datos con el sistema central.
+
+\begin{requisitocard}{RF-020 -- Revisión de sesión antes de finalizarla}
+
+\textbf{Tipo:} funcional.
+
+\textbf{Prioridad:} alta.
+
+\textbf{Caso de uso asociado:} CU-05.
+
+\textbf{Descripción:} la aplicación móvil deberá permitir revisar una sesión antes
+de finalizarla, comprobando las observaciones registradas antes de su
+sincronización o envío al servidor.
+
+\textbf{Criterio de aceptación:} el usuario puede consultar las observaciones de
+una sesión activa y comprobar su contenido antes de cerrarla.
+
+\end{requisitocard}
+
+\begin{requisitocard}{RF-024 -- Finalización de sesiones activas}
+
+\textbf{Tipo:} funcional.
+
+\textbf{Prioridad:} alta.
+
+\textbf{Caso de uso asociado:} CU-05 y CU-06.
+
+\textbf{Descripción:} la aplicación móvil deberá permitir finalizar sesiones
+activas antes de sincronizarlas cuando sea necesario.
+
+\textbf{Criterio de aceptación:} una sesión activa puede cerrarse desde el flujo de
+revisión o sincronización antes de enviarse al servidor.
+
+\end{requisitocard}
+
+\subsection{CU-06 -- Sincronizar datos pendientes}
+
+Este caso de uso cubre el funcionamiento offline y la sincronización posterior de
+los datos. Permite que las sesiones y observaciones registradas sin conexión se
+mantengan almacenadas localmente hasta que puedan enviarse al servidor.
+
+\begin{requisitocard}{RF-021 -- Estado de sincronización de sesiones}
+
+\textbf{Tipo:} funcional.
+
+\textbf{Prioridad:} alta.
+
+\textbf{Caso de uso asociado:} CU-06.
+
+\textbf{Descripción:} la aplicación móvil deberá mostrar el estado de
+sincronización de cada sesión, diferenciando sesiones sincronizadas, pendientes,
+activas o con error.
+
+\textbf{Criterio de aceptación:} el usuario puede identificar claramente el estado
+de cada sesión desde la interfaz de sincronización.
+
+\end{requisitocard}
+
+\begin{requisitocard}{RF-022 -- Funcionamiento offline completo}
+
+\textbf{Tipo:} funcional.
+
+\textbf{Prioridad:} crítica.
+
+\textbf{Caso de uso asociado:} CU-03, CU-04 y CU-06.
+
+\textbf{Descripción:} la aplicación móvil deberá permitir la captura sin conexión
+durante el trabajo de campo, almacenando localmente sesiones, observaciones,
+fotografías y coordenadas GPS.
+
+\textbf{Criterio de aceptación:} el usuario puede crear sesiones y observaciones
+sin conexión, quedando los datos disponibles para sincronización posterior.
+
+\end{requisitocard}
+
+\begin{requisitocard}{RF-023 -- Sincronización automática o manual}
+
+\textbf{Tipo:} funcional.
+
+\textbf{Prioridad:} crítica.
+
+\textbf{Caso de uso asociado:} CU-06.
+
+\textbf{Descripción:} el sistema deberá disponer de una cola de sincronización y
+permitir la subida de datos pendientes al recuperar conectividad, incluyendo
+sincronización automática o manual sin pérdida de datos.
+
+\textbf{Criterio de aceptación:} los registros pendientes se envían al servidor
+cuando existe conexión y permanecen disponibles si se produce un error.
+
+\end{requisitocard}
+
+\begin{requisitocard}{RF-025 -- Pantalla de sincronización}
+
+\textbf{Tipo:} funcional.
+
+\textbf{Prioridad:} alta.
+
+\textbf{Caso de uso asociado:} CU-06.
+
+\textbf{Descripción:} la aplicación móvil deberá incluir una pantalla de
+sincronización con detalle de sesiones pendientes y número de ítems u
+observaciones asociados.
+
+\textbf{Criterio de aceptación:} el usuario puede consultar qué sesiones están
+pendientes, cuáles están sincronizadas y cuántas observaciones contiene cada una.
+
+\end{requisitocard}
+
+\subsection{CU-07 -- Consultar sesiones y observaciones}
+
+Este caso de uso representa la explotación de la información desde el portal web.
+Los usuarios autorizados pueden consultar sesiones, observaciones, mapas y
+métricas agregadas, siempre respetando el aislamiento por grupo.
+
+\begin{requisitocard}{RF-027 -- Listados de sesiones y observaciones con filtros}
+
+\textbf{Tipo:} funcional.
+
+\textbf{Prioridad:} alta.
+
+\textbf{Caso de uso asociado:} CU-07.
+
+\textbf{Descripción:} el portal web deberá permitir consultar sesiones y
+observaciones mediante listados y filtros.
+
+\textbf{Criterio de aceptación:} un usuario autorizado puede filtrar datos por
+grupo, campaña, sesión, entorno u otros criterios disponibles.
+
+\end{requisitocard}
+
+\begin{requisitocard}{RF-028 -- Visualización en mapa con filtros}
+
+\textbf{Tipo:} funcional.
+
+\textbf{Prioridad:} alta.
+
+\textbf{Caso de uso asociado:} CU-07.
+
+\textbf{Descripción:} el portal web deberá permitir visualizar observaciones en un
+mapa o vista geográfica, con filtros por entorno, campaña, sesión o localización
+cuando proceda.
+
+\textbf{Criterio de aceptación:} las observaciones geolocalizadas pueden
+consultarse espacialmente y filtrarse según los criterios definidos.
+
+\end{requisitocard}
+
+\begin{requisitocard}{RF-030 -- Dashboard con métricas agregadas}
+
+\textbf{Tipo:} funcional.
+
+\textbf{Prioridad:} media.
+
+\textbf{Caso de uso asociado:} CU-07.
+
+\textbf{Descripción:} el portal web deberá mostrar un dashboard con métricas
+agregadas.
+
+\textbf{Criterio de aceptación:} el usuario puede visualizar indicadores, gráficos
+o resúmenes calculados a partir de las observaciones almacenadas.
+
+\end{requisitocard}
+
+\subsection{CU-08 -- Administrar usuarios y grupos}
+
+Este caso de uso permite a los usuarios autorizados administrar la estructura
+organizativa de la plataforma, incluyendo usuarios, grupos, membresías y roles.
+
+\begin{requisitocard}{RF-005 -- Creación de grupos y asociación de usuarios}
+
+\textbf{Tipo:} funcional.
+
+\textbf{Prioridad:} crítica.
+
+\textbf{Caso de uso asociado:} CU-08.
+
+\textbf{Descripción:} el sistema deberá permitir la creación de grupos y la
+asociación de usuarios a dichos grupos.
+
+\textbf{Criterio de aceptación:} un usuario con permisos suficientes puede crear
+un grupo y añadir o eliminar miembros.
+
+\end{requisitocard}
+
+\begin{requisitocard}{RF-032 -- Gestión de usuarios desde el portal}
+
+\textbf{Tipo:} funcional.
+
+\textbf{Prioridad:} alta.
+
+\textbf{Caso de uso asociado:} CU-08.
+
+\textbf{Descripción:} el portal web deberá permitir la gestión de usuarios por
+parte de perfiles autorizados.
+
+\textbf{Criterio de aceptación:} un usuario autorizado puede consultar, crear,
+editar o desactivar usuarios según los permisos definidos.
+
+\end{requisitocard}
+
+\begin{requisitocard}{RF-033 -- Gestión de grupos y membresías}
+
+\textbf{Tipo:} funcional.
+
+\textbf{Prioridad:} alta.
+
+\textbf{Caso de uso asociado:} CU-08.
+
+\textbf{Descripción:} el portal web deberá permitir la gestión de grupos y
+membresías.
+
+\textbf{Criterio de aceptación:} un administrador puede gestionar miembros, roles y
+asociaciones entre usuarios y grupos.
+
+\end{requisitocard}
+
+\subsection{CU-09 -- Exportar datos}
+
+Este caso de uso permite reutilizar la información registrada en OmniLitter para
+análisis externo. La exportación resulta importante para estudios científicos,
+informes y tratamiento posterior de los datos.
+
+\begin{requisitocard}{RF-031 -- Exportación de datos}
+
+\textbf{Tipo:} funcional.
+
+\textbf{Prioridad:} media.
+
+\textbf{Caso de uso asociado:} CU-09.
+
+\textbf{Descripción:} el sistema deberá permitir exportar datos en un formato
+adecuado para análisis posterior, preferentemente CSV.
+
+\textbf{Criterio de aceptación:} un usuario autorizado puede obtener un fichero
+exportable con los registros seleccionados.
+
+\end{requisitocard}
+
+\subsection{CU-10 -- Desplegar y operar el sistema}
+
+Este caso de uso no representa una interacción habitual de los usuarios finales,
+sino una necesidad operativa identificada tras la última reunión. El cliente
+planteó dudas sobre cómo mantener o modificar el sistema en el futuro, por lo que
+se decidió documentar el despliegue y la administración básica, dejando el
+mantenimiento evolutivo fuera del alcance del TFG.
+
+\begin{requisitocard}{RF-036 -- Documentación técnica de instalación y despliegue}
+
+\textbf{Tipo:} funcional de soporte.
+
+\textbf{Prioridad:} alta.
+
+\textbf{Caso de uso asociado:} CU-10.
+
+\textbf{Descripción:} el proyecto deberá incluir documentación técnica de
+instalación, despliegue y administración básica del sistema.
+
+\textbf{Criterio de aceptación:} una persona con perfil técnico dispone de
+instrucciones suficientes para desplegar, configurar y administrar de forma básica
+la plataforma.
+
+\end{requisitocard}
+
+\begin{requisitocard}{RF-037 -- Mantenimiento posterior fuera del alcance}
+
+\textbf{Tipo:} documentación de alcance.
+
+\textbf{Prioridad:} media.
+
+\textbf{Caso de uso asociado:} CU-10 y trabajo futuro.
+
+\textbf{Descripción:} el proyecto deberá documentar que los cambios futuros de
+categorías, taxonomías o metadatos requieren mantenimiento técnico posterior y
+quedan fuera del alcance de desarrollo del TFG.
+
+\textbf{Criterio de aceptación:} la memoria identifica explícitamente estas
+actividades como limitaciones de alcance o líneas de trabajo futuro.
+
+\end{requisitocard}
+
+\section{Requisitos no funcionales consolidados}
+
+Además de los requisitos funcionales, OmniLitter debe cumplir una serie de
+condiciones de calidad que afectan al sistema en su conjunto.
+
+\begin{requisitocard}{RNF-001 -- Seguridad}
+
+\textbf{Prioridad:} crítica.
+
+\textbf{Descripción:} la comunicación entre clientes y backend deberá realizarse
+mediante HTTPS/TLS en entornos de despliegue, y el acceso a datos deberá estar
+protegido mediante autenticación y autorización por grupo.
+
+\end{requisitocard}
+
+\begin{requisitocard}{RNF-002 -- Aislamiento de datos}
+
+\textbf{Prioridad:} crítica.
+
+\textbf{Descripción:} los usuarios solo podrán acceder a datos de los grupos a los
+que pertenecen. Esta separación deberá aplicarse en listados, mapas, métricas,
+campañas y observaciones.
+
+\end{requisitocard}
+
+\begin{requisitocard}{RNF-003 -- Offline-first}
+
+\textbf{Prioridad:} crítica.
+
+\textbf{Descripción:} las operaciones principales de captura en campo no deberán
+depender de conectividad.
+
+\end{requisitocard}
+
+\begin{requisitocard}{RNF-004 -- Fiabilidad de sincronización}
+
+\textbf{Prioridad:} crítica.
+
+\textbf{Descripción:} la sincronización deberá ser reintentable y no deberá perder
+datos ante cortes de red, cierres inesperados de la aplicación o sesiones
+pendientes.
+
+\end{requisitocard}
+
+\begin{requisitocard}{RNF-005 -- Usabilidad en campo}
+
+\textbf{Prioridad:} alta.
+
+\textbf{Descripción:} la aplicación móvil deberá facilitar capturas rápidas,
+revisión de sesiones y comprensión clara del estado pendiente, activo,
+sincronizado o con error.
+
+\end{requisitocard}
+
+\begin{requisitocard}{RNF-006 -- Operabilidad}
+
+\textbf{Prioridad:} alta.
+
+\textbf{Descripción:} el sistema deberá acompañarse de documentación suficiente
+para que una persona con perfil técnico pueda instalar, desplegar, configurar y
+administrar la plataforma de forma básica.
+
+\end{requisitocard}
+
+\begin{requisitocard}{RNF-007 -- Mantenibilidad}
+
+\textbf{Prioridad:} media.
+
+\textbf{Descripción:} el diseño deberá facilitar futuras modificaciones de
+categorías, taxonomías o metadatos, aunque dichas modificaciones quedan fuera del
+mantenimiento posterior incluido en el TFG.
+
+\end{requisitocard}
+
+\begin{requisitocard}{RNF-008 -- Trazabilidad}
+
+\textbf{Prioridad:} alta.
+
+\textbf{Descripción:} el sistema y la memoria deberán mantener relación entre
+requisitos, casos de uso, decisiones de diseño y pruebas, especialmente en
+sincronización, permisos y datos científicos.
+
+\end{requisitocard}
+
+\section{Requisitos de datos científicos consolidados}
+
+Al tratarse de una herramienta para captura y análisis de datos científicos,
+OmniLitter debe preservar suficiente información contextual para que las
+observaciones puedan interpretarse y compararse posteriormente.
+
+\begin{requisitocard}{RDC-001 -- Taxonomía jerárquica con códigos estables}
+
+\textbf{Prioridad:} crítica.
+
+\textbf{Descripción:} la taxonomía de residuos deberá presentarse de forma
+jerárquica y conservar el código identificador de cada tipo de residuo.
+
+\end{requisitocard}
+
+\begin{requisitocard}{RDC-002 -- Metadatos de muestreo}
+
+\textbf{Prioridad:} crítica.
+
+\textbf{Descripción:} las sesiones deberán almacenar metadatos de muestreo
+suficientes para interpretar los datos recopilados.
+
+\end{requisitocard}
+
+\begin{requisitocard}{RDC-003 -- Metadatos de fotografías}
+
+\textbf{Prioridad:} media.
+
+\textbf{Descripción:} las fotografías deberán conservar metadatos relevantes
+cuando estén disponibles, como fecha de captura, dimensiones, formato o
+coordenadas EXIF.
+
+\end{requisitocard}
+
+\begin{requisitocard}{RDC-004 -- Exportación científica}
+
+\textbf{Prioridad:} media.
+
+\textbf{Descripción:} los datos exportados deberán incluir campos suficientes para
+análisis posterior y, cuando sea posible, un diccionario de columnas y unidades.
+
+\end{requisitocard}
+
+\begin{requisitocard}{RDC-005 -- Versionado de taxonomía}
+
+\textbf{Prioridad:} alta.
+
+\textbf{Descripción:} la versión de taxonomía utilizada deberá quedar asociada a
+sesiones y observaciones para garantizar reproducibilidad.
+
+\end{requisitocard}
+
+\begin{requisitocard}{RDC-006 -- Evolución futura de categorías y metadatos}
+
+\textbf{Prioridad:} media.
+
+\textbf{Descripción:} las futuras modificaciones de categorías, taxonomías o
+metadatos deberán documentarse y versionarse para no comprometer la comparabilidad
+de los datos históricos.
+
+\end{requisitocard}
+
+\section{Trazabilidad final}
+
+La trazabilidad permite justificar el origen de los requisitos consolidados y
+relacionar cada decisión con las fuentes empleadas durante el proyecto.
+
+\subsection*{Trazabilidad desde la V1}
+
+El registro inicial de requisitos permitió identificar las necesidades base del
+sistema: registro de residuos, GPS, fotografías, fecha y hora, funcionamiento
+offline, sincronización, usuarios, grupos, roles, mapa, estadísticas, privacidad,
+seguridad, compatibilidad, taxonomía y exportación. Estos requisitos se
+transformaron posteriormente en los bloques funcionales de captura de campo,
+gestión de usuarios y grupos, consulta en portal, sincronización y requisitos
+científicos.
+
+\subsection*{Trazabilidad desde la V2}
+
+La validación mediante mockups permitió refinar los requisitos iniciales y
+organizarlos según los flujos reales del sistema. De esta sesión derivan la
+selección de grupo activo, la organización por sesiones de muestreo, la revisión
+de sesión, la cola de sincronización, los listados con filtros, el dashboard y la
+separación formal entre requisitos funcionales, no funcionales y de datos
+científicos.
+
+\subsection*{Trazabilidad desde la V3}
+
+La última reunión permitió consolidar el flujo offline y de sincronización. De
+esta sesión derivan de forma explícita el estado de sincronización de sesiones, la
+pantalla de sincronización, la finalización de sesiones activas antes de
+sincronizar, el refinamiento de la vista de mapa con filtros y la aclaración de
+la documentación técnica y del mantenimiento posterior fuera del alcance del TFG.
+
+\subsection*{Relación entre fuentes, cambios y requisitos finales}
 
 \begin{itemize}
-  \item La aplicación móvil debía seguir siendo prioritaria para el trabajo de campo
-    y conservar el enfoque \textit{offline-first}.
-  \item El portal web debía mantener una separación clara entre datos de distintos
-    grupos de investigación.
-  \item La captura de datos debía preservar metadatos científicos suficientes para
-    que las observaciones pudieran analizarse posteriormente.
+\item La necesidad inicial de registrar residuos se consolida en RF-007, RF-008,
+RF-010, RF-012, RF-015, RDC-001 y RDC-002.
+
+\item La necesidad inicial de trabajar sin conexión se consolida en RF-021,
+RF-022, RF-023, RF-024, RF-025, RNF-003 y RNF-004.
+
+\item La necesidad inicial de gestionar usuarios, grupos y privacidad se
+consolida en RF-001, RF-002, RF-004, RF-005, RF-006, RF-032, RF-033, RNF-001
+y RNF-002.
+
+\item La necesidad inicial de consultar y analizar datos se consolida en RF-027,
+RF-028, RF-030, RF-031 y RDC-004.
+
+\item La necesidad de preservar valor científico se consolida en RDC-001,
+RDC-002, RDC-003, RDC-004, RDC-005 y RDC-006.
+
+\item Las dudas planteadas en la última reunión sobre despliegue y mantenimiento
+se consolidan en RF-036, RF-037, RNF-006 y RNF-007.
 \end{itemize}
 
-\section{Requisitos funcionales}
-
-Los requisitos funcionales definen el comportamiento esperado del sistema. A
-continuación se resumen los más relevantes para el alcance del proyecto:
-
-\begin{table}[H]
-  \centering
-  \caption{Resumen de requisitos funcionales principales.}
-  \label{tab:req_funcionales_resumen}
-  \begin{tabularx}{\textwidth}{lXl}
-    \toprule
-    \textbf{ID} & \textbf{Descripción} & \textbf{Prioridad} \\
-    \midrule
-    RF-001 & Inicio de sesión en portal web y aplicación móvil. & Crítica \\
-    RF-002 & Cierre de sesión y revocación de sesión local. & Alta \\
-    RF-004 & Soporte de roles y control de acceso por grupo. & Crítica \\
-    RF-005 & Creación de grupos y asociación de usuarios a grupos. & Crítica \\
-    RF-006 & Selección de grupo activo para filtrar datos y acciones. & Alta \\
-    RF-007 & Trabajo por sesiones de muestreo en la aplicación móvil. & Crítica \\
-    RF-008 & Captura de coordenadas GPS al iniciar sesiones de muestreo y observaciones. & Crítica \\
-    RF-010 & Adjuntar fotografías a una observación. & Alta \\
-    RF-012 & Navegación por taxonomía jerárquica de residuos. & Crítica \\
-    RF-015 & Registro de cantidad observada como entero positivo. & Crítica \\
-    RF-020 & Revisión de sesión antes de finalizarla. & Alta \\
-    RF-022 & Funcionamiento sin conexión durante la captura de campo. & Crítica \\
-    RF-023 & Cola de sincronización y subida automática al recuperar conectividad. & Crítica \\
-    RF-027 & Listado de sesiones y observaciones con filtros en el portal. & Alta \\
-    RF-028 & Visualización de observaciones en mapa. & Alta \\
-    RF-030 & Dashboard con métricas agregadas. & Media \\
-    RF-032 & Gestión de usuarios desde el portal. & Alta \\
-    RF-033 & Gestión de grupos y membresías desde el portal. & Alta \\
-    RF-035 & Soporte de interfaz en español e inglés. & Media \\
-    \bottomrule
-  \end{tabularx}
-\end{table}
-
-\section{Requisitos no funcionales}
-
-Los requisitos no funcionales recogen restricciones de calidad, seguridad y
-operación. Los más relevantes son:
-
-\begin{itemize}
-  \item \textbf{Seguridad:} toda la comunicación entre clientes y backend debe
-    realizarse mediante HTTPS/TLS.
-  \item \textbf{Aislamiento de datos:} los usuarios solo podrán acceder a datos de
-    los grupos a los que pertenecen.
-  \item \textbf{Offline-first:} las operaciones de captura en campo no deben depender
-    de conectividad.
-  \item \textbf{Fiabilidad de sincronización:} los datos no deben perderse ante
-    cortes de red o cierres inesperados de la aplicación.
-  \item \textbf{Usabilidad:} la aplicación móvil debe estar optimizada para uso en
-    campo, con botones claros, formularios rápidos y navegación simple.
-  \item \textbf{Trazabilidad:} el sistema debe mantener logs de operaciones
-    relevantes y relacionar requisitos con pruebas.
-\end{itemize}
-
-\section{Requisitos de datos científicos}
-
-Al tratarse de una herramienta para captura y análisis de datos científicos, el
-sistema debe preservar suficiente información contextual para que los datos sean
-interpretables y reproducibles. En particular:
-
-\begin{itemize}
-  \item La taxonomía debe presentarse de forma jerárquica sin perder el código
-    identificador de cada tipo de residuo.
-  \item Las sesiones deben almacenar metadatos de muestreo como entorno, ancho de
-    transecto, duración, protocolo, versión de aplicación y versión de taxonomía.
-  \item Las fotografías deben conservar metadatos relevantes cuando estén
-    disponibles, como fecha de captura, dimensiones o coordenadas EXIF.
-  \item Los datos exportados deben incluir campos suficientes para análisis
-    posteriores y, cuando sea posible, un diccionario de columnas y unidades.
-  \item La versión de taxonomía utilizada debe quedar asociada a las sesiones y
-    observaciones para garantizar reproducibilidad.
-\end{itemize}
-
-\section{Casos de uso principales}
-
-\section{Trazabilidad entre requisitos y fuentes}
-
-La tabla~\ref{tab:trazabilidad_reuniones} resume la relación entre las reuniones con
-el cliente y los requisitos derivados.
-
-\begin{table}[H]
-  \centering
-  \caption{Trazabilidad entre reuniones con el cliente y requisitos.}
-  \label{tab:trazabilidad_reuniones}
-  \begin{tabularx}{\textwidth}{p{3cm}X p{3cm}}
-    \toprule
-    \textbf{Fuente} & \textbf{Necesidad identificada} & \textbf{Requisitos relacionados} \\
-    \midrule
-    Reunión inicial & Aplicación móvil de campo y portal web de gestión. & RF-001, RF-027, RF-030 \\
-    Reunión inicial & Captura de observaciones con GPS, fecha, tipo de residuo, cantidad y fotografía. & RF-008, RF-010, RF-012, RF-015 \\
-    Reunión inicial & Funcionamiento sin conexión y sincronización posterior. & RF-022, RF-023, fiabilidad de sincronización \\
-    Reunión inicial & Gestión de grupos, usuarios y privacidad de datos. & RF-004, RF-005, RF-006, RF-032, RF-033, aislamiento de datos \\
-    Validación de mockups & Confirmación del enfoque \textit{offline-first} y de la captura por sesiones. & RF-007, RF-020, RF-022, RF-023 \\
-    Validación de mockups & Confirmación de la separación por grupos y la trazabilidad científica. & RF-004, RF-006, requisitos de datos científicos \\
-    \bottomrule
-  \end{tabularx}
-\end{table}
-
-El detalle ampliado de requisitos y de su validación con mockups se
-incluye en el Anexo~\ref{sec:anexo_requisitos_detallados}.
+En conclusión, la versión final de requisitos mantiene el objetivo principal de
+OmniLitter: desarrollar una plataforma formada por aplicación móvil, portal web y
+backend centralizado para la captura, gestión y análisis de datos de residuos. La
+evolución respecto a las versiones iniciales se centra en precisar el flujo
+offline y de sincronización, reforzar el estado de las sesiones, completar la
+trazabilidad científica y aclarar el alcance operativo posterior a la entrega.
