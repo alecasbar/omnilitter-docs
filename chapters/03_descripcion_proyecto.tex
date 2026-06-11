@@ -6,11 +6,11 @@ OmniLitter es una plataforma multiplataforma desarrollada con el objetivo de fac
 
 La finalidad de la plataforma no es únicamente contabilizar residuos, sino digitalizar y unificar la toma de datos para que las observaciones puedan convertirse en información científica comparable. Para ello, OmniLitter organiza el trabajo en campañas y sesiones de muestreo, registra metadatos de campo, utiliza categorías estandarizadas de residuos y conserva la localización y evidencias asociadas a cada observación.
 
-La arquitectura de OmniLitter se compone de tres elementos principales estrechamente integrados: una API central (backend), una aplicación móvil y un portal web. La API actúa como núcleo del sistema, gestionando la comunicación entre las distintas plataformas, el acceso a los datos y la aplicación de las reglas de negocio.
-
-La aplicación móvil constituye la herramienta de trabajo utilizada durante las campañas de monitorización. A través de ella, los usuarios pueden participar en grupos de investigación, acceder a campañas de muestreo y registrar sesiones de campo. Durante estas sesiones es posible documentar observaciones de residuos, asociando información como la localización geográfica, la clasificación taxonómica, fotografías y otros datos relevantes para su posterior análisis. Además, la aplicación está diseñada para funcionar tanto en línea como sin conexión, almacenando temporalmente la información en una base de datos local y sincronizándola posteriormente con el servidor cuando exista conexión disponible, automática o manualmente.
-
-Por su parte, el portal web actúa como centro de gestión y análisis de la información recopilada. Desde esta plataforma es posible administrar usuarios, grupos de investigación y campañas de muestreo, así como consultar los datos registrados durante las actividades de campo. Entre sus funcionalidades destaca el módulo de analítica, que permite explorar campañas, sesiones y observaciones mediante diferentes criterios de filtrado, facilitando la obtención de información útil para estudios científicos, proyectos de investigación y procesos de toma de decisiones relacionados con la gestión de residuos.
+La arquitectura de OmniLitter se compone de tres elementos principales estrechamente
+integrados: una API central, una aplicación móvil y un portal web. La aplicación
+móvil se orienta a la recogida de datos en campo, el portal web a la gestión y
+explotación de la información, y la API actúa como punto común de autenticación,
+validación, persistencia y sincronización.
 
 Esta aproximación permite conectar la recogida de datos con la evaluación de tendencias y medidas de mitigación. Al conservar datos cuantitativos, metadatos y trazabilidad por campaña, la plataforma puede apoyar comparaciones antes y después de una intervención, ayudar a identificar fuentes probables de contaminación y aportar evidencias para valorar la eficacia de políticas o acciones de reducción de residuos.
 
@@ -62,7 +62,7 @@ Sus permisos se limitan exclusivamente a los grupos en los que posee dicho rol. 
 
 El superadministrador representa el perfil con mayor nivel de autoridad dentro de OmniLitter. Su función principal consiste en administrar la plataforma a nivel global y garantizar su correcto funcionamiento.
 
-Este perfil puede gestionar usuarios, modificar roles globales, supervisar grupos de trabajo y realizar tareas de mantenimiento o soporte. A diferencia del administrador de grupo, sus permisos no se encuentran restringidos a un único grupo, sino que abarcan la totalidad del sistema.
+Este perfil puede gestionar usuarios, modificar roles globales, supervisar grupos de trabajo y realizar tareas de soporte operativo dentro de la plataforma. A diferencia del administrador de grupo, sus permisos no se encuentran restringidos a un único grupo, sino que abarcan la totalidad del sistema.
 
 Debido a su alcance, este perfil está destinado a tareas de administración y soporte de la plataforma, y no a la realización de actividades habituales de monitorización en campo.
 

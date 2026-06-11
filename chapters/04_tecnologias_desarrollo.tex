@@ -20,7 +20,7 @@ Los criterios utilizados para seleccionar las tecnologías han sido los siguient
     en el frontend como en el backend para reducir el cambio de contexto durante
     el desarrollo.
   \item \textbf{Capacidad offline:} la aplicación móvil debe poder crear sesiones,
-    observaciones y fotografías sin depender de la conexión a internet.
+    observaciones y fotografías sin depender de la conexión a Internet.
   \item \textbf{Madurez del ecosistema:} se eligen tecnologías ampliamente usadas,
     con documentación suficiente y comunidad activa.
   \item \textbf{Facilidad de despliegue:} el sistema debe poder desplegarse en
@@ -31,22 +31,22 @@ Los criterios utilizados para seleccionar las tecnologías han sido los siguient
     de campo sin rehacer la arquitectura.
 \end{itemize}
 
-\paragraph{Tecnologías empleadas en los mockups}
+\paragraph{Tecnologías empleadas en los prototipos}
 
-Durante la fase inicial se han construido dos prototipos funcionales con datos en
-memoria: un portal web y una simulación de aplicación móvil en navegador. Ambos
-prototipos permiten validar flujos de usuario con el cliente antes de desarrollar
-la versión final.
+Durante la fase inicial se construyeron prototipos funcionales con datos en
+memoria: un portal web y una simulación de la aplicación móvil en navegador. Estos
+prototipos permitieron validar flujos de usuario con el cliente antes de trasladar
+las decisiones principales a la implementación final.
 
 \begin{table}[H]
   \centering
-  \caption{Tecnologías empleadas en los mockups funcionales.}
+  \caption{Tecnologías empleadas en los prototipos funcionales.}
   \label{tab:stack_mockups}
   \begin{tabularx}{\textwidth}{lX}
     \toprule
     \textbf{Tecnología} & \textbf{Uso en el proyecto} \\
     \midrule
-    React 18 & Construcción de interfaces de usuario para el portal web y el mockup móvil. \\
+    React 18 & Construcción de interfaces de usuario para el portal web y el prototipo móvil. \\
     TypeScript & Tipado estático de componentes, rutas, estado y datos de ejemplo. \\
     Vite & Servidor de desarrollo y empaquetado rápido de los prototipos. \\
     Tailwind CSS & Sistema de estilos utilitario para construir pantallas responsive. \\
@@ -59,14 +59,14 @@ la versión final.
 
 \section{Portal web}
 
-El portal web definitivo se plantea como una aplicación \textit{Single Page
-Application} desarrollada con React, TypeScript y Vite. Su responsabilidad principal
-será permitir a investigadores y administradores consultar observaciones, gestionar
-usuarios y grupos, visualizar mapas y exportar datos.
+El portal web se plantea como una aplicación \textit{Single Page Application}
+desarrollada con React, TypeScript y Vite. Su responsabilidad principal es permitir
+a investigadores y administradores consultar observaciones, gestionar usuarios y
+grupos, visualizar mapas y exportar datos.
 
 \begin{table}[H]
   \centering
-  \caption{Stack previsto para el portal web.}
+  \caption{Stack seleccionado para el portal web.}
   \label{tab:stack_web}
   \begin{tabularx}{\textwidth}{lX}
     \toprule
@@ -75,7 +75,7 @@ usuarios y grupos, visualizar mapas y exportar datos.
     React & Construcción de componentes reutilizables y pantallas del portal. \\
     TypeScript & Definición de tipos de dominio, respuestas de API y props de componentes. \\
     Vite & Compilación, servidor de desarrollo y generación del bundle final. \\
-    Tailwind CSS & Sistema visual responsive y consistente con los mockups. \\
+    Tailwind CSS & Sistema visual responsive y consistente con los prototipos. \\
     React Router & Gestión de rutas públicas y protegidas. \\
     Axios / Fetch API & Comunicación con la API REST del backend. \\
     Leaflet / React Leaflet & Visualización geográfica de observaciones en mapas interactivos. \\
@@ -89,11 +89,11 @@ usuarios y grupos, visualizar mapas y exportar datos.
 La aplicación móvil se plantea con React Native y Expo, utilizando SQLite mediante
 el paquete \texttt{expo-sqlite} como base de datos local. El objetivo es que el
 usuario pueda completar una jornada de muestreo aunque el dispositivo no tenga
-conexión a internet.
+conexión a Internet.
 
 \begin{table}[H]
   \centering
-  \caption{Stack previsto para la aplicación móvil.}
+  \caption{Stack seleccionado para la aplicación móvil.}
   \label{tab:stack_mobile}
   \begin{tabularx}{\textwidth}{lX}
     \toprule
@@ -113,13 +113,13 @@ conexión a internet.
 
 \section{Backend y persistencia}
 
-El backend centralizará la lógica de negocio, la autenticación, el control de acceso
+El backend centraliza la lógica de negocio, la autenticación, el control de acceso
 por grupo y la sincronización de datos procedentes de dispositivos móviles. Se
 plantea como una API REST desarrollada con Node.js, Express y TypeScript.
 
 \begin{table}[H]
   \centering
-  \caption{Stack previsto para backend y persistencia.}
+  \caption{Stack seleccionado para backend y persistencia.}
   \label{tab:stack_backend}
   \begin{tabularx}{\textwidth}{lX}
     \toprule

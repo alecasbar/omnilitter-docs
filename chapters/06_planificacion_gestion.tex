@@ -17,7 +17,7 @@ La metodología seguida se basa en ciclos cortos de trabajo:
 \begin{enumerate}
   \item Recogida de necesidades con el cliente y tutores.
   \item Definición de requisitos funcionales, no funcionales y de datos científicos.
-  \item Elaboración de mockups funcionales para validar flujos de usuario.
+  \item Elaboración de prototipos funcionales para validar flujos de usuario.
   \item Revisión con el cliente y refinamiento del prototipo.
   \item Diseño de la arquitectura, base de datos y componentes del sistema.
   \item Implementación progresiva de las partes finales del proyecto.
@@ -25,7 +25,7 @@ La metodología seguida se basa en ciclos cortos de trabajo:
 
 Aunque no se ha aplicado una metodología ágil formal completa, el proyecto adopta
 una forma de trabajo incremental: cada avance genera un artefacto revisable
-(documento de requisitos, mockup, diagrama, módulo de código o capítulo de memoria)
+(documento de requisitos, prototipo, diagrama, módulo de código o capítulo de memoria)
 que se contrasta antes de continuar.
 
 \section{Herramientas de gestión}
@@ -76,11 +76,11 @@ sesiones, observaciones y clientes.
     T03 & Portal web: layout, navegación y rutas protegidas & Web & T01, T02 \\
     T04 & Portal admin: usuarios, grupos y membresías & Web y backend & T02, T03 \\
     T05 & Campañas y sesiones de muestreo en backend & Backend & T02 \\
-    T06 & App móvil: navegación principal y perfil & App móvil & T01 \\
-    T07 & App móvil: taxonomía jerárquica, búsqueda y favoritos & App móvil y backend & T06, T01 \\
-    T08 & App móvil: creación de sesión de muestreo & App móvil y backend & T05, T06 \\
+    T06 & Aplicación móvil: navegación principal y perfil & Aplicación móvil & T01 \\
+    T07 & Aplicación móvil: taxonomía jerárquica, búsqueda y favoritos & Aplicación móvil y backend & T06, T01 \\
+    T08 & Aplicación móvil: creación de sesión de muestreo & Aplicación móvil y backend & T05, T06 \\
     T09 & API de observaciones y adjuntos para captura de campo & Backend & T05, T07 \\
-    T10 & App móvil: formulario de observación & App móvil & T07, T08, T09 \\
+    T10 & Aplicación móvil: formulario de observación & Aplicación móvil & T07, T08, T09 \\
     \bottomrule
   \end{tabularx}
 \end{table}
@@ -99,8 +99,8 @@ identificar al usuario antes de aplicar permisos, seleccionar grupos de trabajo 
 registrar datos científicos asociados a una persona concreta.
 
 En el estado actual documentado del proyecto, esta tarea se materializa en los
-flujos de autenticación representados en los mockups y en el diseño de la API REST,
-donde se prevén los puntos de entrada de autenticación, renovación de sesión y
+flujos de autenticación representados en los prototipos y en el diseño de la API REST,
+donde se definen los puntos de entrada de autenticación, renovación de sesión y
 cierre de sesión mediante tokens JWT. En el portal web se contempla la existencia
 de rutas públicas y protegidas, mientras que en la aplicación móvil el acceso al
 perfil y a las pantallas principales parte igualmente de una sesión activa. La
@@ -183,7 +183,7 @@ proyecto o campaña de investigación de cada salida concreta de campo.
 
 En la documentación actual, esta tarea se refleja en el modelo relacional mediante
 las entidades \texttt{CAMPAIGN} y \texttt{SURVEY\_SESSION}, y en el contrato de API
-previsto para crear, consultar y actualizar sesiones. Las sesiones almacenan
+definido para crear, consultar y actualizar sesiones. Las sesiones almacenan
 metadatos relevantes como entorno, parámetros de muestreo, posición inicial,
 duración, versión de taxonomía y estado de sincronización. Esta información resulta
 necesaria para que los datos registrados sean interpretables y reproducibles.
@@ -193,7 +193,7 @@ y usuarios con permisos adecuados. Su impacto en el producto final es central:
 convierte la captura de residuos en un proceso científicamente contextualizado y
 prepara las dependencias necesarias para la creación de observaciones y adjuntos.
 
-\subsubsection*{T06 -- App móvil: navegación principal y perfil}
+\subsubsection*{T06 -- Aplicación móvil: navegación principal y perfil}
 
 La sexta tarea traslada la base de autenticación a la aplicación móvil. Su objetivo
 funcional es establecer la navegación principal de la app y una pantalla de perfil
@@ -212,7 +212,7 @@ en el producto final consiste en proporcionar una estructura estable para que el
 usuario pueda iniciar sesiones, consultar su estado y acceder posteriormente a la
 taxonomía, la captura de observaciones y la sincronización.
 
-\subsubsection*{T07 -- App móvil: taxonomía jerárquica, búsqueda y favoritos}
+\subsubsection*{T07 -- Aplicación móvil: taxonomía jerárquica, búsqueda y favoritos}
 
 La séptima tarea tiene como objetivo funcional incorporar en la aplicación móvil la
 taxonomía de residuos de forma navegable, con soporte para búsqueda y elementos
@@ -233,7 +233,7 @@ impacto en el producto final es doble: mejora la usabilidad durante el trabajo d
 campo y refuerza la calidad científica de los datos al mantener una clasificación
 controlada y trazable.
 
-\subsubsection*{T08 -- App móvil: creación de sesión de muestreo}
+\subsubsection*{T08 -- Aplicación móvil: creación de sesión de muestreo}
 
 La octava tarea permite iniciar desde la aplicación móvil una nueva sesión de
 muestreo. Su objetivo funcional es que el investigador pueda registrar el contexto
@@ -259,7 +259,7 @@ proporcionar la API necesaria para registrar observaciones y asociarles adjuntos
 principalmente fotografías tomadas durante la captura de campo.
 
 En el diseño actual, esta tarea se refleja en las entidades \texttt{OBSERVATION} y
-\texttt{PHOTO}, así como en los endpoints previstos para crear observaciones,
+\texttt{PHOTO}, así como en los endpoints definidos para crear observaciones,
 listar observaciones de una sesión y subir fotografías mediante peticiones
 multipart. Las observaciones incluyen el tipo de residuo, cantidad, atributos
 descriptivos, coordenadas, fecha, comentarios, versión de taxonomía y estado de
@@ -271,7 +271,7 @@ porque el tipo de residuo procede de la taxonomía. Su impacto en el producto fi
 es convertir el backend en receptor de los datos científicos de campo, preparando
 la posterior visualización en el portal, la sincronización y las exportaciones.
 
-\subsubsection*{T10 -- App móvil: formulario de observación}
+\subsubsection*{T10 -- Aplicación móvil: formulario de observación}
 
 La décima tarea completa el primer flujo funcional de campo al incorporar en la
 aplicación móvil el formulario de observación. Su objetivo funcional es permitir
@@ -281,7 +281,7 @@ para su análisis posterior.
 La memoria recoge este flujo como una secuencia en la que el investigador selecciona
 un elemento de la taxonomía, introduce cantidad y atributos complementarios, añade
 comentarios y, cuando procede, incorpora una fotografía geolocalizada. El formulario
-se apoya en la navegación y en la sesión activa de la app móvil, y se relaciona con
+se apoya en la navegación y en la sesión activa de la aplicación móvil, y se relaciona con
 el backend a través de la API de observaciones y adjuntos. En un escenario
 \textit{offline-first}, los registros se almacenan localmente y se preparan para su
 sincronización diferida.
@@ -309,11 +309,11 @@ de la información registrada.
     \toprule
     \textbf{ID} & \textbf{Funcionalidad} & \textbf{Área} & \textbf{Dependencias} \\
     \midrule
-    T11 & App móvil: GPS en sesión y observación & App móvil & T08, T10 \\
-    T12 & App móvil: fotos por observación y metadatos & App móvil y backend & T09, T10, T11 \\
-    T13 & App móvil: revisión, edición y eliminación antes de sincronizar & App móvil & T08, T10, T12 \\
+    T11 & Aplicación móvil: GPS en sesión y observación & Aplicación móvil & T08, T10 \\
+    T12 & Aplicación móvil: fotos por observación y metadatos & Aplicación móvil y backend & T09, T10, T11 \\
+    T13 & Aplicación móvil: revisión, edición y eliminación antes de sincronizar & Aplicación móvil & T08, T10, T12 \\
     T14 & Backend: validación científica y permisos de observaciones & Backend & T09, T10, T11, T12 \\
-    T15 & App móvil: persistencia offline del flujo de campo & App móvil & T07, T08, T10, T11, T12 \\
+    T15 & Aplicación móvil: persistencia offline del flujo de campo & Aplicación móvil & T07, T08, T10, T11, T12 \\
     T16 & Portal web: listado de sesiones y observaciones con filtros & Web y backend & T04, T05, T09, T14 \\
     T17 & Portal web: ficha de observación con fotos & Web & T12, T16 \\
     \bottomrule
@@ -323,7 +323,7 @@ de la información registrada.
 \begin{tcolorbox}[title=T11 -- GPS en sesión y observación,colback=gray!5,colframe=black!70,fonttitle=\bfseries]
 
 \begin{tabularx}{\textwidth}{lX}
-\textbf{Área} & App móvil \\
+\textbf{Área} & Aplicación móvil \\
 \textbf{Responsable} & Ignacio Martínez Díaz \\
 \textbf{Prioridad} & Crítica \\
 \textbf{Dependencias} & T08, T10 \\
@@ -349,7 +349,7 @@ posterior mediante herramientas cartográficas.
 \begin{tcolorbox}[title=T12 -- Fotos por observación y metadatos,colback=gray!5,colframe=black!70,fonttitle=\bfseries]
 
 \begin{tabularx}{\textwidth}{lX}
-\textbf{Área} & App móvil + Backend \\
+\textbf{Área} & Aplicación móvil + Backend \\
 \textbf{Responsable} & Ignacio Martínez Díaz \\
 \textbf{Prioridad} & Alta \\
 \textbf{Dependencias} & T09, T10, T11 \\
@@ -375,7 +375,7 @@ científica posteriores.
 \begin{tcolorbox}[title={T13 -- Revisión, edición y eliminación antes de sincronizar},colback=gray!5,colframe=black!70,fonttitle=\bfseries]
 
 \begin{tabularx}{\textwidth}{lX}
-\textbf{Área} & App móvil \\
+\textbf{Área} & Aplicación móvil \\
 \textbf{Responsable} & Ignacio Martínez Díaz \\
 \textbf{Prioridad} & Alta \\
 \textbf{Dependencias} & T08, T10, T12 \\
@@ -425,7 +425,7 @@ autorizadas dentro del sistema.
 \begin{tcolorbox}[title=T15 -- Persistencia offline del flujo de campo,colback=gray!5,colframe=black!70,fonttitle=\bfseries]
 
 \begin{tabularx}{\textwidth}{lX}
-\textbf{Área} & App móvil \\
+\textbf{Área} & Aplicación móvil \\
 \textbf{Responsable} & Ignacio Martínez Díaz \\
 \textbf{Prioridad} & Crítica \\
 \textbf{Dependencias} & T07, T08, T10, T11, T12 \\
@@ -502,7 +502,7 @@ sincronización y revisión de observaciones.
 
 Las reuniones con el cliente han tenido un papel central en la definición del
 alcance. La primera reunión permitió identificar el problema y las funcionalidades
-esperadas. Posteriormente, una segunda reunión sirvió para revisar los mockups,
+esperadas. Posteriormente, una segunda reunión sirvió para revisar los prototipos,
 confirmar la cobertura de los flujos principales y reforzar prioridades como el
 funcionamiento sin conexión, la separación por grupos y la trazabilidad científica.
 
@@ -516,7 +516,7 @@ donde se relacionan las necesidades detectadas con los requisitos del sistema.
 El alcance se ha dividido en dos niveles:
 
 \begin{itemize}
-  \item \textbf{Alcance funcional validado mediante mockups:} portal web y aplicación
+  \item \textbf{Alcance funcional validado mediante prototipos:} portal web y aplicación
     móvil con flujos navegables, datos de ejemplo, roles simulados y pantallas
     principales implementadas.
   \item \textbf{Alcance de implementación final:} backend REST, base de datos,

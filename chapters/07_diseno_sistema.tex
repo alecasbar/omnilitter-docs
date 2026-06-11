@@ -43,7 +43,7 @@ automatizadas por \textit{scripts} externos o integraciones con repositorios cie
 \textbf{Separación entre portal web y aplicación móvil.}
 Aunque comparten la misma API, los dos clientes tienen requisitos de experiencia de usuario
 muy distintos: el portal prioriza la visualización analítica y la gestión, mientras que la
-app móvil prioriza la captura rápida en condiciones de campo adversas (luz solar, guantes,
+aplicación móvil prioriza la captura rápida en condiciones de campo adversas (luz solar, guantes,
 sin conexión). Mantenerlos como proyectos independientes permite evolucionar cada uno a su
 propio ritmo.
 
@@ -306,17 +306,17 @@ tablas filtrables, modales de confirmación).
 
 \subsubsection{Gestión de estado}
 
-En el prototipo del portal web, \texttt{localStorage} se utiliza como mecanismo de
+En el prototipo inicial del portal web, \texttt{localStorage} se utiliza como mecanismo de
 persistencia de la sesión del usuario entre recargas de página, almacenando el estado
-necesario para simular autenticación, rol y grupo activo. En la implementación final,
-este comportamiento deberá integrarse con los \textit{tokens} emitidos por el backend
-y con una estrategia de refresco de sesión.
+necesario para simular autenticación, rol y grupo activo. En la implementación integrada,
+este comportamiento se vincula con los \textit{tokens} emitidos por el backend y con una
+estrategia de refresco de sesión.
 
-En el mockup actual, la comunicación entre el selector de grupo activo (ubicado en la
-barra lateral) y el componente Dashboard se resuelve mediante un evento personalizado
+En el prototipo inicial, la comunicación entre el selector de grupo activo (ubicado en la
+barra lateral) y el componente Dashboard se resolvía mediante un evento personalizado
 del DOM (\texttt{omnilitter:groupChanged}). Esta solución es suficiente para el
-prototipo y podrá sustituirse por un contexto global o una librería de estado si la
-implementación final aumenta de complejidad.
+prototipo; en una evolución posterior podría sustituirse por un contexto global o
+una librería de estado si la complejidad de la interfaz aumentara.
 
 \subsubsection{Flujo de navegación y control de acceso por rol}
 
