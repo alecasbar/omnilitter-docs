@@ -2,9 +2,11 @@
 
 \section{Contexto y motivación}
 
-La contaminación por residuos en entornos terrestres y acuáticos constituye uno de los principales problemas del medio ambiente a nivel mundial. La acumulación de residuos en los distintos tipos de entornos genera un gran impacto negativo sobre los ecosistemas, la biodiversidad y la calidad de vida de las personas. Con el objetivo de comprender la magnitud de los hechos y desarrollar estrategias eficaces de prevención y mitigación, ciertas organizaciones, administraciones públicas e instituciones desarrollan programas de monitorización y análisis de residuos en los distintos entornos.
+La contaminación por residuos en entornos terrestres y acuáticos constituye uno de los principales problemas del medio ambiente a nivel mundial. La acumulación de residuos en los distintos tipos de entornos genera un impacto negativo sobre los ecosistemas, la biodiversidad y la calidad de vida de las personas. Con el objetivo de comprender la magnitud del problema y desarrollar estrategias eficaces de prevención y mitigación, organizaciones, administraciones públicas e instituciones científicas impulsan programas de monitorización y análisis de residuos en diferentes compartimentos ambientales.
 
-La obtención de datos reales y útiles requiere de la participación de diferentes personas y grupos dispuestos a realizar diversas campañas de monitorización de dichos residuos en los distintos entornos afectados, dejando patentes las observaciones de los residuos para un posterior análisis más exhaustivo. Sin embargo, hoy en día las herramientas para ello se han quedado obsoletas, se basan en capturas y registros manuales muy tediosos o, directamente, no cubren las necesidades actuales.
+La utilidad de estos programas depende de que los datos recogidos sean comparables, estén correctamente georreferenciados y conserven información suficiente sobre cómo, cuándo y dónde se han obtenido. En el caso de las basuras fluviales, el Joint Research Centre de la Comisión Europea señala la falta de información sistemática sobre la cantidad de residuos transportados por los ríos y la ausencia de metodologías armonizadas capaces de generar datos cuantitativos comparables \cite{gonzalez2016riverine}. De forma similar, trabajos recientes subrayan la necesidad de armonizar las técnicas de monitorización de macroplásticos en ecosistemas acuáticos y terrestres \cite{gallitelli2024macroplastics}.
+
+La obtención de datos reales y útiles requiere la participación de diferentes personas y grupos dispuestos a realizar campañas de monitorización en los entornos afectados. No obstante, los registros manuales, las hojas de cálculo aisladas o las campañas de limpieza sin un protocolo común suelen producir información dispersa, difícil de comparar y con metadatos insuficientes para un análisis científico posterior.
 
 Teniendo en cuenta lo anterior, el cliente ha planteado la necesidad de desarrollar una herramienta que solucione el problema.
 
@@ -12,11 +14,11 @@ En respuesta a esta necesidad, se propone el desarrollo de OmniLitter. Esta plat
 
 \section{Problema abordado}
 
-Para hacer un seguimiento de los residuos, se necesita que mucha gente colabore, hacer campañas en diferentes sitios y recoger mucha información. Luego, se procesa y analiza toda esta información. Si no se tienen herramientas especializadas, puede haber problemas con la información dispersa, la falta de orden en los registros y las dificultades para unir los datos que obtienen diferentes participantes.
+Para hacer un seguimiento de los residuos se necesita que diferentes personas colaboren, que se realicen campañas en lugares diversos y que se recoja información suficiente para analizar patrones espaciales y temporales. Si no se dispone de herramientas especializadas, aparecen problemas de información dispersa, falta de orden en los registros y dificultad para integrar los datos obtenidos por distintos participantes.
 
 Generalmente, se recoge la información en la naturaleza, donde no siempre hay conexión a Internet. Esto limita el uso de aplicaciones que necesitan estar siempre conectadas a servidores remotos. Por lo tanto, es necesario tener mecanismos que permitan guardar la información en el dispositivo y sincronizarla después cuando haya conexión a la red.
 
-El proyecto también requiere el uso de clasificaciones de residuos estandarizadas, la asociación de fotos a cada observación y el registro preciso de la ubicación geográfica donde se hace cada muestreo. Hacer todo esto a mano aumenta el riesgo de errores y dificulta el uso posterior de los datos.
+El proyecto también requiere el uso de clasificaciones de residuos estandarizadas, la asociación de fotos a cada observación, el registro preciso de la ubicación geográfica y la captura de metadatos de muestreo, como protocolo, entorno, duración, transecto o área observada. Hacer todo esto a mano aumenta el riesgo de errores y dificulta el uso posterior de los datos.
 
 El cliente necesita una solución de software que permita gestionar campañas de seguimiento, registrar observaciones geolocalizadas desde dispositivos móviles, operar sin conexión a Internet y centralizar toda la información recopilada en una infraestructura común accesible desde un portal web.
 
@@ -35,13 +37,13 @@ Para alcanzar este objetivo general se establecen los siguientes objetivos espec
 
     \item Registrar información geográfica asociada a cada observación utilizando los sensores de posicionamiento disponibles en los dispositivos móviles.
 
-    \item Incorporar la gestión de fotografías y metadatos como evidencias asociadas a las observaciones registradas.
+    \item Incorporar la gestión de fotografías y metadatos de muestreo como evidencias asociadas a las observaciones registradas.
 
     \item Implementar un portal web que facilite la administración de campañas, usuarios y datos recopilados.
 
     \item Centralizar la información obtenida en una base de datos común que garantice la integridad y consistencia de los datos.
 
-    \item Utilizar taxonomías estandarizadas para la clasificación de residuos con el fin de favorecer la calidad científica de la información registrada.
+    \item Utilizar taxonomías estandarizadas y protocolos de muestreo configurables para favorecer la calidad científica y la comparabilidad de la información registrada.
 
     \item Aplicar metodologías y herramientas de ingeniería del software para garantizar la calidad, mantenibilidad y escalabilidad de la solución desarrollada.
 \end{enumerate}
@@ -63,7 +65,7 @@ Dentro del alcance del proyecto se incluyen las siguientes funcionalidades:
     
     \item Gestión de fotografías y metadatos asociados a las observaciones registradas.
     
-    \item Gestión de sesiones de muestreo, incluyendo información contextual como el entorno analizado, la duración de la sesión o las características del área estudiada.
+    \item Gestión de sesiones de muestreo, incluyendo información contextual como el entorno analizado, el protocolo empleado, la duración de la sesión, el tipo de transecto o cuadrante y las características del área estudiada.
     
     \item Funcionamiento en modo offline mediante almacenamiento local de la información y sincronización posterior con el servidor cuando exista conectividad.
     

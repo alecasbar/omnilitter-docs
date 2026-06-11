@@ -42,7 +42,10 @@ requisito con el caso de uso al que da soporte cuando procede.
 Durante el desarrollo de OmniLitter se manejaron tres versiones principales del
 registro de requisitos. Cada una representa un momento distinto del proyecto: la
 toma inicial de requisitos, la validación mediante mockups y la consolidación
-posterior a la última reunión de validación.
+posterior a la última reunión de validación. Además, se incorporó un refinamiento
+de dominio aportado por el cliente, centrado en la necesidad de
+datos científicos armonizados, comparables y útiles para evaluar medidas de
+mitigación.
 
 \subsection{Versión 1: toma inicial de requisitos}
 
@@ -138,9 +141,9 @@ en requisitos más cercanos al funcionamiento real del sistema.
   RF-006 & Selección de grupo activo para filtrar datos y acciones. & Alta \\
   RF-007 & Trabajo por sesiones de muestreo en la aplicación móvil. & Crítica \\
   RF-008 & Captura de coordenadas GPS en sesiones y observaciones. & Crítica \\
-  RF-009 & Registro de metadatos de muestreo asociados a la sesión. & Alta \\
+  RF-009 & Registro de metadatos de muestreo asociados a la sesión, incluyendo protocolo, entorno y parámetros del área observada. & Alta \\
   RF-010 & Fotografías asociadas a observaciones. & Alta \\
-  RF-012 & Navegación por taxonomía jerárquica de residuos. & Crítica \\
+  RF-012 & Navegación por taxonomía jerárquica basada en categorías estandarizadas de residuos. & Crítica \\
   RF-015 & Registro de cantidad observada como entero positivo. & Crítica \\
   RF-020 & Revisión de sesión antes de finalizarla. & Alta \\
   RF-022 & Funcionamiento sin conexión durante la captura de campo. & Crítica \\
@@ -172,14 +175,15 @@ completo, los roles se refinan como control de acceso por grupo, los metadatos s
 organizan alrededor de sesiones de muestreo y la taxonomía deja de ser una lista
 simple para convertirse en una estructura jerárquica navegable.
 
-\subsection{Versión 3: consolidación tras la última reunión}
+\subsection{Versión 3: consolidación tras la última reunión y revisión de dominio}
 
 \textbf{Fecha aproximada:} 10/06/2026.
 
 \textbf{Estado:} versión final consolidada de requisitos.
 
 \textbf{Objetivo de la sesión:} revisar el flujo real de la aplicación móvil,
-especialmente sesiones, sincronización, mapa y operación posterior del sistema.
+especialmente sesiones, sincronización, mapa y operación posterior del sistema, e
+incorporar la revisión científica posterior aportada por el cliente.
 
 En la última reunión se revisó el funcionamiento de la aplicación móvil en
 relación con las sesiones de muestreo. Se reforzó la necesidad de consultar qué
@@ -187,6 +191,15 @@ sesiones estaban pendientes, cuántas observaciones contenían, si una sesión s
 activa y cómo debía finalizarse antes de sincronizar. También se aclaró que la
 memoria debía documentar el despliegue y la administración básica, dejando el
 mantenimiento evolutivo posterior fuera del alcance académico del proyecto.
+
+La información aportada por el cliente reforzó la motivación científica del sistema: la
+falta de datos espaciales y temporales, la ausencia de metodologías armonizadas en
+algunos entornos terrestres y la necesidad de capturar datos y metadatos de campo
+con suficiente calidad para comparar campañas, detectar tendencias y evaluar la
+eficacia de políticas o medidas de mitigación. Esta revisión se alinea con la
+literatura sobre basuras fluviales, que reclama datos comparables, listas comunes
+de categorías, metadatos y compatibilidad entre evaluaciones continentales,
+costeras y marinas \cite{gonzalez2016riverine,gonzalezfernandez2017harmonized,ospar2025monitoring}.
 
 {\small
 \setlength{\tabcolsep}{4pt}
@@ -399,10 +412,13 @@ longitud cuando el dispositivo dispone de permisos y señal GPS suficiente.
 \textbf{Caso de uso asociado:} CU-03.
 
 \textbf{Descripción:} el sistema deberá permitir registrar metadatos de muestreo,
-como entorno, parámetros del transecto, duración o protocolo utilizado.
+como entorno, protocolo utilizado, tipo de método, parámetros del transecto o
+cuadrante, duración, área observada y cualquier información necesaria para
+interpretar el dato en su contexto científico.
 
 \textbf{Criterio de aceptación:} la sesión queda asociada a los metadatos
-necesarios para interpretar correctamente los datos recopilados.
+necesarios para interpretar correctamente los datos recopilados y comparar
+campañas realizadas en distintos entornos o periodos.
 
 \end{requisitocard}
 
@@ -438,10 +454,12 @@ fotografía y esta queda vinculada a la observación correspondiente.
 \textbf{Caso de uso asociado:} CU-04.
 
 \textbf{Descripción:} la aplicación móvil deberá permitir navegar por una
-taxonomía jerárquica de residuos.
+taxonomía jerárquica de residuos basada en categorías estandarizadas, tomando como
+referencia listas comunes utilizadas en monitorización de basuras.
 
 \textbf{Criterio de aceptación:} el usuario puede seleccionar un tipo de residuo
-desde una estructura organizada por categorías y subcategorías.
+desde una estructura organizada por categorías y subcategorías, conservando un
+código estable asociado al ítem seleccionado.
 
 \end{requisitocard}
 
@@ -841,7 +859,9 @@ observaciones puedan interpretarse y compararse posteriormente.
 \textbf{Prioridad:} crítica.
 
 \textbf{Descripción:} la taxonomía de residuos deberá presentarse de forma
-jerárquica y conservar el código identificador de cada tipo de residuo.
+jerárquica y conservar el código identificador de cada tipo de residuo, de acuerdo
+con la necesidad de utilizar listas comunes de categorías para favorecer la
+comparabilidad entre estudios \cite{gonzalez2016riverine}.
 
 \end{requisitocard}
 
@@ -850,7 +870,9 @@ jerárquica y conservar el código identificador de cada tipo de residuo.
 \textbf{Prioridad:} crítica.
 
 \textbf{Descripción:} las sesiones deberán almacenar metadatos de muestreo
-suficientes para interpretar los datos recopilados.
+suficientes para interpretar los datos recopilados, incluyendo entorno, protocolo,
+método de muestreo, unidad o área observada, fecha, duración y localización cuando
+proceda.
 
 \end{requisitocard}
 
@@ -869,7 +891,8 @@ coordenadas EXIF.
 \textbf{Prioridad:} media.
 
 \textbf{Descripción:} los datos exportados deberán incluir campos suficientes para
-análisis posterior y, cuando sea posible, un diccionario de columnas y unidades.
+análisis posterior y, cuando sea posible, un diccionario de columnas, unidades,
+metadatos de muestreo y versión de taxonomía utilizada.
 
 \end{requisitocard}
 
@@ -942,6 +965,12 @@ RF-028, RF-030, RF-031 y RDC-004.
 
 \item La necesidad de preservar valor científico se consolida en RDC-001,
 RDC-002, RDC-003, RDC-004, RDC-005 y RDC-006.
+
+\item La revisión científica aportada por el cliente y las fuentes consultadas
+refuerzan RF-009, RF-012, RF-031, RDC-001, RDC-002, RDC-004 y RDC-005, al
+vincular la aplicación con la toma de datos armonizada, el uso de listas comunes
+de categorías, la captura de metadatos y la generación de datos comparables para
+evaluar tendencias y medidas de mitigación.
 
 \item Las dudas planteadas en la última reunión sobre despliegue y mantenimiento
 se consolidan en RF-036, RF-037, RNF-006 y RNF-007.

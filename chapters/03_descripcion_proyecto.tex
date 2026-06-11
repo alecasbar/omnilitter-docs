@@ -2,13 +2,17 @@
 
 \section{Visión general de OmniLitter}
 
-OmniLitter es una plataforma multiplataforma desarrollada con el objetivo de facilitar la monitorización y el análisis de residuos en distintos tipos de entornos. El sistema está orientado tanto a investigadores como a colaboradores de campo, proporcionando herramientas que permiten registrar, almacenar y analizar información relacionada con campañas de muestreo de residuos.
+OmniLitter es una plataforma multiplataforma desarrollada con el objetivo de facilitar la monitorización y el análisis de residuos en distintos tipos de entornos: playas, riberas, bosques y zonas urbanas. El sistema está orientado tanto a investigadores como a colaboradores de campo, proporcionando herramientas que permiten registrar, almacenar y analizar información relacionada con campañas de muestreo de residuos.
+
+La finalidad de la plataforma no es únicamente contabilizar residuos, sino digitalizar y unificar la toma de datos para que las observaciones puedan convertirse en información científica comparable. Para ello, OmniLitter organiza el trabajo en campañas y sesiones de muestreo, registra metadatos de campo, utiliza categorías estandarizadas de residuos y conserva la localización y evidencias asociadas a cada observación.
 
 La arquitectura de OmniLitter se compone de tres elementos principales estrechamente integrados: una API central (backend), una aplicación móvil y un portal web. La API actúa como núcleo del sistema, gestionando la comunicación entre las distintas plataformas, el acceso a los datos y la aplicación de las reglas de negocio.
 
 La aplicación móvil constituye la herramienta de trabajo utilizada durante las campañas de monitorización. A través de ella, los usuarios pueden participar en grupos de investigación, acceder a campañas de muestreo y registrar sesiones de campo. Durante estas sesiones es posible documentar observaciones de residuos, asociando información como la localización geográfica, la clasificación taxonómica, fotografías y otros datos relevantes para su posterior análisis. Además, la aplicación está diseñada para funcionar tanto en línea como sin conexión, almacenando temporalmente la información en una base de datos local y sincronizándola posteriormente con el servidor cuando exista conexión disponible, automática o manualmente.
 
 Por su parte, el portal web actúa como centro de gestión y análisis de la información recopilada. Desde esta plataforma es posible administrar usuarios, grupos de investigación y campañas de muestreo, así como consultar los datos registrados durante las actividades de campo. Entre sus funcionalidades destaca el módulo de analítica, que permite explorar campañas, sesiones y observaciones mediante diferentes criterios de filtrado, facilitando la obtención de información útil para estudios científicos, proyectos de investigación y procesos de toma de decisiones relacionados con la gestión de residuos.
+
+Esta aproximación permite conectar la recogida de datos con la evaluación de tendencias y medidas de mitigación. Al conservar datos cuantitativos, metadatos y trazabilidad por campaña, la plataforma puede apoyar comparaciones antes y después de una intervención, ayudar a identificar fuentes probables de contaminación y aportar evidencias para valorar la eficacia de políticas o acciones de reducción de residuos.
 
 \section{Actores y perfiles de usuario}
 
@@ -131,7 +135,7 @@ Las campañas actúan como elemento organizador de toda la información recogida
 
 Dentro de cada campaña, los usuarios pueden crear sesiones de muestreo que representan actividades concretas de recogida de datos.
 
-Las sesiones permiten registrar información contextual relacionada con el trabajo realizado, como el entorno de estudio, el método de muestreo empleado, la duración de la actividad o la ubicación geográfica asociada.
+Las sesiones permiten registrar información contextual relacionada con el trabajo realizado, como el entorno de estudio, el método de muestreo empleado, el protocolo aplicado, la duración de la actividad, el tipo de transecto o cuadrante y la ubicación geográfica asociada.
 
 Esta funcionalidad aporta trazabilidad a los datos recopilados, permitiendo conocer las condiciones bajo las que se registró cada observación.
 
@@ -143,9 +147,9 @@ Cada observación queda vinculada a una campaña y una sesión concretas, permit
 
 \subsection{Clasificación mediante taxonomías}
 
-La plataforma incorpora una taxonomía de residuos que permite clasificar las observaciones de forma homogénea y estandarizada.
+La plataforma incorpora una taxonomía de residuos que permite clasificar las observaciones de forma homogénea y estandarizada, tomando como referencia listas comunes de categorías utilizadas en monitorización de basuras.
 
-El uso de categorías comunes mejora la calidad de los datos recopilados y facilita su comparación entre campañas, grupos de trabajo y periodos temporales diferentes.
+El uso de categorías comunes mejora la calidad de los datos recopilados y facilita su comparación entre campañas, grupos de trabajo, entornos y periodos temporales diferentes.
 
 \subsection{Registro fotográfico y geolocalización}
 
@@ -169,7 +173,7 @@ Los usuarios autorizados pueden revisar observaciones, consultar información ge
 
 OmniLitter incorpora mecanismos para exportar la información recopilada en formatos adecuados para su tratamiento posterior.
 
-Esta funcionalidad facilita la reutilización de los datos en herramientas externas de análisis y favorece su utilización en estudios científicos relacionados con la contaminación por residuos.
+Esta funcionalidad facilita la reutilización de los datos en herramientas externas de análisis y favorece su utilización en estudios científicos relacionados con la contaminación por residuos, incluyendo la generación de series temporales, comparaciones espaciales y evaluaciones de medidas de mitigación.
 
 \subsection{Resumen funcional}
 
