@@ -8,7 +8,7 @@
 
 La validación del proyecto se organizó de forma incremental, siguiendo la misma división por sprints utilizada durante el desarrollo. El objetivo fue comprobar, en cada etapa, que las funcionalidades incorporadas no solo estaban disponibles desde la interfaz, sino que respetaban las reglas de negocio, los permisos, los contratos de datos y las restricciones definidas para el sistema.
 
-La estrategia de pruebas combinó dos enfoques complementarios. Por un lado, se implementaron pruebas automatizadas sobre las partes más críticas del proyecto: esquemas compartidos, servicios de la API y determinadas utilidades del portal web. Por otro lado, los recorridos completos de usuario, especialmente aquellos relacionados con la aplicación móvil, el uso offline, la cámara, la ubicación y la sincronización, se validaron mediante pruebas manuales funcionales apoyadas en evidencias visuales.
+La estrategia de pruebas combinó dos enfoques complementarios. Por un lado, se implementaron pruebas automatizadas sobre las partes más críticas del proyecto: esquemas compartidos, servicios de la API y determinadas utilidades del portal web. Por otro lado, los recorridos completos de usuario, especialmente aquellos relacionados con la aplicación móvil, el uso offline, la cámara, la ubicación y la sincronización, se validaron mediante pruebas manuales funcionales descritas como procedimientos de ejecución.
 
 Esta separación permite reflejar con precisión el alcance real de la validación. La memoria no atribuye al proyecto pruebas automatizadas que no existen, pero sí deja constancia de que las funcionalidades principales fueron comprobadas mediante el tipo de prueba más adecuado a su naturaleza.
 
@@ -24,7 +24,7 @@ Tipo de prueba & Objetivo & Aplicación en OmniLitter \\
 Pruebas de contrato & Verificar que los datos intercambiados entre clientes y API cumplen la estructura esperada. & Esquemas compartidos de autenticación, campañas, catálogo, sesiones, observaciones y fotografías. \\
 Pruebas unitarias de servicio & Comprobar reglas de negocio sin depender de la interfaz ni de una base de datos real. & Servicios de usuarios, grupos, campañas, catálogo y observaciones del backend mediante mocks de Prisma. \\
 Pruebas automatizadas web & Validar lógica auxiliar del portal web que no depende directamente de componentes visuales. & Cálculo de distancia de rutas y preferencias de exportación del dashboard. \\
-Pruebas manuales funcionales & Comprobar recorridos completos desde la perspectiva del usuario final. & Portal web, aplicación móvil, captura de campo, uso offline, sincronización y evidencias visuales. \\
+Pruebas manuales funcionales & Comprobar recorridos completos desde la perspectiva del usuario final. & Portal web, aplicación móvil, captura de campo, uso offline, sincronización y flujos integrados. \\
 Pruebas de regresión & Comprobar que los cambios posteriores no rompen funcionalidades ya validadas. & Reejecución de la suite automatizada y revisión manual de los flujos principales al cierre de cada sprint. \\
 \bottomrule
 \end{tabularx}
@@ -44,7 +44,7 @@ La suite automatizada se ejecutó con \textit{Vitest}. En el paquete compartido 
 API & Tests de \texttt{apps/api} & Vitest & Servicios de campañas, catálogo, grupos, usuarios y observaciones con mocks de Prisma. \\
 Web & Tests de \texttt{apps/web} & Vitest & Preferencias de exportación del dashboard y cálculo de distancia de rutas. \\
 Shared & Test de \texttt{packages/shared} & Vitest + Zod & Esquemas compartidos de autenticación, campañas, catálogo, sesiones, observaciones y fotografías. \\
-Mobile & Sin ficheros de test configurados & No aplica & La aplicación móvil se validó mediante pruebas manuales funcionales y evidencias visuales. \\
+Mobile & Sin ficheros de test configurados & No aplica & La aplicación móvil se validó mediante pruebas manuales funcionales por caso de uso. \\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -68,6 +68,7 @@ CAT & Pruebas del catálogo científico usado por el sistema. \\
 OBS & Pruebas del servicio de observaciones del backend. \\
 WEB-SES & Pruebas de utilidades web relacionadas con sesiones y cálculo de distancias. \\
 WEB-EXP & Pruebas de preferencias de exportación en el portal web. \\
+PM-CU & Pruebas manuales funcionales asociadas a un caso de uso concreto. \\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -92,6 +93,14 @@ Total ejecutado & Correcto & 8 & 77 \\
 \bottomrule
 \end{tabularx}
 \end{table}
+
+En cuanto a las pruebas manuales, se optó por documentarlas mediante una tabla
+agrupada por caso de uso. Cada fila corresponde a un único caso de uso y recoge
+las pruebas manuales ejecutadas para validarlo. La redacción se presenta en
+pasado para dejar constancia de que los flujos fueron comprobados correctamente
+durante la validación.
+
+\newcommand{\manualCaseCell}[2]{\textbf{#1}\\[0.35em]#2}
 
 \subsection{Criterios de finalización de tareas}
 \subsection{Estructura de releases}
@@ -130,10 +139,6 @@ Formulario móvil de observación & SCH-14 a SCH-16 & Validación compartida de 
 
 Estas pruebas protegen reglas que no deben depender únicamente de la interfaz. Aunque los formularios ayuden a evitar datos incorrectos, los esquemas compartidos y los servicios de backend garantizan que la validación se mantiene ante datos reutilizados por distintos clientes o enviados directamente a la API.
 
-\subsubsection{Pruebas manuales funcionales}
-
-Las pruebas manuales de este sprint se reservan para los recorridos completos de usuario, como registro, inicio de sesión, administración básica, creación de campañas, creación de sesiones y registro inicial de observaciones desde la aplicación móvil. Su detalle se documenta mediante evidencias visuales en el apartado correspondiente de validación manual.
-
 \subsection{Desviaciones e incidencias}
 \subsection{Resultado del sprint}
 
@@ -169,10 +174,6 @@ Dashboard de métricas científicas & WEB-EXP-01 a WEB-EXP-12 & Formatos soporta
 
 La cobertura de este sprint resulta relevante para la calidad científica del sistema. Una observación no debe almacenarse sin ítems, con coordenadas imposibles, con cantidades no positivas o con ficheros de imagen no soportados. Además, las pruebas de permisos aseguran que cada usuario consulta únicamente la información que corresponde a su ámbito de autorización.
 
-\subsubsection{Pruebas manuales funcionales}
-
-Las pruebas manuales de este sprint cubren los flujos que requieren interacción real con la aplicación móvil y revisión visual del resultado: permisos de ubicación, captura de coordenadas, asociación de fotografías, validación de formularios, consulta por roles y visualización inicial de métricas en el portal web.
-
 \subsection{Desviaciones e incidencias}
 \subsection{Resultado del sprint}
 
@@ -206,10 +207,6 @@ Sincronización móvil-backend & Sin suite automatizada específica & La sincron
 \end{table}
 
 La ausencia de una prueba automatizada específica para sincronización se considera una limitación de la validación automática. No obstante, se documenta de forma explícita para mantener la trazabilidad y evitar que la memoria presente como automatizada una comprobación que realmente fue funcional y manual.
-
-\subsubsection{Pruebas manuales funcionales}
-
-Las pruebas manuales de este sprint son especialmente relevantes, ya que varias funcionalidades dependen de la interacción entre aplicación móvil, API y portal web. Incluyen trabajo sin conexión, sincronización posterior, visualización en mapas, exportación científica y configuración de usuario.
 
 \subsection{Desviaciones e incidencias}
 \subsection{Resultado del sprint}
@@ -245,10 +242,6 @@ Aplicación móvil & Sin suite automatizada específica & Los ajustes visuales y
 
 Esta validación permitió comprobar que las reglas principales del sistema seguían funcionando tras los cambios finales. Se mantiene como limitación que la aplicación móvil no dispone de una suite automatizada configurada.
 
-\subsubsection{Pruebas manuales funcionales}
-
-Las pruebas manuales de este sprint se orientan a la revisión global del sistema: autenticación, configuración, campañas, sesiones, observaciones, catálogo, navegación del portal web y recorrido principal de la aplicación móvil.
-
 \subsection{Desviaciones e incidencias}
 \subsection{Resultado del sprint}
 
@@ -257,5 +250,579 @@ Las pruebas manuales de este sprint se orientan a la revisión global del sistem
 \subsection{Funcionalidades implementadas}
 \subsection{Evolución del sistema}
 \subsection{Cobertura de requisitos}
-\subsection{Matriz de trazabilidad prueba/requisito}
+\subsection{Pruebas manuales funcionales}
+
+Las pruebas manuales realizadas sobre OmniLitter tienen como objetivo validar el comportamiento funcional del sistema desde la perspectiva del usuario final, comprobando que los principales flujos de la aplicación se ejecutan correctamente en condiciones reales de uso. Estas pruebas abarcan tanto el portal web como la aplicación móvil, incluyendo autenticación, gestión de grupos y campañas, creación de sesiones de muestreo, registro de observaciones, funcionamiento sin conexión, sincronización posterior de datos y consulta de la información registrada. Para facilitar su trazabilidad dentro de la memoria, las pruebas se organizan por casos de uso, permitiendo justificar de forma clara qué partes del sistema han sido verificadas.
+
+{\footnotesize
+\setlength{\tabcolsep}{5pt}
+\renewcommand{\arraystretch}{1.15}
+\begin{longtable}{|>{\raggedright\arraybackslash}p{4.1cm}|>{\raggedright\arraybackslash}p{10.2cm}|}
+\caption{Pruebas manuales funcionales agrupadas por casos de uso}
+\label{tab:pruebas_manuales_por_caso_uso} \\
+\hline
+\textbf{Caso de uso} & \textbf{Prueba realizada} \\
+\hline
+\endfirsthead
+\hline
+\textbf{Caso de uso} & \textbf{Prueba realizada} \\
+\hline
+\endhead
+\manualCaseCell{CU-01}{Registrarse, autenticarse y gestionar la sesión.} &
+\textbf{PM-CU01-01 -- Registro de nuevo usuario}
+\begin{itemize}[leftmargin=1.2em,itemsep=0.15em,topsep=0.2em]
+\item Abrimos el formulario de registro del portal web.
+\item Enviamos datos incompletos, correo inválido y contraseña débil, y vimos que el sistema mostraba errores de validación.
+\item Registramos una cuenta con nombre, correo único y contraseña válida.
+\item Comprobamos que el usuario accedía correctamente a la zona autenticada.
+\end{itemize}
+\textbf{PM-CU01-02 -- Inicio y cierre de sesión en web y móvil}
+\begin{itemize}[leftmargin=1.2em,itemsep=0.15em,topsep=0.2em]
+\item Intentamos iniciar sesión con credenciales incorrectas y vimos que se rechazaban.
+\item Iniciamos sesión con credenciales válidas y accedimos a pantallas privadas.
+\item Recargamos la web y reabrimos la aplicación para comprobar que la sesión se mantenía.
+\item Cerramos sesión y verificamos que ya no era posible acceder a zonas protegidas.
+\end{itemize}
+\textbf{PM-CU01-03 -- Protección de rutas privadas}
+\begin{itemize}[leftmargin=1.2em,itemsep=0.15em,topsep=0.2em]
+\item Abrimos el portal sin sesión activa.
+\item Accedimos manualmente a rutas privadas como dashboard, campañas, mapa o configuración.
+\item Comprobamos que todas redirigían al acceso público.
+\item Iniciamos sesión y vimos que las mismas rutas mostraban los módulos permitidos.
+\end{itemize}
+\textbf{PM-CU01-04 -- Cambio de contraseña del usuario autenticado en portal web}
+\begin{itemize}[leftmargin=1.2em,itemsep=0.15em,topsep=0.2em]
+\item Iniciamos sesión con un usuario existente.
+\item Intentamos cambiar la contraseña con contraseña actual incorrecta.
+\item Intentamos reutilizar la contraseña vigente como nueva contraseña.
+\item Introdujimos contraseña actual correcta y nueva contraseña válida.
+\item Cerramos sesión e iniciamos sesión con la nueva contraseña correctamente.
+\end{itemize}
+\\ \hline
+\manualCaseCell{CU-02}{Gestionar el perfil y el grupo activo.} &
+\textbf{PM-CU02-01 -- Consulta y edición del perfil básico}
+\begin{itemize}[leftmargin=1.2em,itemsep=0.15em,topsep=0.2em]
+\item Iniciamos sesión con un usuario existente.
+\item Abrimos la pantalla de perfil o configuración.
+\item Modificamos el nombre visible y guardamos los cambios.
+\item Recargamos la pantalla y comprobamos que el nuevo nombre se mantenía.
+\end{itemize}
+\textbf{PM-CU02-02 -- Selección de grupo activo}
+\begin{itemize}[leftmargin=1.2em,itemsep=0.15em,topsep=0.2em]
+\item Iniciamos sesión con un usuario perteneciente a más de un grupo.
+\item Abrimos el selector de grupo activo y seleccionamos un grupo.
+\item Revisamos campañas, observaciones y métricas asociadas.
+\item Cambiamos a otro grupo activo y vimos que los datos y acciones se actualizaban.
+\end{itemize}
+\textbf{PM-CU02-03 -- Configuración de perfil en web y móvil}
+\begin{itemize}[leftmargin=1.2em,itemsep=0.15em,topsep=0.2em]
+\item Abrimos la configuración web y editamos datos del usuario.
+\item Guardamos los cambios y comprobamos su persistencia.
+\item Abrimos el perfil en móvil y vimos los datos actualizados.
+\item Cambiamos el grupo activo desde móvil y revisamos que cambiaban las campañas disponibles.
+\end{itemize}
+\\ \hline
+\manualCaseCell{CU-03}{Administrar grupos, miembros e invitaciones.} &
+\textbf{PM-CU03-01 -- Creación y edición de grupo}
+\begin{itemize}[leftmargin=1.2em,itemsep=0.15em,topsep=0.2em]
+\item Iniciamos sesión con un usuario.
+\item Creamos un grupo con nombre y descripción.
+\item Abrimos el detalle del grupo, editamos sus datos y guardamos los cambios.
+\item Comprobamos que el grupo aparecía actualizado en el listado.
+\end{itemize}
+\textbf{PM-CU03-02 -- Gestión de miembros y roles de grupo}
+\begin{itemize}[leftmargin=1.2em,itemsep=0.15em,topsep=0.2em]
+\item Añadimos un usuario existente como miembro de un grupo, desde una cuenta de superadministrador.
+\item Cambiamos su rol y vimos que las acciones disponibles se ajustaban al nuevo permiso.
+\item Expulsamos al miembro del grupo.
+\item Y comprobamos que ya no existía en el grupo.
+\item Ingresamos como un usuario normal para gestionar un grupo del que somos administradores.
+\item Dimos permisos de administrador a un usuario del grupo.
+\item Comprobamos que no se le puede cambiar el rol a un administrador de grupo.
+\end{itemize}
+\textbf{PM-CU03-03 -- Invitación y aceptación desde la app móvil}
+\begin{itemize}[leftmargin=1.2em,itemsep=0.15em,topsep=0.2em]
+\item Enviamos una invitación a un usuario desde el portal web.
+\item Iniciamos sesión con el usuario invitado.
+\item Nos dirigimos a las invitaciones pendientes y aceptamos la invitación.
+\item Comprobamos que el nuevo grupo quedaba disponible para trabajar.
+\item Del mismo modo lo probamos en la aplicación móvil.
+\end{itemize}
+\textbf{PM-CU03-04 -- Archivo, restauración y eliminación de grupos}
+\begin{itemize}[leftmargin=1.2em,itemsep=0.15em,topsep=0.2em]
+\item Iniciamos sesión como superadministrador o administrador de grupo.
+\item Abrimos el detalle de un grupo.
+\item Archivamos el grupo y comprobamos que sus campañas activas quedaban cerradas o no disponibles.
+\item Restauramos el grupo.
+\item Intentamos eliminar definitivamente un grupo activo y vimos que el sistema respetaba permisos y estados.
+\end{itemize}
+\\ \hline
+\manualCaseCell{CU-04}{Administrar usuarios de la plataforma.} &
+\textbf{PM-CU04-01 -- Alta administrativa de usuario}
+\begin{itemize}[leftmargin=1.2em,itemsep=0.15em,topsep=0.2em]
+\item Iniciamos sesión como superadministrador.
+\item Creamos un usuario con nombre, correo, contraseña temporal y rol global.
+\item Lo asociamos a uno o varios grupos durante el alta.
+\item Comprobamos que aparecía en el listado con sus datos y membresías.
+\end{itemize}
+\textbf{PM-CU04-02 -- Cambio de rol y estado de cuenta}
+\begin{itemize}[leftmargin=1.2em,itemsep=0.15em,topsep=0.2em]
+\item Abrimos el detalle de un usuario existente.
+\item Desactivamos la cuenta y comprobamos que no podía iniciar sesión.
+\item Reactivamos la cuenta y modificamos el rol global.
+\item Vimos que los módulos disponibles se ajustaban al nuevo rol.
+\end{itemize}
+\textbf{PM-CU04-03 -- Restricción de administración global}
+\begin{itemize}[leftmargin=1.2em,itemsep=0.15em,topsep=0.2em]
+\item Iniciamos sesión con un usuario sin rol de superadministrador.
+\item Intentamos acceder a la administración global de usuarios.
+\item Comprobamos que las operaciones de superadministrador desaparecen para perfiles no autorizados.
+\end{itemize}
+\\ \hline
+\manualCaseCell{CU-05}{Crear y gestionar campañas de muestreo.} &
+\textbf{PM-CU05-01 -- Creación de campaña desde el portal}
+\begin{itemize}[leftmargin=1.2em,itemsep=0.15em,topsep=0.2em]
+\item Iniciamos sesión como usuario.
+\item Seleccionamos un grupo activo del que eramos administrador y abrimos el módulo de campañas.
+\item Creamos una campaña con nombre, descripción, estado y fechas.
+\item Comprobamos que la campaña quedaba asociada al grupo activo, y asi le aparecía a los demás miembros del grupo.
+\end{itemize}
+\textbf{PM-CU05-02 -- Edición, filtrado y eliminación de campaña}
+\begin{itemize}[leftmargin=1.2em,itemsep=0.15em,topsep=0.2em]
+\item Filtramos el listado de campañas por texto y estado.
+\item Comparamos que se listaban las campañas deseadas.
+\item Editamos una campaña existente y guardamos cambios válidos, comprobando que se guardaban correctamente.
+\item Intentamos guardar fechas incoherentes y vimos que se rechazaban.
+\item Eliminamos una campaña no necesaria para otras pruebas, comprobando que se eliminaba para todos los usuarios.
+\end{itemize}
+\textbf{PM-CU05-03 -- Disponibilidad de campaña en móvil}
+\begin{itemize}[leftmargin=1.2em,itemsep=0.15em,topsep=0.2em]
+\item Iniciamos sesión en móvil con un miembro administrador de grupo.
+\item Creamos una campaña para dicho grupo.
+\item Comprobamos que se creaba correctamente.
+\end{itemize}
+\textbf{PM-CU05-04 -- Creación móvil de campaña con catálogo}
+\begin{itemize}[leftmargin=1.2em,itemsep=0.15em,topsep=0.2em]
+\item Iniciamos sesión en móvil con permisos de administración sobre el grupo activo.
+\item Creamos una nueva campaña desde la aplicación.
+\item Seleccionamos entorno del catálogo, tipología, fechas y estado.
+\item Guardamos la campaña.
+\item Verificamos que aparecía correctamente en móvil y en el portal web.
+\end{itemize}
+\\ \hline
+\manualCaseCell{CU-06}{Crear y actualizar una sesión de muestreo.} &
+\textbf{PM-CU06-01 -- Creación de sesión móvil asociada a campaña}
+\begin{itemize}[leftmargin=1.2em,itemsep=0.15em,topsep=0.2em]
+\item Iniciamos sesión en móvil con un usuario del grupo activo.
+\item Abrimos una campaña activa y accedimos a sus sesiones.
+\item Creamos una sesión.
+\item Guardamos la sesión y comprobamos que quedaba asociada a campaña, grupo y observador.
+\end{itemize}
+\textbf{PM-CU06-02 -- Captura de coordenadas iniciales}
+\begin{itemize}[leftmargin=1.2em,itemsep=0.15em,topsep=0.2em]
+\item Activamos la localización del dispositivo o simulador.
+\item Creamos una sesión nueva y concedimos permiso de ubicación.
+\item Abrimos el detalle o mapa de la sesión.
+\item Comprobamos que la sesión almacenaba coordenadas iniciales.
+\end{itemize}
+\textbf{PM-CU06-03 -- Métodos de muestreo y parámetros específicos}
+\begin{itemize}[leftmargin=1.2em,itemsep=0.15em,topsep=0.2em]
+\item Creamos sesiones con método libre, cuadrícula y transecto.
+\item Hicimos recorridos para trazar las sesiones
+\item Vimos que se muestreaban correctamente según el método escogido.
+\end{itemize}
+\textbf{PM-CU06-04 -- Registro de recorrido durante la sesión}
+\begin{itemize}[leftmargin=1.2em,itemsep=0.15em,topsep=0.2em]
+\item Abrimos una sesión activa en móvil.
+\item Mantuvimos la sesión abierta mientras cambiaba la ubicación real o simulada.
+\item Revisamos el mapa o resumen de la sesión.
+\item Comprobamos que se añadían puntos de recorrido, duración y progreso.
+\end{itemize}
+\textbf{PM-CU06-05 -- Edición de sesión existente}
+\begin{itemize}[leftmargin=1.2em,itemsep=0.15em,topsep=0.2em]
+\item Creamos una sesión de muestreo en móvil.
+\item Abrimos el detalle de la sesión.
+\item Editamos campos permitidos como nombre, notas, entorno o parámetros de muestreo.
+\item Guardamos los cambios y volvimos a abrir la sesión.
+\item Comprobamos que se mantenía su asociación a campaña, grupo y observador.
+\end{itemize}
+\textbf{PM-CU06-06 -- Entorno y rangos científicos en sesión}
+\begin{itemize}[leftmargin=1.2em,itemsep=0.15em,topsep=0.2em]
+\item Creamos o editamos una sesión móvil.
+\item Seleccionamos un entorno válido e introdujimos parámetros científicos compatibles.
+\item Intentamos guardar valores fuera de rango.
+\item Corregimos los valores y comprobamos que la sesión conservaba datos válidos.
+\end{itemize}
+\\ \hline
+\manualCaseCell{CU-07}{Registrar observaciones de residuos.} &
+\textbf{PM-CU07-01 -- Registro básico de observación}
+\begin{itemize}[leftmargin=1.2em,itemsep=0.15em,topsep=0.2em]
+\item Abrimos una sesión activa propia en móvil.
+\item Intentamos guardar una observación sin seleccionar residuo y vimos la validación.
+\item Seleccionamos un residuo de la taxonomía y rellenamos el resto del formulario.
+\item Guardamos la observación y comprobamos que quedaba dentro de la sesión.
+\end{itemize}
+\textbf{PM-CU07-02 -- Edición y borrado de observación}
+\begin{itemize}[leftmargin=1.2em,itemsep=0.15em,topsep=0.2em]
+\item Seleccionamos una observación.
+\item Editamos los detalles de la misma y guardamos dichos cambios.
+\item Abrimos el detalle de la observación.
+\item Comprobamos que los cambios se habían guardado.
+\item Por último, seleccionamos la eliminación de la observación, comprobando que se realizaba correctamente.
+\end{itemize}
+\textbf{PM-CU07-04 -- Observación con fotografía}
+\begin{itemize}[leftmargin=1.2em,itemsep=0.15em,topsep=0.2em]
+\item Abrimos el formulario de nueva observación.
+\item Seleccionamos un residuo, cantidad, material y notas.
+\item Añadimos fotografías desde cámara y galería.
+\item Guardamos la observación y comprobamos que las imágenes quedaban asociadas y eran accesibles.
+\end{itemize}
+\textbf{PM-CU07-05 -- Límite y permisos de fotografías}
+\begin{itemize}[leftmargin=1.2em,itemsep=0.15em,topsep=0.2em]
+\item Denegamos temporalmente el permiso de cámara o galería.
+\item Intentamos adjuntar una imagen y vimos que la aplicación informaba del permiso denegado.
+\item Concedimos permisos y adjuntamos imágenes correctamente.
+\item Intentamos superar el límite máximo y comprobamos que la aplicación lo bloqueaba.
+\end{itemize}
+\textbf{PM-CU07-06 -- Validación y permisos de observaciones}
+\begin{itemize}[leftmargin=1.2em,itemsep=0.15em,topsep=0.2em]
+\item Creamos una observación como investigador de campo.
+\item Comprobamos la consulta con propietario, administrador de grupo y usuario de otro grupo.
+\item Vimos que los permisos permitían consultar solo el alcance correspondiente.
+\end{itemize}
+\textbf{PM-CU07-07 -- Edición de observación existente}
+\begin{itemize}[leftmargin=1.2em,itemsep=0.15em,topsep=0.2em]
+\item Creamos una observación con taxonomía, cantidad, notas y fotografía.
+\item Abrimos el detalle de la observación.
+\item Editamos campos permitidos, como cantidad o notas.
+\item Guardamos los cambios y sincronizamos cuando procedía.
+\item Revisamos en web que el detalle reflejaba la versión actualizada.
+\end{itemize}
+\textbf{PM-CU07-08 -- Rangos de tamaño científicos}
+\begin{itemize}[leftmargin=1.2em,itemsep=0.15em,topsep=0.2em]
+\item Abrimos el formulario de observación.
+\item Seleccionamos un residuo y un rango de tamaño válido.
+\item Guardamos la observación.
+\item Intentamos registrar una combinación no permitida cuando la interfaz la ofrecía.
+\item Comprobamos que los rangos se registraban de forma consistente.
+\end{itemize}
+\\ \hline
+\manualCaseCell{CU-08}{Revisar y finalizar una sesión de muestreo.} &
+\textbf{PM-CU08-01 -- Revisión de observaciones antes del cierre}
+\begin{itemize}[leftmargin=1.2em,itemsep=0.15em,topsep=0.2em]
+\item Abrimos una sesión activa con observaciones registradas.
+\item Revisamos el listado y el detalle de las observaciones.
+\item Comprobamos taxonomía, cantidad, coordenadas, notas y fotografías.
+\item Volvimos al resumen de sesión y verificamos que la información seguía disponible.
+\end{itemize}
+\textbf{PM-CU08-02 -- Eliminación o corrección antes de sincronizar}
+\begin{itemize}[leftmargin=1.2em,itemsep=0.15em,topsep=0.2em]
+\item Creamos una observación en una sesión activa.
+\item Abrimos su detalle desde móvil.
+\item Eliminamos una fotografía y después la observación completa.
+\item Confirmamos la acción y vimos que desaparecía del listado de la sesión.
+\end{itemize}
+\textbf{PM-CU08-03 -- Finalización de sesión}
+\begin{itemize}[leftmargin=1.2em,itemsep=0.15em,topsep=0.2em]
+\item Abrimos una sesión activa y revisamos sus observaciones.
+\item Confirmamos la finalización de la sesión.
+\item Comprobamos que se guardaba la fecha u hora de cierre y el progreso.
+\end{itemize}
+\\ \hline
+\manualCaseCell{CU-09}{Trabajar sin conexión y sincronizar datos.} &
+\textbf{PM-CU09-01 -- Login offline y consulta de datos cacheados}
+\begin{itemize}[leftmargin=1.2em,itemsep=0.15em,topsep=0.2em]
+\item Iniciamos sesión online en móvil y abrimos perfil, grupos y campañas para poblar la caché.
+\item Cerramos sesión, desactivamos la conectividad y volvimos a iniciar sesión.
+\item Abrimos campañas y sesiones cacheadas.
+\item Comprobamos que el acceso offline funcionaba para datos ya disponibles en el dispositivo.
+\end{itemize}
+\textbf{PM-CU09-02 -- Creación local de datos pendientes}
+\begin{itemize}[leftmargin=1.2em,itemsep=0.15em,topsep=0.2em]
+\item Trabajamos en móvil sin conexión.
+\item Creamos una sesión y una observación dentro de una campaña cacheada.
+\item Adjuntamos una fotografía cuando fue posible.
+\item Abrimos sincronización y vimos que los elementos quedaban marcados como pendientes.
+\end{itemize}
+\textbf{PM-CU09-03 -- Sincronización manual de cola pendiente}
+\begin{itemize}[leftmargin=1.2em,itemsep=0.15em,topsep=0.2em]
+\item Creamos una sesión y una observación offline.
+\item Recuperamos conectividad y abrimos la pantalla de sincronización.
+\item Pulsamos la acción de sincronizar.
+\item Comprobamos que el contador de pendientes bajaba.
+\item Verificamos en web que la sesión y la observación aparecían.
+\end{itemize}
+\textbf{PM-CU09-04 -- Restricción de sincronización por Wi-Fi}
+\begin{itemize}[leftmargin=1.2em,itemsep=0.15em,topsep=0.2em]
+\item Activamos la opción de sincronizar solo con Wi-Fi.
+\item Generamos datos pendientes y simulamos una condición sin Wi-Fi.
+\item Intentamos sincronizar y vimos que la aplicación lo bloqueaba.
+\item Restablecimos una condición válida y la sincronización se completó.
+\end{itemize}
+\textbf{PM-CU09-05 -- Descarga de cambios remotos}
+\begin{itemize}[leftmargin=1.2em,itemsep=0.15em,topsep=0.2em]
+\item Creamos o modificamos una campaña desde el portal web.
+\item Abrimos la aplicación móvil con un usuario de dicha campaña.
+\item Establecimos conexión.
+\item Comprobamos que los cambios remotos aparecían en el listado móvil.
+\end{itemize}
+\\ \hline
+\manualCaseCell{CU-10}{Consultar sesiones y observaciones.} &
+\textbf{PM-CU10-01 -- Listado web de observaciones}
+\begin{itemize}[leftmargin=1.2em,itemsep=0.15em,topsep=0.2em]
+\item Sincronizamos una observación creada desde móvil.
+\item Abrimos el módulo de observaciones en el portal web.
+\item Filtramos por campaña, sesión, entorno, observador, fecha y presencia de fotos.
+\item Abrimos el detalle y comprobamos que los datos se mostraban correctamente.
+\end{itemize}
+\textbf{PM-CU10-02 -- Consulta según permisos}
+\begin{itemize}[leftmargin=1.2em,itemsep=0.15em,topsep=0.2em]
+\item Creamos observaciones con dos usuarios del mismo grupo.
+\item Accedimos como investigador, administrador de grupo y usuario de otro grupo.
+\item Comprobamos que el listado y el detalle respetaban el alcance autorizado.
+\end{itemize}
+\textbf{PM-CU10-03 -- Consulta tras edición móvil}
+\begin{itemize}[leftmargin=1.2em,itemsep=0.15em,topsep=0.2em]
+\item Editamos una sesión o una observación desde móvil.
+\item Sincronizamos los cambios.
+\item Abrimos el portal web y consultamos el registro afectado.
+\item Aplicamos filtros para localizarlo.
+\item Comprobamos que los valores editados eran los vigentes.
+\end{itemize}
+\\ \hline
+\manualCaseCell{CU-11}{Visualizar la información en mapa.} &
+\textbf{PM-CU11-01 -- Mapa de observaciones}
+\begin{itemize}[leftmargin=1.2em,itemsep=0.15em,topsep=0.2em]
+\item Creamos observaciones con coordenadas válidas y las sincronizamos.
+\item Abrimos el módulo de mapa en web.
+\item Seleccionamos el modo de marcadores.
+\item Abrimos el popup de una observación.
+\item Comprobamos que mostraba datos básicos y fotografía cuando existía.
+\end{itemize}
+\textbf{PM-CU11-02 -- Densidad, rutas y áreas muestreadas}
+\begin{itemize}[leftmargin=1.2em,itemsep=0.15em,topsep=0.2em]
+\item Abrimos el mapa con sesiones que tenían recorrido.
+\item Cambiamos entre modos de densidad y rutas.
+\item Aplicamos filtros por campaña, entorno, categoría y fecha.
+\item Revisamos que puntos, rutas y áreas se representaban de forma coherente.
+\end{itemize}
+\\ \hline
+\manualCaseCell{CU-12}{Consultar métricas y analítica.} &
+\textbf{PM-CU12-01 -- Dashboard de métricas agregadas}
+\begin{itemize}[leftmargin=1.2em,itemsep=0.15em,topsep=0.2em]
+\item Abrimos el dashboard con un grupo activo.
+\item Revisamos totales de campañas, sesiones, observaciones, residuos y fotos.
+\item Aplicamos filtros temporales y comparamos los totales antes y después.
+\item Vimos que las métricas se recalculaban según el filtro aplicado.
+\end{itemize}
+\textbf{PM-CU12-02 -- Analítica filtrada por campaña, sesión y residuo}
+\begin{itemize}[leftmargin=1.2em,itemsep=0.15em,topsep=0.2em]
+\item Abrimos el módulo de analítica.
+\item Filtramos por campaña, sesión, entorno, observador y fecha.
+\item Revisamos rankings de materiales o categorías.
+\item Comprobamos que el panel reflejaba el subconjunto seleccionado.
+\end{itemize}
+\textbf{PM-CU12-03 -- Métricas respetando grupo activo y permisos}
+\begin{itemize}[leftmargin=1.2em,itemsep=0.15em,topsep=0.2em]
+\item Iniciamos sesión con un usuario perteneciente a varios grupos.
+\item Seleccionamos un primer grupo activo y revisamos dashboard y analítica.
+\item Cambiamos de grupo activo y volvimos a revisar las métricas.
+\item Repetimos la comprobación con distintos perfiles.
+\item Vimos que los cálculos respetaban permisos y grupo activo.
+\end{itemize}
+\textbf{PM-CU12-04 -- Recálculo tras edición o eliminación}
+\begin{itemize}[leftmargin=1.2em,itemsep=0.15em,topsep=0.2em]
+\item Registramos varias observaciones en una sesión.
+\item Revisamos las métricas del dashboard.
+\item Editamos o eliminamos una observación desde móvil.
+\item Sincronizamos los cambios.
+\item Volvimos a dashboard y analítica, y vimos que totales, rankings y gráficos cambiaban de forma coherente.
+\end{itemize}
+\\ \hline
+\manualCaseCell{CU-13}{Exportar datos.} &
+\textbf{PM-CU13-01 -- Exportación desde dashboard}
+\begin{itemize}[leftmargin=1.2em,itemsep=0.15em,topsep=0.2em]
+\item Abrimos el dashboard web.
+\item Aplicamos un rango de fechas.
+\item Exportamos los datos en CSV y JSON.
+\item Abrimos los ficheros y comprobamos que contenían datos coherentes con los filtros.
+\end{itemize}
+\textbf{PM-CU13-02 -- Exportación científica desde analítica}
+\begin{itemize}[leftmargin=1.2em,itemsep=0.15em,topsep=0.2em]
+\item Abrimos analítica y aplicamos filtros por campaña, sesión o categoría.
+\item Exportamos observaciones, residuos y resúmenes.
+\item Revisamos que los CSV incluían columnas y datos interpretables.
+\item Comprobamos que los ficheros respetaban los filtros activos.
+\end{itemize}
+\textbf{PM-CU13-03 -- Exportación GeoJSON desde mapa}
+\begin{itemize}[leftmargin=1.2em,itemsep=0.15em,topsep=0.2em]
+\item Abrimos el mapa y aplicamos filtros.
+\item Exportamos GeoJSON.
+\item Abrimos el fichero generado.
+\item Comprobamos que contenía una \texttt{FeatureCollection} coherente con los datos visibles.
+\end{itemize}
+\\ \hline
+\manualCaseCell{CU-14}{Configurar preferencias de la aplicación.} &
+\textbf{PM-CU14-01 -- Cambio de idioma}
+\begin{itemize}[leftmargin=1.2em,itemsep=0.15em,topsep=0.2em]
+\item Abrimos la configuración en web o móvil.
+\item Cambiamos el idioma de español a inglés.
+\item Navegamos por varias pantallas y vimos que los textos principales cambiaban.
+\item Volvimos a español y comprobamos que la preferencia se mantenía.
+\end{itemize}
+\textbf{PM-CU14-02 -- Preferencias de sincronización y localización}
+\begin{itemize}[leftmargin=1.2em,itemsep=0.15em,topsep=0.2em]
+\item Abrimos la configuración móvil.
+\item Activamos y desactivamos sincronización automática, solo Wi-Fi y ubicación de alta precisión.
+\item Cerramos y reabrimos la configuración.
+\item Comprobamos que los valores se conservaban y afectaban al comportamiento de la aplicación.
+\end{itemize}
+\textbf{PM-CU14-03 -- Configuración web y catálogo científico}
+\begin{itemize}[leftmargin=1.2em,itemsep=0.15em,topsep=0.2em]
+\item Iniciamos sesión como superadministrador.
+\item Abrimos la configuración web.
+\item Creamos un entorno de catálogo y una tipología asociada.
+\item Intentamos crear duplicados y comprobamos que se rechazaban.
+\item Editamos y eliminamos registros no usados, validando permisos y referencias en uso.
+\end{itemize}
+\\ \hline
+\end{longtable}
+}
+\renewcommand{\arraystretch}{1}
+
+\subsection{Matriz de trazabilidad}
+
+La matriz siguiente relaciona los casos de uso consolidados con las pruebas
+manuales descritas. La relación se limita a las pruebas definidas para cada
+caso de uso, aunque durante su ejecución se hayan utilizado datos o flujos
+pertenecientes a otros casos ya validados.
+
+{\scriptsize
+\setlength{\tabcolsep}{2pt}
+\renewcommand{\arraystretch}{1.12}
+\begin{longtable}{|>{\raggedright\arraybackslash}p{2.25cm}|*{14}{>{\centering\arraybackslash}p{0.48cm}|}}
+\caption{Matriz de trazabilidad entre casos de uso y pruebas manuales}
+\label{tab:matriz_trazabilidad_cu_pm} \\
+\hline
+\textbf{PM/CU} & \textbf{01} & \textbf{02} & \textbf{03} & \textbf{04} & \textbf{05} & \textbf{06} & \textbf{07} & \textbf{08} & \textbf{09} & \textbf{10} & \textbf{11} & \textbf{12} & \textbf{13} & \textbf{14} \\
+\hline
+\endfirsthead
+\hline
+\textbf{PM/CU} & \textbf{01} & \textbf{02} & \textbf{03} & \textbf{04} & \textbf{05} & \textbf{06} & \textbf{07} & \textbf{08} & \textbf{09} & \textbf{10} & \textbf{11} & \textbf{12} & \textbf{13} & \textbf{14} \\
+\hline
+\endhead
+PM-CU01-01 & X &  &  &  &  &  &  &  &  &  &  &  &  &  \\
+\hline
+PM-CU01-02 & X &  &  &  &  &  &  &  &  &  &  &  &  &  \\
+\hline
+PM-CU01-03 & X &  &  &  &  &  &  &  &  &  &  &  &  &  \\
+\hline
+PM-CU01-04 & X &  &  &  &  &  &  &  &  &  &  &  &  &  \\
+\hline
+PM-CU02-01 &  & X &  &  &  &  &  &  &  &  &  &  &  &  \\
+\hline
+PM-CU02-02 &  & X &  &  &  &  &  &  &  &  &  &  &  &  \\
+\hline
+PM-CU02-03 &  & X &  &  &  &  &  &  &  &  &  &  &  &  \\
+\hline
+PM-CU03-01 &  &  & X &  &  &  &  &  &  &  &  &  &  &  \\
+\hline
+PM-CU03-02 &  &  & X &  &  &  &  &  &  &  &  &  &  &  \\
+\hline
+PM-CU03-03 &  &  & X &  &  &  &  &  &  &  &  &  &  &  \\
+\hline
+PM-CU03-04 &  &  & X &  &  &  &  &  &  &  &  &  &  &  \\
+\hline
+PM-CU04-01 &  &  &  & X &  &  &  &  &  &  &  &  &  &  \\
+\hline
+PM-CU04-02 &  &  &  & X &  &  &  &  &  &  &  &  &  &  \\
+\hline
+PM-CU04-03 &  &  &  & X &  &  &  &  &  &  &  &  &  &  \\
+\hline
+PM-CU05-01 &  &  &  &  & X &  &  &  &  &  &  &  &  &  \\
+\hline
+PM-CU05-02 &  &  &  &  & X &  &  &  &  &  &  &  &  &  \\
+\hline
+PM-CU05-03 &  &  &  &  & X &  &  &  &  &  &  &  &  &  \\
+\hline
+PM-CU05-04 &  &  &  &  & X &  &  &  &  &  &  &  &  &  \\
+\hline
+PM-CU06-01 &  &  &  &  &  & X &  &  &  &  &  &  &  &  \\
+\hline
+PM-CU06-02 &  &  &  &  &  & X &  &  &  &  &  &  &  &  \\
+\hline
+PM-CU06-03 &  &  &  &  &  & X &  &  &  &  &  &  &  &  \\
+\hline
+PM-CU06-04 &  &  &  &  &  & X &  &  &  &  &  &  &  &  \\
+\hline
+PM-CU06-05 &  &  &  &  &  & X &  &  &  &  &  &  &  &  \\
+\hline
+PM-CU06-06 &  &  &  &  &  & X &  &  &  &  &  &  &  &  \\
+\hline
+PM-CU07-01 &  &  &  &  &  &  & X &  &  &  &  &  &  &  \\
+\hline
+PM-CU07-02 &  &  &  &  &  &  & X &  &  &  &  &  &  &  \\
+\hline
+PM-CU07-03 &  &  &  &  &  &  & X &  &  &  &  &  &  &  \\
+\hline
+PM-CU07-04 &  &  &  &  &  &  & X &  &  &  &  &  &  &  \\
+\hline
+PM-CU07-05 &  &  &  &  &  &  & X &  &  &  &  &  &  &  \\
+\hline
+PM-CU07-06 &  &  &  &  &  &  & X &  &  &  &  &  &  &  \\
+\hline
+PM-CU07-07 &  &  &  &  &  &  & X &  &  &  &  &  &  &  \\
+\hline
+PM-CU07-08 &  &  &  &  &  &  & X &  &  &  &  &  &  &  \\
+\hline
+PM-CU08-01 &  &  &  &  &  &  &  & X &  &  &  &  &  &  \\
+\hline
+PM-CU08-02 &  &  &  &  &  &  &  & X &  &  &  &  &  &  \\
+\hline
+PM-CU08-03 &  &  &  &  &  &  &  & X &  &  &  &  &  &  \\
+\hline
+PM-CU09-01 &  &  &  &  &  &  &  &  & X &  &  &  &  &  \\
+\hline
+PM-CU09-02 &  &  &  &  &  &  &  &  & X &  &  &  &  &  \\
+\hline
+PM-CU09-03 &  &  &  &  &  &  &  &  & X &  &  &  &  &  \\
+\hline
+PM-CU09-04 &  &  &  &  &  &  &  &  & X &  &  &  &  &  \\
+\hline
+PM-CU09-05 &  &  &  &  &  &  &  &  & X &  &  &  &  &  \\
+\hline
+PM-CU10-01 &  &  &  &  &  &  &  &  &  & X &  &  &  &  \\
+\hline
+PM-CU10-02 &  &  &  &  &  &  &  &  &  & X &  &  &  &  \\
+\hline
+PM-CU10-03 &  &  &  &  &  &  &  &  &  & X &  &  &  &  \\
+\hline
+PM-CU11-01 &  &  &  &  &  &  &  &  &  &  & X &  &  &  \\
+\hline
+PM-CU11-02 &  &  &  &  &  &  &  &  &  &  & X &  &  &  \\
+\hline
+PM-CU12-01 &  &  &  &  &  &  &  &  &  &  &  & X &  &  \\
+\hline
+PM-CU12-02 &  &  &  &  &  &  &  &  &  &  &  & X &  &  \\
+\hline
+PM-CU12-03 &  &  &  &  &  &  &  &  &  &  &  & X &  &  \\
+\hline
+PM-CU12-04 &  &  &  &  &  &  &  &  &  &  &  & X &  &  \\
+\hline
+PM-CU13-01 &  &  &  &  &  &  &  &  &  &  &  &  & X &  \\
+\hline
+PM-CU13-02 &  &  &  &  &  &  &  &  &  &  &  &  & X &  \\
+\hline
+PM-CU13-03 &  &  &  &  &  &  &  &  &  &  &  &  & X &  \\
+\hline
+PM-CU14-01 &  &  &  &  &  &  &  &  &  &  &  &  &  & X \\
+\hline
+PM-CU14-02 &  &  &  &  &  &  &  &  &  &  &  &  &  & X \\
+\hline
+PM-CU14-03 &  &  &  &  &  &  &  &  &  &  &  &  &  & X \\
+\hline
+\end{longtable}
+}
+\renewcommand{\arraystretch}{1}
+
 \subsection{Limitaciones finales}
