@@ -141,7 +141,7 @@ en requisitos más cercanos al funcionamiento real del sistema.
   RF-006 & Selección de grupo activo para filtrar datos y acciones. & Alta \\
   RF-007 & Trabajo por sesiones de muestreo en la aplicación móvil. & Crítica \\
   RF-008 & Captura de coordenadas GPS en sesiones y observaciones. & Crítica \\
-  RF-009 & Registro de metadatos de muestreo asociados a la sesión, incluyendo protocolo, entorno y parámetros del área observada. & Alta \\
+  RF-009 & Creación y consulta de campañas asociadas a un grupo. & Alta \\
   RF-010 & Fotografías asociadas a observaciones. & Alta \\
   RF-012 & Navegación por taxonomía jerárquica basada en categorías estandarizadas de residuos. & Crítica \\
   RF-015 & Registro de cantidad observada como entero positivo. & Crítica \\
@@ -215,15 +215,14 @@ costeras y marinas \cite{gonzalez2016riverine,gonzalezfernandez2017harmonized,os
   \textbf{ID} & \textbf{Descripción} & \textbf{Prioridad} \\
   \midrule
   \endhead
-  RF-021 & Estado de sincronización de sesiones: sincronizada, pendiente, activa o con error. & Alta \\
-  RF-022 & Funcionamiento offline completo con sesiones, observaciones, fotografías y coordenadas locales. & Crítica \\
-  RF-023 & Sincronización automática o manual al recuperar conectividad, sin pérdida de datos. & Crítica \\
-  RF-024 & Finalización de sesiones activas antes de sincronizarlas cuando sea necesario. & Alta \\
-  RF-025 & Pantalla de sincronización con sesiones pendientes, sincronizadas y número de observaciones. & Alta \\
+  RF-021 & Estado de sincronización de sesiones y observaciones: sincronizado, pendiente, fallido o en conflicto. & Alta \\
+  RF-022 & Funcionamiento offline durante la captura de campo con campañas descargadas, sesiones, observaciones y elementos asociados. & Crítica \\
+  RF-023 & Sincronización por lotes de cambios pendientes, con resultado individual por operación. & Crítica \\
+  RF-024 & Consulta de cambios remotos del grupo activo desde una marca temporal. & Alta \\
+  RF-025 & Persistencia local de sesiones y observaciones mediante SQLite. & Alta \\
   RF-028 & Visualización en mapa con filtros por entorno, campaña, sesión o localización cuando proceda. & Alta \\
   RF-035 & Interfaz en español e inglés, sin soporte multiidioma avanzado dentro del alcance. & Media \\
-  RF-036 & Documentación técnica de instalación, despliegue y administración básica. & Alta \\
-  RF-037 & Documentación del mantenimiento posterior como actividad fuera del alcance del TFG. & Media \\
+  RF-036 & Configuración de preferencias de sincronización y localización. & Media \\
   RNF-006 & Operabilidad mediante documentación suficiente para despliegue y administración básica. & Alta \\
   RNF-007 & Mantenibilidad orientada a facilitar futuras modificaciones de categorías o metadatos. & Media \\
   RDC-006 & Versionado y documentación de futuras evoluciones de categorías, taxonomías y metadatos. & Media \\
@@ -238,59 +237,74 @@ alcance operativo posterior a la entrega.
 
 \section{Casos de uso de referencia}
 
-Los casos de uso de referencia permiten relacionar los requisitos finales con
-interacciones concretas del sistema. No se pretende recoger todos los escenarios
-posibles, sino los flujos principales necesarios para validar el comportamiento de
-OmniLitter.
+Los casos de uso de referencia permiten relacionar los requisitos funcionales
+finales con interacciones concretas del sistema. La relación se ha actualizado a
+partir del documento específico de casos de uso, que organiza OmniLitter en torno
+a catorce flujos principales.
 
 \begin{itemize}
-\item \textbf{CU-01 -- Autenticarse en el sistema.} El usuario accede al portal
-web o a la aplicación móvil mediante credenciales válidas.
+\item \textbf{CU-01 -- Registrarse, autenticarse y gestionar la sesión.} El
+usuario accede al sistema, crea una cuenta, recupera el acceso cuando procede y
+gestiona su sesión activa.
 
-\item \textbf{CU-02 -- Seleccionar grupo activo.} El usuario autenticado elige
-el grupo de trabajo sobre el que se filtrarán campañas, sesiones y observaciones.
+\item \textbf{CU-02 -- Gestionar el perfil y el grupo activo.} El usuario
+mantiene sus datos básicos y selecciona el grupo de trabajo sobre el que opera.
 
-\item \textbf{CU-03 -- Crear sesión de muestreo.} El investigador de campo inicia
-una sesión, indicando campaña, entorno y metadatos de muestreo.
+\item \textbf{CU-03 -- Administrar grupos, miembros e invitaciones.} Los usuarios
+con permisos organizan equipos de trabajo, membresías e invitaciones.
 
-\item \textbf{CU-04 -- Registrar observación.} El investigador registra un
-residuo indicando taxonomía, cantidad, GPS, fecha, comentarios y fotografía
-cuando proceda.
+\item \textbf{CU-04 -- Administrar usuarios de la plataforma.} El
+superadministrador gestiona cuentas, roles globales y estado de los usuarios.
 
-\item \textbf{CU-05 -- Revisar y finalizar sesión.} El usuario comprueba las
-observaciones registradas en una sesión activa y la finaliza antes de
-sincronizarla.
+\item \textbf{CU-05 -- Crear y gestionar campañas de muestreo.} El administrador
+de grupo planifica campañas asociadas al grupo activo.
 
-\item \textbf{CU-06 -- Sincronizar datos pendientes.} El usuario o el sistema
-sube a la base de datos principal las sesiones y observaciones pendientes cuando
-existe conexión.
+\item \textbf{CU-06 -- Crear y actualizar una sesión de muestreo.} El
+investigador inicia una sesión dentro de una campaña y registra el progreso del
+trabajo de campo.
 
-\item \textbf{CU-07 -- Consultar sesiones y observaciones.} El usuario autorizado
-revisa desde el portal web sesiones, observaciones, filtros, mapas y métricas
-agregadas.
+\item \textbf{CU-07 -- Registrar observaciones de residuos.} El investigador
+registra residuos dentro de una sesión, con taxonomía, cantidad, fotografía,
+coordenadas y notas cuando proceda.
 
-\item \textbf{CU-08 -- Administrar usuarios y grupos.} Un administrador gestiona
-usuarios, grupos, membresías y roles dentro del alcance implementado.
+\item \textbf{CU-08 -- Revisar y finalizar una sesión de muestreo.} El
+investigador revisa la información recogida antes de cerrar la sesión.
 
-\item \textbf{CU-09 -- Exportar datos.} Un usuario autorizado exporta los datos
-recopilados para su análisis posterior en herramientas externas.
+\item \textbf{CU-09 -- Trabajar sin conexión y sincronizar datos.} La aplicación
+móvil conserva datos localmente y los sincroniza cuando existe conectividad.
 
-\item \textbf{CU-10 -- Desplegar y operar el sistema.} Una persona con perfil
-técnico utiliza la documentación del proyecto para instalar, desplegar y
-administrar la plataforma de forma básica.
+\item \textbf{CU-10 -- Consultar sesiones y observaciones.} Los usuarios
+autorizados consultan la información registrada desde web o móvil respetando el
+alcance del grupo activo.
+
+\item \textbf{CU-11 -- Visualizar la información en mapa.} Los usuarios
+interpretan espacialmente observaciones, rutas y áreas muestreadas.
+
+\item \textbf{CU-12 -- Consultar métricas y analítica.} Los usuarios autorizados
+analizan información agregada del grupo activo.
+
+\item \textbf{CU-13 -- Exportar datos.} Los usuarios autorizados extraen datos en
+formatos reutilizables para análisis externo.
+
+\item \textbf{CU-14 -- Configurar preferencias de la aplicación.} El usuario
+adapta idioma, localización y comportamiento de sincronización, especialmente en
+la aplicación móvil.
 \end{itemize}
 
 \section{Requisitos finales consolidados}
 
-En esta sección se presenta la versión final consolidada de requisitos. Para cada
-bloque se introduce brevemente el caso de uso correspondiente y, a continuación,
-se describen los requisitos asociados mediante tarjetas.
+En esta sección se presenta la versión final consolidada de requisitos
+funcionales. Para cada bloque se introduce el caso de uso correspondiente y se
+describen los requisitos asociados mediante tarjetas. Los criterios de aceptación
+se tratan en la planificación y validación de pruebas, por lo que no se duplican
+dentro de las tarjetas de requisitos.
 
-\subsection{CU-01 -- Autenticarse en el sistema}
+\subsection{CU-01 -- Registrarse, autenticarse y gestionar la sesión}
 
-Este caso de uso permite que un usuario acceda al sistema desde el portal web o
-desde la aplicación móvil. Es la base para aplicar permisos, acceder a grupos de
-trabajo y registrar actividad asociada a una cuenta concreta.
+El usuario debe poder acceder al sistema de forma segura, tanto desde el portal
+web como desde la aplicación móvil. Este caso de uso cubre el registro de una
+nueva cuenta, el inicio de sesión, la renovación de la sesión, el cierre de
+sesión y la recuperación de acceso.
 
 \begin{requisitocard}{RF-001 -- Inicio de sesión en portal web y aplicación móvil}
 
@@ -300,16 +314,14 @@ trabajo y registrar actividad asociada a una cuenta concreta.
 
 \textbf{Caso de uso asociado:} CU-01.
 
-\textbf{Descripción:} el sistema deberá permitir el inicio de sesión de usuarios
-en el portal web y en la aplicación móvil.
-
-\textbf{Criterio de aceptación:} un usuario con credenciales válidas puede acceder
-al sistema desde ambas plataformas y visualizar las funcionalidades
-correspondientes a su perfil.
+\textbf{Descripción:} el sistema deberá permitir que un usuario con credenciales
+válidas inicie sesión desde cualquiera de las plataformas disponibles. Tras
+autenticarse, el usuario recibirá una sesión válida y accederá únicamente a las
+funcionalidades permitidas por su perfil y sus grupos.
 
 \end{requisitocard}
 
-\begin{requisitocard}{RF-002 -- Cierre de sesión y revocación local}
+\begin{requisitocard}{RF-002 -- Cierre de sesión y revocación de sesión}
 
 \textbf{Tipo:} funcional.
 
@@ -317,36 +329,58 @@ correspondientes a su perfil.
 
 \textbf{Caso de uso asociado:} CU-01.
 
-\textbf{Descripción:} el sistema deberá permitir el cierre de sesión y la
-revocación de la sesión local.
-
-\textbf{Criterio de aceptación:} el usuario puede cerrar sesión y no puede acceder
-a zonas protegidas sin autenticarse de nuevo.
+\textbf{Descripción:} el sistema deberá permitir cerrar la sesión activa y revocar
+el token de refresco asociado. Tras el cierre de sesión, el usuario no podrá
+acceder a rutas protegidas sin autenticarse de nuevo.
 
 \end{requisitocard}
 
-\subsection{CU-02 -- Seleccionar grupo activo}
-
-Este caso de uso permite que un usuario que pertenece a uno o varios grupos pueda
-trabajar sobre un contexto concreto. El grupo activo determina qué campañas,
-sesiones, observaciones, métricas y acciones están disponibles.
-
-\begin{requisitocard}{RF-004 -- Roles y control de acceso por grupo}
+\begin{requisitocard}{RF-003 -- Registro de nuevos usuarios}
 
 \textbf{Tipo:} funcional.
 
-\textbf{Prioridad:} crítica.
+\textbf{Prioridad:} alta.
 
-\textbf{Caso de uso asociado:} CU-02, CU-07 y CU-08.
+\textbf{Caso de uso asociado:} CU-01.
 
-\textbf{Descripción:} el sistema deberá soportar roles y control de acceso por
-grupo, garantizando que cada usuario solo pueda acceder a las funcionalidades y
-datos permitidos dentro del grupo correspondiente.
-
-\textbf{Criterio de aceptación:} las funcionalidades visibles y las operaciones
-permitidas varían según el rol del usuario dentro del grupo activo.
+\textbf{Descripción:} el sistema deberá permitir la creación de nuevas cuentas
+mediante nombre, correo electrónico y contraseña. La contraseña deberá cumplir las
+reglas mínimas de seguridad definidas por la aplicación.
 
 \end{requisitocard}
+
+\begin{requisitocard}{RF-018 -- Recuperación y restablecimiento de contraseña}
+
+\textbf{Tipo:} funcional.
+
+\textbf{Prioridad:} media.
+
+\textbf{Caso de uso asociado:} CU-01.
+
+\textbf{Descripción:} el sistema deberá permitir solicitar la recuperación de
+contraseña mediante el correo electrónico de la cuenta y restablecerla mediante un
+token temporal válido.
+
+\end{requisitocard}
+
+\begin{requisitocard}{RF-019 -- Cambio de contraseña del usuario autenticado}
+
+\textbf{Tipo:} funcional.
+
+\textbf{Prioridad:} media.
+
+\textbf{Caso de uso asociado:} CU-01.
+
+\textbf{Descripción:} el sistema deberá permitir que un usuario autenticado cambie
+su contraseña indicando la contraseña actual y una nueva contraseña válida.
+
+\end{requisitocard}
+
+\subsection{CU-02 -- Gestionar el perfil y el grupo activo}
+
+El usuario autenticado debe poder mantener sus datos básicos y seleccionar el
+grupo de trabajo sobre el que desea operar. El grupo activo determina campañas,
+sesiones, observaciones, métricas, mapas y operaciones permitidas.
 
 \begin{requisitocard}{RF-006 -- Selección de grupo activo}
 
@@ -356,301 +390,44 @@ permitidas varían según el rol del usuario dentro del grupo activo.
 
 \textbf{Caso de uso asociado:} CU-02.
 
-\textbf{Descripción:} el sistema deberá permitir seleccionar un grupo activo para
-filtrar datos y acciones.
-
-\textbf{Criterio de aceptación:} las campañas, sesiones, observaciones y métricas
-mostradas se corresponden con el grupo activo seleccionado.
+\textbf{Descripción:} el sistema deberá permitir seleccionar un grupo activo entre
+los grupos a los que pertenece el usuario. Los datos mostrados y las operaciones
+disponibles deberán corresponderse con dicho grupo.
 
 \end{requisitocard}
 
-\subsection{CU-03 -- Crear sesión de muestreo}
-
-Este caso de uso representa el inicio del trabajo de campo. Antes de registrar
-observaciones individuales, el investigador crea una sesión de muestreo que
-almacena el contexto de la actividad, como campaña, entorno, parámetros de
-muestreo, ubicación inicial y metadatos asociados.
-
-\begin{requisitocard}{RF-007 -- Trabajo por sesiones de muestreo}
-
-\textbf{Tipo:} funcional.
-
-\textbf{Prioridad:} crítica.
-
-\textbf{Caso de uso asociado:} CU-03.
-
-\textbf{Descripción:} la aplicación móvil deberá organizar el trabajo de campo
-mediante sesiones de muestreo.
-
-\textbf{Criterio de aceptación:} el usuario puede crear una sesión y asociar a
-ella las observaciones registradas durante el muestreo.
-
-\end{requisitocard}
-
-\begin{requisitocard}{RF-008 -- Captura de coordenadas GPS}
-
-\textbf{Tipo:} funcional.
-
-\textbf{Prioridad:} crítica.
-
-\textbf{Caso de uso asociado:} CU-03 y CU-04.
-
-\textbf{Descripción:} la aplicación móvil deberá capturar coordenadas GPS al
-iniciar sesiones de muestreo y al registrar observaciones.
-
-\textbf{Criterio de aceptación:} las sesiones y observaciones almacenan latitud y
-longitud cuando el dispositivo dispone de permisos y señal GPS suficiente.
-
-\end{requisitocard}
-
-\begin{requisitocard}{RF-009 -- Metadatos de muestreo}
-
-\textbf{Tipo:} funcional.
-
-\textbf{Prioridad:} alta.
-
-\textbf{Caso de uso asociado:} CU-03.
-
-\textbf{Descripción:} el sistema deberá permitir registrar metadatos de muestreo,
-como entorno, protocolo utilizado, tipo de método, parámetros del transecto o
-cuadrante, duración, área observada y cualquier información necesaria para
-interpretar el dato en su contexto científico.
-
-\textbf{Criterio de aceptación:} la sesión queda asociada a los metadatos
-necesarios para interpretar correctamente los datos recopilados y comparar
-campañas realizadas en distintos entornos o periodos.
-
-\end{requisitocard}
-
-\subsection{CU-04 -- Registrar observación}
-
-Este caso de uso constituye el flujo principal de la aplicación móvil. Durante una
-sesión de muestreo, el investigador registra un residuo observado, seleccionando
-su tipo dentro de la taxonomía, indicando cantidad y asociando información de
-ubicación, fecha, comentarios y fotografías cuando proceda.
-
-\begin{requisitocard}{RF-010 -- Fotografías asociadas a observaciones}
-
-\textbf{Tipo:} funcional.
-
-\textbf{Prioridad:} alta.
-
-\textbf{Caso de uso asociado:} CU-04.
-
-\textbf{Descripción:} la aplicación móvil deberá permitir adjuntar fotografías a
-una observación.
-
-\textbf{Criterio de aceptación:} el usuario puede capturar o seleccionar una
-fotografía y esta queda vinculada a la observación correspondiente.
-
-\end{requisitocard}
-
-\begin{requisitocard}{RF-012 -- Navegación por taxonomía jerárquica}
-
-\textbf{Tipo:} funcional.
-
-\textbf{Prioridad:} crítica.
-
-\textbf{Caso de uso asociado:} CU-04.
-
-\textbf{Descripción:} la aplicación móvil deberá permitir navegar por una
-taxonomía jerárquica de residuos basada en categorías estandarizadas, tomando como
-referencia listas comunes utilizadas en monitorización de basuras.
-
-\textbf{Criterio de aceptación:} el usuario puede seleccionar un tipo de residuo
-desde una estructura organizada por categorías y subcategorías, conservando un
-código estable asociado al ítem seleccionado.
-
-\end{requisitocard}
-
-\begin{requisitocard}{RF-015 -- Cantidad observada}
-
-\textbf{Tipo:} funcional.
-
-\textbf{Prioridad:} crítica.
-
-\textbf{Caso de uso asociado:} CU-04.
-
-\textbf{Descripción:} el sistema deberá registrar la cantidad observada como un
-valor entero positivo.
-
-\textbf{Criterio de aceptación:} no se permite guardar una observación con cantidad
-vacía, negativa o igual a cero.
-
-\end{requisitocard}
-
-\subsection{CU-05 -- Revisar y finalizar sesión}
-
-Este caso de uso permite revisar la información registrada antes de cerrar una
-sesión de muestreo. La revisión es importante para detectar errores antes de
-sincronizar los datos con el sistema central.
-
-\begin{requisitocard}{RF-020 -- Revisión de sesión antes de finalizarla}
-
-\textbf{Tipo:} funcional.
-
-\textbf{Prioridad:} alta.
-
-\textbf{Caso de uso asociado:} CU-05.
-
-\textbf{Descripción:} la aplicación móvil deberá permitir revisar una sesión antes
-de finalizarla, comprobando las observaciones registradas antes de su
-sincronización o envío al servidor.
-
-\textbf{Criterio de aceptación:} el usuario puede consultar las observaciones de
-una sesión activa y comprobar su contenido antes de cerrarla.
-
-\end{requisitocard}
-
-\begin{requisitocard}{RF-024 -- Finalización de sesiones activas}
-
-\textbf{Tipo:} funcional.
-
-\textbf{Prioridad:} alta.
-
-\textbf{Caso de uso asociado:} CU-05 y CU-06.
-
-\textbf{Descripción:} la aplicación móvil deberá permitir finalizar sesiones
-activas antes de sincronizarlas cuando sea necesario.
-
-\textbf{Criterio de aceptación:} una sesión activa puede cerrarse desde el flujo de
-revisión o sincronización antes de enviarse al servidor.
-
-\end{requisitocard}
-
-\subsection{CU-06 -- Sincronizar datos pendientes}
-
-Este caso de uso cubre el funcionamiento offline y la sincronización posterior de
-los datos. Permite que las sesiones y observaciones registradas sin conexión se
-mantengan almacenadas localmente hasta que puedan enviarse al servidor.
-
-\begin{requisitocard}{RF-021 -- Estado de sincronización de sesiones}
-
-\textbf{Tipo:} funcional.
-
-\textbf{Prioridad:} alta.
-
-\textbf{Caso de uso asociado:} CU-06.
-
-\textbf{Descripción:} la aplicación móvil deberá mostrar el estado de
-sincronización de cada sesión, diferenciando sesiones sincronizadas, pendientes,
-activas o con error.
-
-\textbf{Criterio de aceptación:} el usuario puede identificar claramente el estado
-de cada sesión desde la interfaz de sincronización.
-
-\end{requisitocard}
-
-\begin{requisitocard}{RF-022 -- Funcionamiento offline completo}
-
-\textbf{Tipo:} funcional.
-
-\textbf{Prioridad:} crítica.
-
-\textbf{Caso de uso asociado:} CU-03, CU-04 y CU-06.
-
-\textbf{Descripción:} la aplicación móvil deberá permitir la captura sin conexión
-durante el trabajo de campo, almacenando localmente sesiones, observaciones,
-fotografías y coordenadas GPS.
-
-\textbf{Criterio de aceptación:} el usuario puede crear sesiones y observaciones
-sin conexión, quedando los datos disponibles para sincronización posterior.
-
-\end{requisitocard}
-
-\begin{requisitocard}{RF-023 -- Sincronización automática o manual}
-
-\textbf{Tipo:} funcional.
-
-\textbf{Prioridad:} crítica.
-
-\textbf{Caso de uso asociado:} CU-06.
-
-\textbf{Descripción:} el sistema deberá disponer de una cola de sincronización y
-permitir la subida de datos pendientes al recuperar conectividad, incluyendo
-sincronización automática o manual sin pérdida de datos.
-
-\textbf{Criterio de aceptación:} los registros pendientes se envían al servidor
-cuando existe conexión y permanecen disponibles si se produce un error.
-
-\end{requisitocard}
-
-\begin{requisitocard}{RF-025 -- Pantalla de sincronización}
-
-\textbf{Tipo:} funcional.
-
-\textbf{Prioridad:} alta.
-
-\textbf{Caso de uso asociado:} CU-06.
-
-\textbf{Descripción:} la aplicación móvil deberá incluir una pantalla de
-sincronización con detalle de sesiones pendientes y número de ítems u
-observaciones asociados.
-
-\textbf{Criterio de aceptación:} el usuario puede consultar qué sesiones están
-pendientes, cuáles están sincronizadas y cuántas observaciones contiene cada una.
-
-\end{requisitocard}
-
-\subsection{CU-07 -- Consultar sesiones y observaciones}
-
-Este caso de uso representa la explotación de la información desde el portal web.
-Los usuarios autorizados pueden consultar sesiones, observaciones, mapas y
-métricas agregadas, siempre respetando el aislamiento por grupo.
-
-\begin{requisitocard}{RF-027 -- Listados de sesiones y observaciones con filtros}
-
-\textbf{Tipo:} funcional.
-
-\textbf{Prioridad:} alta.
-
-\textbf{Caso de uso asociado:} CU-07.
-
-\textbf{Descripción:} el portal web deberá permitir consultar sesiones y
-observaciones mediante listados y filtros.
-
-\textbf{Criterio de aceptación:} un usuario autorizado puede filtrar datos por
-grupo, campaña, sesión, entorno u otros criterios disponibles.
-
-\end{requisitocard}
-
-\begin{requisitocard}{RF-028 -- Visualización en mapa con filtros}
-
-\textbf{Tipo:} funcional.
-
-\textbf{Prioridad:} alta.
-
-\textbf{Caso de uso asociado:} CU-07.
-
-\textbf{Descripción:} el portal web deberá permitir visualizar observaciones en un
-mapa o vista geográfica, con filtros por entorno, campaña, sesión o localización
-cuando proceda.
-
-\textbf{Criterio de aceptación:} las observaciones geolocalizadas pueden
-consultarse espacialmente y filtrarse según los criterios definidos.
-
-\end{requisitocard}
-
-\begin{requisitocard}{RF-030 -- Dashboard con métricas agregadas}
+\begin{requisitocard}{RF-011 -- Edición del perfil básico del usuario}
 
 \textbf{Tipo:} funcional.
 
 \textbf{Prioridad:} media.
 
-\textbf{Caso de uso asociado:} CU-07.
+\textbf{Caso de uso asociado:} CU-02.
 
-\textbf{Descripción:} el portal web deberá mostrar un dashboard con métricas
-agregadas.
-
-\textbf{Criterio de aceptación:} el usuario puede visualizar indicadores, gráficos
-o resúmenes calculados a partir de las observaciones almacenadas.
+\textbf{Descripción:} el sistema deberá permitir consultar y modificar los datos
+básicos del usuario autenticado, como el nombre visible y el correo electrónico.
 
 \end{requisitocard}
 
-\subsection{CU-08 -- Administrar usuarios y grupos}
+\subsection{CU-03 -- Administrar grupos, miembros e invitaciones}
 
-Este caso de uso permite a los usuarios autorizados administrar la estructura
-organizativa de la plataforma, incluyendo usuarios, grupos, membresías y roles.
+Los usuarios con permisos adecuados deben poder organizar equipos de trabajo
+mediante grupos, gestionar miembros y controlar invitaciones pendientes. Este
+caso de uso garantiza la colaboración sin mezclar datos de distintos equipos.
+
+\begin{requisitocard}{RF-004 -- Roles y control de acceso por grupo}
+
+\textbf{Tipo:} funcional.
+
+\textbf{Prioridad:} crítica.
+
+\textbf{Caso de uso asociado:} CU-03, CU-04, CU-05, CU-10, CU-12 y CU-13.
+
+\textbf{Descripción:} el sistema deberá aplicar permisos en función del rol global
+del usuario y de su rol dentro de cada grupo. Un usuario solo podrá acceder a los
+datos y acciones permitidos en el grupo correspondiente.
+
+\end{requisitocard}
 
 \begin{requisitocard}{RF-005 -- Creación de grupos y asociación de usuarios}
 
@@ -658,29 +435,10 @@ organizativa de la plataforma, incluyendo usuarios, grupos, membresías y roles.
 
 \textbf{Prioridad:} crítica.
 
-\textbf{Caso de uso asociado:} CU-08.
+\textbf{Caso de uso asociado:} CU-03.
 
-\textbf{Descripción:} el sistema deberá permitir la creación de grupos y la
-asociación de usuarios a dichos grupos.
-
-\textbf{Criterio de aceptación:} un usuario con permisos suficientes puede crear
-un grupo y añadir o eliminar miembros.
-
-\end{requisitocard}
-
-\begin{requisitocard}{RF-032 -- Gestión de usuarios desde el portal}
-
-\textbf{Tipo:} funcional.
-
-\textbf{Prioridad:} alta.
-
-\textbf{Caso de uso asociado:} CU-08.
-
-\textbf{Descripción:} el portal web deberá permitir la gestión de usuarios por
-parte de perfiles autorizados.
-
-\textbf{Criterio de aceptación:} un usuario autorizado puede consultar, crear,
-editar o desactivar usuarios según los permisos definidos.
+\textbf{Descripción:} el sistema deberá permitir crear grupos de trabajo y asociar
+usuarios a dichos grupos mediante membresías.
 
 \end{requisitocard}
 
@@ -690,77 +448,434 @@ editar o desactivar usuarios según los permisos definidos.
 
 \textbf{Prioridad:} alta.
 
-\textbf{Caso de uso asociado:} CU-08.
+\textbf{Caso de uso asociado:} CU-03.
 
-\textbf{Descripción:} el portal web deberá permitir la gestión de grupos y
-membresías.
-
-\textbf{Criterio de aceptación:} un administrador puede gestionar miembros, roles y
-asociaciones entre usuarios y grupos.
+\textbf{Descripción:} el sistema deberá permitir consultar, editar, archivar,
+restaurar y eliminar grupos cuando el usuario tenga permisos suficientes. También
+deberá permitir añadir miembros, modificar sus roles y expulsarlos del grupo.
 
 \end{requisitocard}
 
-\subsection{CU-09 -- Exportar datos}
+\begin{requisitocard}{RF-034 -- Gestión de invitaciones a grupos}
 
-Este caso de uso permite reutilizar la información registrada en OmniLitter para
-análisis externo. La exportación resulta importante para estudios científicos,
-informes y tratamiento posterior de los datos.
+\textbf{Tipo:} funcional.
 
-\begin{requisitocard}{RF-031 -- Exportación de datos}
+\textbf{Prioridad:} alta.
+
+\textbf{Caso de uso asociado:} CU-03.
+
+\textbf{Descripción:} el sistema deberá permitir invitar usuarios mediante correo
+electrónico y permitir que los destinatarios acepten o rechacen dichas
+invitaciones.
+
+\end{requisitocard}
+
+\subsection{CU-04 -- Administrar usuarios de la plataforma}
+
+El superadministrador debe poder gestionar las cuentas de usuario de la
+plataforma. Esta administración global queda separada de la gestión ordinaria de
+los grupos.
+
+\begin{requisitocard}{RF-032 -- Gestión de usuarios desde el portal}
+
+\textbf{Tipo:} funcional.
+
+\textbf{Prioridad:} alta.
+
+\textbf{Caso de uso asociado:} CU-04.
+
+\textbf{Descripción:} el portal web deberá permitir a un superadministrador
+consultar usuarios, crear cuentas, cambiar roles globales y activar o desactivar
+cuentas.
+
+\end{requisitocard}
+
+\subsection{CU-05 -- Crear y gestionar campañas de muestreo}
+
+El administrador de grupo debe poder planificar el trabajo de campo mediante
+campañas asociadas al grupo activo. Las campañas contextualizan las sesiones y
+permiten analizar posteriormente los datos por proyecto, periodo o entorno.
+
+\begin{requisitocard}{RF-009 -- Creación y consulta de campañas asociadas a un grupo}
+
+\textbf{Tipo:} funcional.
+
+\textbf{Prioridad:} alta.
+
+\textbf{Caso de uso asociado:} CU-05.
+
+\textbf{Descripción:} el sistema deberá permitir crear, consultar, modificar y
+eliminar campañas asociadas al grupo activo. Cada campaña deberá contener
+información básica como nombre, descripción, estado, fechas y contexto de
+muestreo.
+
+\end{requisitocard}
+
+\subsection{CU-06 -- Crear y actualizar una sesión de muestreo}
+
+El investigador de campo debe poder iniciar una sesión de muestreo dentro de una
+campaña. La sesión agrupa el trabajo realizado durante una salida de campo e
+incluye información científica necesaria para interpretar las observaciones.
+
+\begin{requisitocard}{RF-007 -- Trabajo por sesiones de muestreo}
+
+\textbf{Tipo:} funcional.
+
+\textbf{Prioridad:} crítica.
+
+\textbf{Caso de uso asociado:} CU-06.
+
+\textbf{Descripción:} la aplicación móvil deberá organizar el trabajo de campo
+mediante sesiones de muestreo asociadas a una campaña y a un observador.
+
+\end{requisitocard}
+
+\begin{requisitocard}{RF-008 -- Captura de coordenadas GPS}
+
+\textbf{Tipo:} funcional.
+
+\textbf{Prioridad:} crítica.
+
+\textbf{Caso de uso asociado:} CU-06 y CU-07.
+
+\textbf{Descripción:} la aplicación móvil deberá capturar coordenadas GPS al
+iniciar una sesión y al registrar observaciones, siempre que el dispositivo
+disponga de permisos y señal suficiente.
+
+\end{requisitocard}
+
+\begin{requisitocard}{RF-017 -- Inclusión de notas de campo}
 
 \textbf{Tipo:} funcional.
 
 \textbf{Prioridad:} media.
 
-\textbf{Caso de uso asociado:} CU-09.
+\textbf{Caso de uso asociado:} CU-06 y CU-07.
 
-\textbf{Descripción:} el sistema deberá permitir exportar datos en un formato
-adecuado para análisis posterior, preferentemente CSV.
-
-\textbf{Criterio de aceptación:} un usuario autorizado puede obtener un fichero
-exportable con los registros seleccionados.
+\textbf{Descripción:} el sistema deberá permitir registrar notas descriptivas en
+sesiones y observaciones para completar la información estrictamente estructurada.
 
 \end{requisitocard}
 
-\subsection{CU-10 -- Desplegar y operar el sistema}
+\begin{requisitocard}{RF-026 -- Registro del progreso de la sesión}
 
-Este caso de uso no representa una interacción habitual de los usuarios finales,
-sino una necesidad operativa identificada tras la última reunión. El cliente
-planteó dudas sobre cómo mantener o modificar el sistema en el futuro, por lo que
-se decidió documentar el despliegue y la administración básica, dejando el
-mantenimiento evolutivo fuera del alcance del TFG.
-
-\begin{requisitocard}{RF-036 -- Documentación técnica de instalación y despliegue}
-
-\textbf{Tipo:} funcional de soporte.
+\textbf{Tipo:} funcional.
 
 \textbf{Prioridad:} alta.
 
-\textbf{Caso de uso asociado:} CU-10.
+\textbf{Caso de uso asociado:} CU-06 y CU-08.
 
-\textbf{Descripción:} el proyecto deberá incluir documentación técnica de
-instalación, despliegue y administración básica del sistema.
-
-\textbf{Criterio de aceptación:} una persona con perfil técnico dispone de
-instrucciones suficientes para desplegar, configurar y administrar de forma básica
-la plataforma.
+\textbf{Descripción:} el sistema deberá permitir actualizar el progreso de una
+sesión mediante puntos de ruta, duración, área muestreada y parámetros asociados
+al método de muestreo, como cuadrícula, transecto o muestreo libre.
 
 \end{requisitocard}
 
-\begin{requisitocard}{RF-037 -- Mantenimiento posterior fuera del alcance}
+\subsection{CU-07 -- Registrar observaciones de residuos}
 
-\textbf{Tipo:} documentación de alcance.
+Durante una sesión de muestreo, el investigador de campo debe poder registrar
+observaciones de residuos. Cada observación queda vinculada a la sesión, al
+usuario observador, a la localización, a una categoría taxonómica y a los
+elementos de residuo identificados.
+
+\begin{requisitocard}{RF-013 -- Registro de observaciones dentro de una sesión}
+
+\textbf{Tipo:} funcional.
+
+\textbf{Prioridad:} crítica.
+
+\textbf{Caso de uso asociado:} CU-07.
+
+\textbf{Descripción:} la aplicación móvil deberá permitir crear observaciones
+asociadas a una sesión de muestreo activa.
+
+\end{requisitocard}
+
+\begin{requisitocard}{RF-014 -- Asociación de observaciones a campaña, grupo y usuario observador}
+
+\textbf{Tipo:} funcional.
+
+\textbf{Prioridad:} alta.
+
+\textbf{Caso de uso asociado:} CU-07.
+
+\textbf{Descripción:} el sistema deberá conservar la trazabilidad de cada
+observación mediante su relación con la sesión, la campaña, el grupo y el usuario
+que la registró.
+
+\end{requisitocard}
+
+\begin{requisitocard}{RF-012 -- Navegación por taxonomía jerárquica}
+
+\textbf{Tipo:} funcional.
+
+\textbf{Prioridad:} crítica.
+
+\textbf{Caso de uso asociado:} CU-07.
+
+\textbf{Descripción:} el sistema deberá permitir seleccionar residuos desde una
+taxonomía estructurada por códigos, categorías y versiones activas.
+
+\end{requisitocard}
+
+\begin{requisitocard}{RF-015 -- Cantidad observada}
+
+\textbf{Tipo:} funcional.
+
+\textbf{Prioridad:} crítica.
+
+\textbf{Caso de uso asociado:} CU-07.
+
+\textbf{Descripción:} el sistema deberá registrar la cantidad observada como un
+número entero positivo y no deberá admitir cantidades vacías, negativas o iguales
+a cero.
+
+\end{requisitocard}
+
+\begin{requisitocard}{RF-016 -- Registro de material y categoría del residuo}
+
+\textbf{Tipo:} funcional.
+
+\textbf{Prioridad:} alta.
+
+\textbf{Caso de uso asociado:} CU-07.
+
+\textbf{Descripción:} el sistema deberá permitir registrar la categoría del
+residuo y, cuando proceda, el material asociado a cada elemento observado.
+
+\end{requisitocard}
+
+\begin{requisitocard}{RF-010 -- Fotografías asociadas a observaciones}
+
+\textbf{Tipo:} funcional.
+
+\textbf{Prioridad:} alta.
+
+\textbf{Caso de uso asociado:} CU-07.
+
+\textbf{Descripción:} la aplicación deberá permitir adjuntar fotografías a una
+observación y almacenar los metadatos necesarios para relacionarlas con el
+registro correspondiente.
+
+\end{requisitocard}
+
+\subsection{CU-08 -- Revisar y finalizar una sesión de muestreo}
+
+Antes de cerrar una sesión, el investigador debe poder revisar la información
+recogida y comprobar que las observaciones registradas son coherentes. La
+finalización marca el cierre del trabajo de campo asociado.
+
+\begin{requisitocard}{RF-020 -- Revisión de sesión antes de finalizarla}
+
+\textbf{Tipo:} funcional.
+
+\textbf{Prioridad:} alta.
+
+\textbf{Caso de uso asociado:} CU-08.
+
+\textbf{Descripción:} la aplicación móvil deberá permitir consultar las
+observaciones registradas en una sesión antes de finalizarla.
+
+\end{requisitocard}
+
+\subsection{CU-09 -- Trabajar sin conexión y sincronizar datos}
+
+La aplicación móvil debe permitir trabajar en campo en condiciones de conectividad
+limitada. Los datos creados localmente deberán conservarse en el dispositivo y
+sincronizarse con el servidor cuando exista conexión disponible.
+
+\begin{requisitocard}{RF-022 -- Funcionamiento offline durante la captura de campo}
+
+\textbf{Tipo:} funcional.
+
+\textbf{Prioridad:} crítica.
+
+\textbf{Caso de uso asociado:} CU-09.
+
+\textbf{Descripción:} la aplicación móvil deberá permitir crear y consultar datos
+relevantes sin conexión, incluyendo campañas descargadas, sesiones, observaciones
+y elementos asociados.
+
+\end{requisitocard}
+
+\begin{requisitocard}{RF-025 -- Persistencia local de sesiones y observaciones}
+
+\textbf{Tipo:} funcional.
+
+\textbf{Prioridad:} alta.
+
+\textbf{Caso de uso asociado:} CU-09.
+
+\textbf{Descripción:} la aplicación móvil deberá almacenar localmente los datos
+necesarios mediante SQLite para evitar pérdida de información durante el trabajo
+de campo.
+
+\end{requisitocard}
+
+\begin{requisitocard}{RF-021 -- Estado de sincronización de sesiones y observaciones}
+
+\textbf{Tipo:} funcional.
+
+\textbf{Prioridad:} alta.
+
+\textbf{Caso de uso asociado:} CU-09.
+
+\textbf{Descripción:} la aplicación deberá mostrar el estado de sincronización de
+los datos locales, diferenciando registros sincronizados, pendientes, fallidos o
+en conflicto.
+
+\end{requisitocard}
+
+\begin{requisitocard}{RF-023 -- Sincronización por lotes de cambios pendientes}
+
+\textbf{Tipo:} funcional.
+
+\textbf{Prioridad:} crítica.
+
+\textbf{Caso de uso asociado:} CU-09.
+
+\textbf{Descripción:} el sistema deberá disponer de una cola de sincronización que
+envíe al servidor las operaciones pendientes. Cada operación del lote deberá
+recibir un resultado individual.
+
+\end{requisitocard}
+
+\begin{requisitocard}{RF-024 -- Consulta de cambios remotos del grupo activo}
+
+\textbf{Tipo:} funcional.
+
+\textbf{Prioridad:} alta.
+
+\textbf{Caso de uso asociado:} CU-09.
+
+\textbf{Descripción:} la aplicación móvil deberá poder consultar cambios remotos
+desde una marca temporal para actualizar la copia local de los datos del grupo
+activo.
+
+\end{requisitocard}
+
+\subsection{CU-10 -- Consultar sesiones y observaciones}
+
+Los usuarios autorizados deben poder consultar la información registrada desde el
+portal web y desde la aplicación móvil. La consulta debe respetar el alcance del
+grupo activo y los permisos del usuario.
+
+\begin{requisitocard}{RF-027 -- Listados de sesiones y observaciones con filtros}
+
+\textbf{Tipo:} funcional.
+
+\textbf{Prioridad:} alta.
+
+\textbf{Caso de uso asociado:} CU-10, CU-12 y CU-13.
+
+\textbf{Descripción:} el sistema deberá permitir consultar sesiones y
+observaciones mediante listados filtrables por campaña, sesión, entorno, fecha u
+otros criterios disponibles.
+
+\end{requisitocard}
+
+\subsection{CU-11 -- Visualizar la información en mapa}
+
+Los usuarios autorizados deben poder interpretar espacialmente los datos
+registrados. El mapa permite visualizar observaciones, rutas de sesiones y áreas
+muestreadas para facilitar el análisis territorial.
+
+\begin{requisitocard}{RF-028 -- Visualización de observaciones en mapa}
+
+\textbf{Tipo:} funcional.
+
+\textbf{Prioridad:} alta.
+
+\textbf{Caso de uso asociado:} CU-11.
+
+\textbf{Descripción:} el portal web y la aplicación deberán permitir representar
+observaciones geolocalizadas en una vista cartográfica.
+
+\end{requisitocard}
+
+\begin{requisitocard}{RF-029 -- Visualización de rutas y áreas muestreadas}
+
+\textbf{Tipo:} funcional.
 
 \textbf{Prioridad:} media.
 
-\textbf{Caso de uso asociado:} CU-10 y trabajo futuro.
+\textbf{Caso de uso asociado:} CU-11.
 
-\textbf{Descripción:} el proyecto deberá documentar que los cambios futuros de
-categorías, taxonomías o metadatos requieren mantenimiento técnico posterior y
-quedan fuera del alcance de desarrollo del TFG.
+\textbf{Descripción:} el sistema deberá permitir consultar rutas de sesiones y
+áreas muestreadas a partir de los puntos de recorrido registrados durante el
+trabajo de campo.
 
-\textbf{Criterio de aceptación:} la memoria identifica explícitamente estas
-actividades como limitaciones de alcance o líneas de trabajo futuro.
+\end{requisitocard}
+
+\subsection{CU-12 -- Consultar métricas y analítica}
+
+Los usuarios autorizados deben poder analizar la información agregada del grupo
+activo. Este caso de uso transforma los registros individuales en indicadores
+útiles para seguimiento, revisión y toma de decisiones.
+
+\begin{requisitocard}{RF-030 -- Dashboard con métricas agregadas}
+
+\textbf{Tipo:} funcional.
+
+\textbf{Prioridad:} media.
+
+\textbf{Caso de uso asociado:} CU-12.
+
+\textbf{Descripción:} el portal web deberá mostrar indicadores agregados sobre
+campañas, sesiones, observaciones, fotografías y residuos registrados.
+
+\end{requisitocard}
+
+\subsection{CU-13 -- Exportar datos}
+
+Los usuarios autorizados deben poder extraer la información registrada para su
+tratamiento externo, elaboración de informes o análisis científico. La
+exportación favorece la reutilización y reproducibilidad de los datos.
+
+\begin{requisitocard}{RF-031 -- Exportación de datos en formatos reutilizables}
+
+\textbf{Tipo:} funcional.
+
+\textbf{Prioridad:} media.
+
+\textbf{Caso de uso asociado:} CU-13.
+
+\textbf{Descripción:} el sistema deberá permitir exportar datos seleccionados en
+formatos adecuados para análisis posterior, incluyendo CSV, JSON y GeoJSON cuando
+proceda.
+
+\end{requisitocard}
+
+\subsection{CU-14 -- Configurar preferencias de la aplicación}
+
+El usuario debe poder adaptar la aplicación a sus condiciones de uso,
+especialmente en el dispositivo móvil. Las preferencias permiten ajustar idioma,
+localización y comportamiento de sincronización.
+
+\begin{requisitocard}{RF-035 -- Soporte de interfaz en español e inglés}
+
+\textbf{Tipo:} funcional.
+
+\textbf{Prioridad:} media.
+
+\textbf{Caso de uso asociado:} CU-14.
+
+\textbf{Descripción:} el sistema deberá permitir utilizar la interfaz al menos en
+español e inglés.
+
+\end{requisitocard}
+
+\begin{requisitocard}{RF-036 -- Configuración de preferencias de sincronización y localización}
+
+\textbf{Tipo:} funcional.
+
+\textbf{Prioridad:} media.
+
+\textbf{Caso de uso asociado:} CU-14.
+
+\textbf{Descripción:} la aplicación móvil deberá permitir configurar opciones como
+sincronización automática, sincronización solo por Wi-Fi y uso de localización de
+alta precisión.
 
 \end{requisitocard}
 
@@ -835,16 +950,6 @@ administrar la plataforma de forma básica.
 \textbf{Descripción:} el diseño deberá facilitar futuras modificaciones de
 categorías, taxonomías o metadatos, aunque dichas modificaciones quedan fuera del
 alcance de mantenimiento incluido en el TFG.
-
-\end{requisitocard}
-
-\begin{requisitocard}{RNF-008 -- Trazabilidad}
-
-\textbf{Prioridad:} alta.
-
-\textbf{Descripción:} el sistema y la memoria deberán mantener relación entre
-requisitos, casos de uso, decisiones de diseño y pruebas, especialmente en
-sincronización, permisos y datos científicos.
 
 \end{requisitocard}
 
@@ -942,16 +1047,18 @@ científicos.
 \subsection*{Trazabilidad desde la V3}
 
 La última reunión permitió consolidar el flujo offline y de sincronización. De
-esta sesión derivan de forma explícita el estado de sincronización de sesiones, la
-pantalla de sincronización, la finalización de sesiones activas antes de
-sincronizar, el refinamiento de la vista de mapa con filtros y la aclaración de
-la documentación técnica y del mantenimiento posterior fuera del alcance del TFG.
+esta sesión derivan de forma explícita el estado de sincronización de sesiones y
+observaciones, la persistencia local, la sincronización por lotes, la consulta de
+cambios remotos, el refinamiento de la vista de mapa con filtros y la aclaración
+de la documentación técnica y del mantenimiento posterior fuera del alcance del
+TFG.
 
 \subsection*{Relación entre fuentes, cambios y requisitos finales}
 
 \begin{itemize}
 \item La necesidad inicial de registrar residuos se consolida en RF-007, RF-008,
-RF-010, RF-012, RF-015, RDC-001 y RDC-002.
+RF-010, RF-012, RF-013, RF-014, RF-015, RF-016, RF-017, RF-020, RF-026,
+RDC-001 y RDC-002.
 
 \item La necesidad inicial de trabajar sin conexión se consolida en RF-021,
 RF-022, RF-023, RF-024, RF-025, RNF-003 y RNF-004.
@@ -967,13 +1074,14 @@ RF-028, RF-030, RF-031 y RDC-004.
 RDC-002, RDC-003, RDC-004, RDC-005 y RDC-006.
 
 \item La revisión científica aportada por el cliente y las fuentes consultadas
-refuerzan RF-009, RF-012, RF-031, RDC-001, RDC-002, RDC-004 y RDC-005, al
-vincular la aplicación con la toma de datos armonizada, el uso de listas comunes
-de categorías, la captura de metadatos y la generación de datos comparables para
-evaluar tendencias y medidas de mitigación.
+refuerzan RF-012, RF-013, RF-014, RF-031, RDC-001, RDC-002, RDC-004 y RDC-005,
+al vincular la aplicación con la toma de datos armonizada, el uso de listas
+comunes de categorías, la captura de metadatos y la generación de datos
+comparables para evaluar tendencias y medidas de mitigación.
 
 \item Las dudas planteadas en la última reunión sobre despliegue y mantenimiento
-se consolidan en RF-036, RF-037, RNF-006 y RNF-007.
+se consolidan como requisitos no funcionales de operabilidad y mantenibilidad,
+principalmente en RNF-006 y RNF-007.
 \end{itemize}
 
 En conclusión, la versión final de requisitos mantiene el objetivo principal de
