@@ -59,6 +59,83 @@ explotación de datos.
 
 \sprintHoursTable{1}
 \subsection{Implementación realizada}
+
+El primer sprint se dedicó a construir la base técnica sobre la que se apoyaría
+el resto de OmniLitter. La implementación se centró en disponer de una
+arquitectura operativa mínima, con autenticación, separación de datos por
+grupos, gestión inicial de campañas y sesiones, y registro básico de
+observaciones desde la aplicación móvil.
+
+\paragraph{Backend y modelo de dominio.}
+Se estructuró una API REST modular sobre Express \cite{express}, con módulos diferenciados
+para autenticación, usuarios, grupos, campañas, sesiones, observaciones y
+taxonomía. Las rutas privadas quedaron protegidas mediante middleware de
+autenticación JWT \cite{rfc7519jwt} y las reglas de acceso se articularon alrededor del grupo
+activo del usuario. Esta decisión permitió separar el rol global del usuario
+del rol que ejerce dentro de cada grupo, distinguiendo entre administración
+general, administración de grupo e investigador de campo.
+
+En autenticación se implementaron registro, inicio de sesión, cierre de sesión,
+refresco de sesión y recuperación de contraseña. Las contraseñas se almacenaron
+mediante hash y los tokens de refresco quedaron persistidos para poder revocar
+sesiones. En el modelo de datos consolidado se definieron las entidades
+principales del sistema: usuarios, tokens, grupos, membresías, invitaciones,
+campañas, sesiones de muestreo, taxonomía, observaciones e ítems de residuo.
+No se localizaron migraciones incrementales por sprint; el repositorio conserva
+una migración inicial con el estado final consolidado.
+
+\paragraph{Portal web.}
+El portal web se organizó como una aplicación React \cite{react} con rutas protegidas,
+conservación de sesión en el navegador y un layout común para las áreas
+privadas. Sobre esta base se integraron las primeras pantallas de campañas,
+grupos y administración de usuarios. La navegación interna quedó preparada para
+incorporar progresivamente módulos posteriores como observaciones, mapa,
+analítica y configuración.
+
+\paragraph{Aplicación móvil y paquete compartido.}
+La aplicación móvil se implementó con Expo y React Native \cite{expo,reactnative}. Se definió el flujo
+de autenticación, la navegación principal y los primeros servicios de consumo
+de la API. Desde la sección de campañas se incorporó la creación inicial de
+sesiones y observaciones, utilizando contratos compartidos para evitar
+divergencias entre clientes y servidor. El paquete común centralizó tipos y
+esquemas Zod \cite{zod} de autenticación, campañas, sesiones, observaciones, ítems y
+fotografías, de modo que la validación de entrada no dependiera únicamente de
+cada interfaz.
+
+\paragraph{Integración entre capas.}
+La integración se resolvió mediante servicios REST consumidos por web y móvil,
+tokens JWT en las peticiones privadas y validación compartida en
+\texttt{packages/shared}. Las campañas y sesiones quedaron vinculadas al grupo
+activo, mientras que las observaciones se asociaron a una sesión, una taxonomía
+y un usuario observador. Con ello se estableció el flujo técnico básico:
+autenticación, selección de contexto de trabajo, planificación de campaña,
+creación de sesión y registro inicial de residuos.
+
+\begin{table}[H]
+\centering
+\caption{Trazabilidad técnica de la implementación del Sprint 1}
+\label{tab:implementacion_sprint1}
+\scriptsize
+\renewcommand{\arraystretch}{1.12}
+\begin{tabularx}{\textwidth}{p{3.1cm}p{2.2cm}XX}
+\toprule
+Bloque implementado & Plataforma & Elementos principales & Finalidad \\
+\midrule
+Autenticación y sesión & Backend, web y móvil & Registro, login, refresh, logout, recuperación de contraseña y rutas protegidas & Establecer acceso seguro y sesión reutilizable en las tres capas. \\
+Grupos y permisos & Backend y web & Usuarios, grupos, membresías, invitaciones, grupo activo y roles por contexto & Separar datos entre equipos y controlar operaciones según permisos. \\
+Campañas y sesiones & Backend, web y móvil & Servicios REST, gestión web de campañas y creación móvil de sesiones & Definir el contexto organizativo del trabajo de campo. \\
+Observaciones iniciales & Backend, móvil y shared & API de observaciones, formulario móvil, taxonomía y esquemas compartidos & Registrar residuos vinculados a sesión, usuario y clasificación científica. \\
+Estructura común & Web, móvil y shared & SPA con rutas protegidas, navegación móvil y contratos Zod & Preparar una base extensible para los módulos de sprints posteriores. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Como resultado técnico, el sprint dejó disponible una versión mínima funcional
+del sistema, con acceso autenticado, organización por grupos, administración
+básica, planificación de campañas, creación de sesiones y captura inicial de
+observaciones. Esta base permitió abordar en los sprints siguientes la captura
+avanzada de datos, el trabajo offline, la sincronización y la explotación de la
+información registrada.
 \subsection{Pruebas realizadas}
 
 En el primer sprint se validó la base funcional del sistema. Las pruebas se centraron en autenticación, administración inicial de usuarios y grupos, campañas, catálogo, sesiones de muestreo y primeras observaciones. Esta fase era especialmente importante porque establecía los contratos y servicios sobre los que se apoyarían los sprints posteriores.
@@ -117,6 +194,86 @@ inicial de análisis de la información registrada.
 \end{itemize}
 \sprintHoursTable{2}
 \subsection{Implementación realizada}
+
+El segundo sprint amplió la base anterior hacia un flujo de campo más completo.
+La implementación se centró en enriquecer las sesiones y observaciones con
+coordenadas, recorridos, fotografías y persistencia local, además de incorporar
+las primeras capacidades web de consulta, métricas y análisis sobre los datos
+capturados.
+
+\paragraph{Captura móvil y persistencia local.}
+En la aplicación móvil se incorporó la obtención de ubicación mediante
+\texttt{expo-location} \cite{expo-location}, con solicitud de permisos y lectura de coordenadas del
+dispositivo. Para las sesiones se implementó el registro de recorridos mediante
+puntos GPS, aplicando filtros de precisión, distancia mínima y velocidad máxima.
+Esta información permitió representar el avance de una salida de campo mediante
+\texttt{trackPoints} y \texttt{sampledArea}, mientras que cada observación
+incorporó sus propias coordenadas.
+
+También se añadió la captura y selección de fotografías desde cámara o galería.
+Las imágenes se copiaron al almacenamiento local de la aplicación para poder
+mantenerlas asociadas a observaciones incluso en escenarios de conectividad
+variable. La base SQLite local \cite{sqlite} se estructuró mediante repositorios por entidad,
+incluyendo usuarios, grupos, campañas, sesiones, observaciones, taxonomía,
+fotografías y cola de sincronización. Esta separación facilitó que la interfaz
+móvil pudiera revisar, editar o eliminar datos creados localmente antes de su
+envío al servidor.
+
+\paragraph{Backend y validación científica.}
+En el backend se reforzó el módulo de observaciones para aceptar fotografías,
+registrar sus metadatos y exponer endpoints de listado, descarga, subida y
+eliminación. Además, se añadieron reglas de validación sobre taxonomía activa,
+coordenadas, fechas, cantidades y permisos por grupo. La lógica impidió, por
+ejemplo, registrar observaciones fuera del intervalo temporal permitido para la
+sesión o asociarlas a grupos a los que el usuario no tuviera acceso.
+
+El modelo consolidado incorporó fotografías de observación, URLs asociadas a
+observaciones y campos espaciales de sesión. Aunque estos cambios aparecen en
+la migración inicial consolidada, su uso funcional corresponde a esta fase de
+captura avanzada.
+
+\paragraph{Portal web y explotación inicial.}
+El portal web incorporó listados y fichas de observaciones con filtros por
+campaña, sesión, entorno, observador, fecha y presencia de fotografías. La ficha
+permitió consultar la información científica y contextual del registro,
+incluyendo taxonomía, ítems, coordenadas, notas y evidencias fotográficas.
+
+Además, se implementó el cálculo de métricas agregadas en backend y su
+visualización en el dashboard web. Estas métricas resumieron actividad,
+observaciones e ítems por dimensiones como campaña, sesión, categoría, material,
+entorno u observador. El módulo de analítica inicial reutilizó esta información
+para explorar subconjuntos filtrados y preparar exportaciones posteriores.
+
+\paragraph{Integración entre capas.}
+La aplicación móvil construyó payloads compatibles con los esquemas compartidos
+y los conservó localmente hasta poder enviarlos. El backend validó y persistió
+observaciones, ítems y fotografías, y el portal web consumió esos datos para
+revisión y análisis. De esta forma, el dato capturado en campo comenzó a
+alimentar directamente la supervisión web y las primeras métricas del sistema.
+
+\begin{table}[H]
+\centering
+\caption{Trazabilidad técnica de la implementación del Sprint 2}
+\label{tab:implementacion_sprint2}
+\scriptsize
+\renewcommand{\arraystretch}{1.12}
+\begin{tabularx}{\textwidth}{p{3.1cm}p{2.2cm}XX}
+\toprule
+Bloque implementado & Plataforma & Elementos principales & Finalidad \\
+\midrule
+Localización y recorridos & Móvil & Permisos GPS, puntos de track, área muestreada y filtros de precisión & Registrar contexto espacial de sesiones y observaciones. \\
+Fotografías de observación & Móvil y backend & Captura desde cámara/galería, almacenamiento local, subida y metadatos & Asociar evidencia visual a los registros de residuos. \\
+Persistencia local inicial & Móvil & SQLite, repositorios por entidad y cola de operaciones pendientes & Permitir revisión y trabajo con conectividad variable. \\
+Validación de observaciones & Backend y shared & Taxonomía activa, fechas, coordenadas, cantidades y permisos & Mantener coherencia científica y control de acceso. \\
+Consulta y métricas web & Backend y web & Listado de observaciones, fichas, dashboard y analítica inicial & Convertir la captura de campo en información revisable y agregada. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Al finalizar este sprint, OmniLitter disponía de un flujo de captura más
+representativo del trabajo de campo: sesiones con recorrido, observaciones con
+fotografías, persistencia local y primeras herramientas web para revisar y
+analizar la información registrada.
 \subsection{Pruebas realizadas}
 
 El segundo sprint reforzó la captura de datos de campo y el análisis inicial. La validación se orientó a comprobar la calidad del dato capturado, la incorporación de fotografías, el uso de ubicación GPS, el control de permisos sobre observaciones y las primeras funcionalidades de análisis del portal web.
@@ -174,6 +331,86 @@ ciertas preferencias a las necesidades del usuario.
 \end{itemize}
 \sprintHoursTable{3}
 \subsection{Implementación realizada}
+
+El tercer sprint se orientó a cerrar el ciclo técnico entre la aplicación móvil,
+el backend y el portal web. La implementación se centró en sincronización,
+visualización geográfica, exportación de datos y configuración de preferencias,
+permitiendo que los registros creados sin conexión pudieran consolidarse y
+explotarse posteriormente desde el sistema central.
+
+\paragraph{Sincronización móvil-backend.}
+En la aplicación móvil se implementó una pantalla específica de sincronización
+y un servicio encargado de procesar operaciones pendientes. La base local
+conservó las acciones en una cola persistente, de forma que sesiones,
+actualizaciones de progreso, finalizaciones y observaciones pudieran mantenerse
+hasta recuperar conectividad. También se añadió sincronización automática al
+volver a estar online, considerando preferencias como la restricción a redes
+Wi-Fi.
+
+El backend incorporó endpoints de sincronización por lotes y consulta de cambios
+remotos. El procesamiento por lotes permitió enviar varias operaciones en una
+misma petición y obtener resultados individuales por elemento, evitando que un
+fallo puntual invalidase necesariamente el conjunto completo. Esta estructura
+resultó especialmente adecuada para escenarios de campo, donde los datos pueden
+acumularse en el dispositivo durante periodos sin conexión.
+
+\paragraph{Mapa y visualización espacial.}
+El portal web incorporó un mapa interactivo basado en React Leaflet \cite{reactleaflet}. Se
+implementaron marcadores de observaciones, agrupación visual, filtros por
+campaña, entorno, categoría y fecha, y carga de fotografías en ventanas de
+detalle. Además, se añadieron modos de visualización de densidad, recorridos y
+áreas muestreadas, utilizando los datos espaciales de sesiones y observaciones
+persistidos por el backend.
+
+Para las sesiones de muestreo, la API expuso rutas y áreas asociadas al grupo
+activo. El portal pudo así representar recorridos, superficies muestreadas y
+zonas de concentración de residuos, conectando la captura móvil con una lectura
+geográfica de los resultados.
+
+\paragraph{Analítica, exportaciones y configuración.}
+Se ampliaron las utilidades de exportación del portal web con salidas CSV, JSON
+y GeoJSON. El dashboard pudo exportar datos agregados, el mapa generó
+colecciones geográficas de observaciones, rutas y áreas, y la analítica produjo
+ficheros orientados al tratamiento posterior de observaciones, residuos y
+resúmenes. En backend, las consultas de analítica incluyeron información de
+campaña, grupo, sesión, entorno, observador, coordenadas, taxonomía, método de
+muestreo, duración e ítems.
+
+En la aplicación móvil se incorporaron preferencias de idioma, sincronización y
+precisión de ubicación. La infraestructura de internacionalización también se
+observa en el portal web, aunque parte de la configuración web se completó en el
+sprint siguiente según la trazabilidad disponible.
+
+\paragraph{Integración entre capas.}
+La app móvil trabajó sobre SQLite, agrupó cambios pendientes y los envió al
+backend cuando la conectividad lo permitió. La API persistió los cambios en la
+base central y expuso tanto cambios remotos como datos espaciales y analíticos.
+El portal web consumió esos datos ya consolidados para mapas, métricas y
+exportaciones. La integración de este sprint unió captura offline, publicación,
+consulta y reutilización externa de los datos.
+
+\begin{table}[H]
+\centering
+\caption{Trazabilidad técnica de la implementación del Sprint 3}
+\label{tab:implementacion_sprint3}
+\scriptsize
+\renewcommand{\arraystretch}{1.12}
+\begin{tabularx}{\textwidth}{p{3.1cm}p{2.2cm}XX}
+\toprule
+Bloque implementado & Plataforma & Elementos principales & Finalidad \\
+\midrule
+Sincronización batch & Móvil y backend & Cola local, pantalla de sincronización, envío por lotes y resultados individuales & Consolidar en servidor datos generados sin conexión. \\
+Descarga de cambios & Backend y móvil & Consulta de cambios remotos por grupo y actualización de la copia local & Mantener el dispositivo alineado con la información central. \\
+Mapa interactivo & Web y backend & Marcadores, filtros, fotografías, rutas, áreas y densidad & Interpretar observaciones y sesiones desde una perspectiva espacial. \\
+Exportaciones & Web y backend & CSV, JSON, GeoJSON y consultas analíticas filtradas & Facilitar reutilización científica y cartográfica de los datos. \\
+Preferencias & Móvil y web & Idioma, sincronización, Wi-Fi y precisión de ubicación & Adaptar el comportamiento del sistema al contexto de uso. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+El resultado técnico del sprint fue una plataforma capaz de soportar el ciclo
+completo de trabajo: captura local, sincronización controlada, consulta
+centralizada, representación espacial y exportación en formatos reutilizables.
 \subsection{Pruebas realizadas}
 
 El tercer sprint estuvo orientado a sincronización, mapas y exportación científica. En esta fase fue necesario diferenciar con claridad entre las pruebas automatizadas existentes y la validación funcional de integración. La sincronización móvil-backend se comprobó mediante recorridos manuales completos, pero no se implementó una prueba automática de integración contra una base de datos real.
@@ -230,6 +467,84 @@ para su evaluación.
 \end{itemize}
 \sprintHoursTable{4}
 \subsection{Implementación realizada}
+
+El cuarto sprint tuvo un carácter de integración final y refinamiento funcional.
+La implementación se centró en completar la configuración web, reforzar reglas
+de permisos, ampliar la administración, permitir edición posterior desde móvil,
+consolidar el catálogo científico y preparar el sistema para una presentación y
+despliegue más estables.
+
+\paragraph{Backend, permisos y administración.}
+En backend se reforzaron los módulos de usuarios, grupos, campañas, catálogo,
+sesiones y observaciones. En usuarios se incorporaron operaciones de
+actualización de perfil y cambio de contraseña. En grupos se ampliaron las
+capacidades de administración con archivado, restauración, invitaciones,
+gestión de membresías y generación de copias de seguridad. También se ajustaron
+reglas de alcance para diferenciar el acceso de superadministradores,
+administradores de grupo e investigadores.
+
+Las campañas y métricas pasaron a respetar de forma más precisa el contexto del
+usuario. Cuando no existe grupo activo, el superadministrador puede operar sobre
+vistas agregadas, mientras que el investigador mantiene un alcance restringido a
+sus campañas, sesiones u observaciones. Estas reglas completaron la separación
+de responsabilidades iniciada en los sprints anteriores.
+
+\paragraph{Edición móvil y sincronización de cambios.}
+La aplicación móvil incorporó edición local de sesiones y observaciones ya
+creadas. Los repositorios locales permitieron actualizar campos editables y
+coordinar esos cambios con la cola de sincronización. Cuando un registro aún
+tenía una creación pendiente, las modificaciones se integraron sobre el estado
+local antes de enviarlo, evitando duplicar operaciones innecesarias. En backend,
+los servicios de sesiones y observaciones añadieron operaciones de actualización
+posterior sujetas a permisos, estado y titularidad.
+
+\paragraph{Catálogo científico y configuración web.}
+El catálogo de entornos y tipologías se gestionó desde un módulo específico de
+backend y se consumió desde web y móvil. En el modelo consolidado, la tipología
+y el entorno se vinculan a la sesión de muestreo, lo que permite clasificar de
+forma más consistente el contexto real de la salida de campo. Los esquemas
+compartidos mantuvieron validaciones sobre método de muestreo y parámetros
+específicos, como tamaño de cuadrícula o anchura de transecto.
+
+En el portal web se añadió la página de configuración de cuenta, con actualización
+de perfil y cambio de contraseña. Además, se consolidaron vistas de
+administración de grupos y usuarios, ajustes responsive, traducciones y mejoras
+de presentación en páginas principales como dashboard, campañas, observaciones,
+mapa y analítica.
+
+\paragraph{Interfaz pública y despliegue.}
+La página pública del portal se rediseñó como pantalla de presentación de la
+plataforma. En paralelo, se documentó la configuración de despliegue mediante
+Docker \cite{docker}, variables de entorno de producción, PostgreSQL \cite{postgresql},
+API, web estática y build móvil con EAS \cite{expo-eas}. La guía de despliegue también deja constancia de que el
+almacenamiento local de fotografías requiere almacenamiento persistente o un
+servicio externo en un entorno productivo como Render \cite{render}.
+
+\begin{table}[H]
+\centering
+\caption{Trazabilidad técnica de la implementación del Sprint 4}
+\label{tab:implementacion_sprint4}
+\scriptsize
+\renewcommand{\arraystretch}{1.12}
+\begin{tabularx}{\textwidth}{p{3.1cm}p{2.2cm}XX}
+\toprule
+Bloque implementado & Plataforma & Elementos principales & Finalidad \\
+\midrule
+Configuración de cuenta & Backend y web & Perfil, cambio de contraseña y preferencias visibles desde portal & Completar la gestión básica del usuario. \\
+Administración avanzada & Backend y web & Archivado, restauración, invitaciones, membresías, backups y alcance por rol & Reforzar operación y control administrativo de grupos y campañas. \\
+Edición posterior & Backend y móvil & Actualización de sesiones y observaciones, repositorios locales y cola de sincronización & Permitir correcciones coherentes antes o después de sincronizar. \\
+Catálogo científico & Backend, web, móvil y shared & Entornos, tipologías y validaciones de muestreo & Uniformar la clasificación del contexto de las sesiones. \\
+Cierre y despliegue & Web, backend y móvil & Landing pública, limpieza final, Docker, Render y EAS & Preparar una versión más presentable y desplegable del sistema. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+El resultado del Sprint 4 fue una versión más integrada del producto, con
+permisos reforzados, administración ampliada, edición móvil posterior,
+catálogo científico consolidado, configuración de cuenta, landing pública
+revisada y documentación de despliegue. La parte relativa a una entidad
+independiente de rangos de tamaño queda como punto pendiente de confirmación
+manual.
 \subsection{Pruebas realizadas}
 
 El cuarto sprint correspondió al cierre funcional y al refinamiento del sistema. La validación tuvo un carácter principalmente regresivo: se reejecutaron las pruebas automatizadas existentes y se revisaron manualmente los flujos principales del portal web y de la aplicación móvil para comprobar que los cambios finales no introducían errores.
