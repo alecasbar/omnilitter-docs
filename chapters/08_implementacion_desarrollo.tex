@@ -1,115 +1,63 @@
 \chapter{Desarrollo, implantación y validación}
 \label{sec:desarrollo_implantacion_validacion}
 
-\section{Organización del desarrollo}
-\subsection{Metodología de trabajo}
-\subsection{Gestión del proyecto en GitHub Projects}
-\subsection{Plan de pruebas}
-
-La validación del proyecto se organizó de forma incremental, siguiendo la misma división por sprints utilizada durante el desarrollo. El objetivo fue comprobar, en cada etapa, que las funcionalidades incorporadas no solo estaban disponibles desde la interfaz, sino que respetaban las reglas de negocio, los permisos, los contratos de datos y las restricciones definidas para el sistema.
-
-La estrategia de pruebas combinó dos enfoques complementarios. Por un lado, se implementaron pruebas automatizadas sobre las partes más críticas del proyecto: esquemas compartidos, servicios de la API y determinadas utilidades del portal web. Por otro lado, los recorridos completos de usuario, especialmente aquellos relacionados con la aplicación móvil, el uso offline, la cámara, la ubicación y la sincronización, se validaron mediante pruebas manuales funcionales descritas como procedimientos de ejecución.
-
-Esta separación permite reflejar con precisión el alcance real de la validación. La memoria no atribuye al proyecto pruebas automatizadas que no existen, pero sí deja constancia de que las funcionalidades principales fueron comprobadas mediante el tipo de prueba más adecuado a su naturaleza.
-
+\newcommand{\sprintHoursTable}[1]{%
 \begin{table}[H]
 \centering
-\caption{Estrategia general de pruebas del proyecto}
-\label{tab:estrategia_general_pruebas}
+\caption{Resumen de horas reales del Sprint #1.}
+\label{tab:horas_sprint_#1}
 \small
-\begin{tabularx}{\textwidth}{p{3.2cm}X X}
+\renewcommand{\arraystretch}{1.18}
+\begin{tabularx}{0.88\textwidth}{@{}X>{\raggedleft\arraybackslash}p{2.2cm}@{}}
 \toprule
-Tipo de prueba & Objetivo & Aplicación en OmniLitter \\
+\multicolumn{2}{c}{\textbf{Horas del Sprint #1}} \\
 \midrule
-Pruebas de contrato & Verificar que los datos intercambiados entre clientes y API cumplen la estructura esperada. & Esquemas compartidos de autenticación, campañas, catálogo, sesiones, observaciones y fotografías. \\
-Pruebas unitarias de servicio & Comprobar reglas de negocio sin depender de la interfaz ni de una base de datos real. & Servicios de usuarios, grupos, campañas, catálogo y observaciones del backend mediante mocks de Prisma. \\
-Pruebas automatizadas web & Validar lógica auxiliar del portal web que no depende directamente de componentes visuales. & Cálculo de distancia de rutas y preferencias de exportación del dashboard. \\
-Pruebas manuales funcionales & Comprobar recorridos completos desde la perspectiva del usuario final. & Portal web, aplicación móvil, captura de campo, uso offline, sincronización y flujos integrados. \\
-Pruebas de regresión & Comprobar que los cambios posteriores no rompen funcionalidades ya validadas. & Reejecución de la suite automatizada y revisión manual de los flujos principales al cierre de cada sprint. \\
+Horas planificadas del Sprint & X \\
+Horas reales (Alejandro Castilla) & X \\
+Horas reales (Ignacio Martínez Díaz) & X \\
+Horas reales totales del Sprint & X \\
+Horas acumuladas planificadas hasta este Sprint & X \\
+Horas acumuladas reales hasta este Sprint & X \\
 \bottomrule
 \end{tabularx}
 \end{table}
-
-La suite automatizada se ejecutó con \textit{Vitest}. En el paquete compartido se utilizaron esquemas definidos con \textit{Zod}, mientras que en el backend se validaron servicios mediante mocks de Prisma. Esta decisión permitió comprobar reglas de negocio relevantes sin depender de una base de datos PostgreSQL real ni de la ejecución completa de rutas HTTP.
-
-\begin{table}[H]
-\centering
-\caption{Alcance real de las pruebas automatizadas}
-\label{tab:alcance_real_pruebas_automatizadas}
-\small
-\begin{tabularx}{\textwidth}{p{2.4cm}p{3.4cm}p{2.4cm}X}
-\toprule
-Área & Ficheros implementados & Herramienta & Cobertura principal \\
-\midrule
-API & Tests de \texttt{apps/api} & Vitest & Servicios de campañas, catálogo, grupos, usuarios y observaciones con mocks de Prisma. \\
-Web & Tests de \texttt{apps/web} & Vitest & Preferencias de exportación del dashboard y cálculo de distancia de rutas. \\
-Shared & Test de \texttt{packages/shared} & Vitest + Zod & Esquemas compartidos de autenticación, campañas, catálogo, sesiones, observaciones y fotografías. \\
-Mobile & Sin ficheros de test configurados & No aplica & La aplicación móvil se validó mediante pruebas manuales funcionales por caso de uso. \\
-\bottomrule
-\end{tabularx}
-\end{table}
-
-Para facilitar la trazabilidad, las pruebas automatizadas se agruparon mediante códigos identificativos. Estos códigos se emplean en los apartados de cada sprint para relacionar las tareas desarrolladas con las comprobaciones realizadas.
-
-\begin{table}[H]
-\centering
-\caption{Leyenda de códigos usados en las pruebas}
-\label{tab:leyenda_codigos_pruebas}
-\small
-\begin{tabularx}{\textwidth}{p{2.7cm}X}
-\toprule
-Código & Significado \\
-\midrule
-SCH & Pruebas de contrato sobre esquemas compartidos. Validan que los datos enviados por web, móvil o API cumplen la estructura esperada. \\
-USR & Pruebas del servicio de usuarios del backend. \\
-GRP & Pruebas del servicio de grupos y membresías del backend. \\
-CMP & Pruebas del servicio de campañas del backend. \\
-CAT & Pruebas del catálogo científico usado por el sistema. \\
-OBS & Pruebas del servicio de observaciones del backend. \\
-WEB-SES & Pruebas de utilidades web relacionadas con sesiones y cálculo de distancias. \\
-WEB-EXP & Pruebas de preferencias de exportación en el portal web. \\
-PM-CU & Pruebas manuales funcionales asociadas a un caso de uso concreto. \\
-\bottomrule
-\end{tabularx}
-\end{table}
-
-La ejecución global de la suite automatizada finalizó correctamente. En total se ejecutaron 77 pruebas automatizadas distribuidas entre el paquete compartido, el portal web y la API.
-
-\begin{table}[H]
-\centering
-\caption{Resultado global de la ejecución de pruebas automatizadas}
-\label{tab:resultado_global_pruebas_automatizadas}
-\small
-\begin{tabularx}{\textwidth}{p{4cm}p{4cm}r r}
-\toprule
-Paquete & Resultado & Ficheros & Casos \\
-\midrule
-\texttt{@omnilitter/shared} & Correcto & 1 & 23 \\
-\texttt{@omnilitter/web} & Correcto & 2 & 15 \\
-\texttt{@omnilitter/api} & Correcto & 5 & 39 \\
-\texttt{@omnilitter/mobile} & Sin tests automatizados configurados & 0 & 0 \\
-\midrule
-Total ejecutado & Correcto & 8 & 77 \\
-\bottomrule
-\end{tabularx}
-\end{table}
-
-En cuanto a las pruebas manuales, se optó por documentarlas mediante una tabla
-agrupada por caso de uso. Cada fila corresponde a un único caso de uso y recoge
-las pruebas manuales ejecutadas para validarlo. La redacción se presenta en
-pasado para dejar constancia de que los flujos fueron comprobados correctamente
-durante la validación.
+}
 
 \newcommand{\manualCaseCell}[2]{\textbf{#1}\\[0.35em]#2}
 
-\subsection{Criterios de finalización de tareas}
-\subsection{Estructura de releases}
+La fase de desarrollo e implementación de OmniLitter recoge el proceso seguido para transformar los requisitos definidos previamente en un sistema funcional compuesto por una aplicación móvil, un portal web y un backend centralizado. Esta sección describe cómo se organizó el trabajo a lo largo de los distintos sprints, qué partes del sistema se abordaron en cada etapa y qué decisiones técnicas permitieron construir una solución coherente con las necesidades del proyecto. Además, se detallan las funcionalidades implementadas, la integración entre los distintos componentes, el soporte para trabajo offline en la aplicación móvil, la sincronización con el servidor y la estructura general que permite gestionar campañas, sesiones, observaciones, usuarios y grupos dentro de la plataforma.
+
 
 \clearpage
 \section{Sprint 1: Base funcional del sistema}
-\subsection{Objetivo del sprint}
-\subsection{Parte del proyecto abordada}
-\subsection{Tiempo invertido y reparto del trabajo}
+\subsection{Características y objetivos del sprint}
+
+El primer sprint tuvo como objetivo establecer la base funcional de OmniLitter.
+En esta primera iteración se buscó construir una versión mínima pero coherente
+del sistema, capaz de soportar los flujos principales sobre los que se apoyaría
+el resto del desarrollo. Para ello, se abordaron las funcionalidades esenciales
+relacionadas con el acceso de usuarios, la separación de datos por grupos de
+trabajo, la creación inicial de campañas y sesiones de muestreo, y el registro
+básico de observaciones desde la aplicación móvil.
+
+Este sprint fue especialmente importante porque permitió definir la estructura
+operativa inicial del sistema. A partir de esta base, los usuarios podían
+acceder a la plataforma, trabajar dentro de un grupo concreto, crear campañas
+como contexto organizativo del trabajo de campo y registrar las primeras
+observaciones asociadas a una sesión. De este modo, se estableció el flujo
+principal de uso de OmniLitter, que posteriormente sería ampliado con
+capacidades de geolocalización, fotografías, trabajo offline, sincronización y
+explotación de datos.
+
+\begin{itemize}[leftmargin=1.4em]
+\item \textbf{Autenticación y acceso.} Esta funcionalidad constituye el punto de entrada al sistema y permite identificar de forma segura a cada usuario antes de acceder a las zonas privadas. Abarca el registro, el inicio y cierre de sesión, la conservación de la sesión válida y la protección de rutas internas tanto en el portal web como en la aplicación móvil.
+\item \textbf{Usuarios, grupos y permisos.} Esta parte funcional organiza el trabajo colaborativo mediante grupos, membresías y roles. Su finalidad es delimitar qué datos puede consultar o modificar cada usuario, qué grupo actúa como contexto activo de trabajo y cómo se separa la información entre equipos diferentes.
+\item \textbf{Campañas.} La campaña funciona como unidad organizativa del trabajo de campo. Sirve para planificar una actividad de muestreo dentro de un grupo, agrupar las sesiones que pertenecen al mismo contexto y mantener una referencia común para consultar después las observaciones registradas.
+\item \textbf{Sesiones de muestreo.} La sesión representa una salida o actividad concreta de recogida de datos dentro de una campaña. Esta funcionalidad permite relacionar el trabajo realizado con un grupo, un observador, una campaña y el conjunto de observaciones generadas durante esa actividad.
+\item \textbf{Observaciones.} La observación es el registro básico de un residuo encontrado durante una sesión. Esta funcionalidad recoge la información necesaria para describirlo, como taxonomía, coordenadas, cantidades, materiales, categorías y notas, manteniendo además su relación con la sesión, la campaña, el grupo y el usuario responsable.
+\end{itemize}
+
+\sprintHoursTable{1}
 \subsection{Implementación realizada}
 \subsection{Pruebas realizadas}
 
@@ -144,9 +92,30 @@ Estas pruebas protegen reglas que no deben depender únicamente de la interfaz. 
 
 \clearpage
 \section{Sprint 2: Captura de campo y análisis inicial}
-\subsection{Objetivo del sprint}
-\subsection{Parte del proyecto abordada}
-\subsection{Tiempo invertido y reparto del trabajo}
+\subsection{Características y objetivos del sprint}
+
+El segundo sprint se centró en ampliar el flujo de trabajo de campo y mejorar
+la calidad de los datos registrados desde la aplicación móvil. Una vez
+construida la base funcional del sistema, esta iteración permitió enriquecer las
+sesiones y observaciones con información más precisa, incorporando coordenadas,
+fotografías, metadatos, validaciones y mecanismos de revisión previa.
+
+Además, este sprint introdujo las primeras funcionalidades de explotación de
+datos desde el portal web. Esto permitió que la información capturada desde la
+aplicación móvil no quedara limitada al registro, sino que pudiera consultarse,
+filtrarse e interpretarse desde la parte web del sistema. Por tanto, este sprint
+supuso un avance tanto en la calidad de la captura en campo como en la capacidad
+inicial de análisis de la información registrada.
+
+\begin{itemize}[leftmargin=1.4em]
+\item \textbf{Sesiones de muestreo II.} Esta funcionalidad continúa el trabajo iniciado en las sesiones de muestreo, ampliándolas para que representen una actividad de campo con información espacial y de progreso. Además de identificar la campaña y el observador, la sesión pasa a reflejar el recorrido realizado, la distancia aproximada y el avance del muestreo, datos necesarios para interpretar posteriormente la cobertura del trabajo.
+\item \textbf{Observaciones II.} Esta parte funcional continúa la funcionalidad de observaciones, ampliando el registro básico de residuos con coordenadas, fotografías y metadatos asociados. También contempla la revisión y corrección de datos antes de su consolidación, así como reglas de validación y permisos para mantener la coherencia científica y el control de acceso.
+\item \textbf{Trabajo offline.} Esta funcionalidad permite que la aplicación móvil siga siendo útil cuando la conectividad es limitada. Su objetivo es conservar localmente la información necesaria para navegar, consultar datos ya disponibles y continuar el trabajo de campo sin depender de una conexión constante.
+\item \textbf{Consulta web de observaciones.} Esta funcionalidad convierte el portal web en una herramienta de revisión de los datos capturados. Permite localizar observaciones mediante filtros, abrir su detalle, comprobar la información asociada y consultar fotografías o metadatos relevantes desde un entorno más cómodo para la supervisión.
+\item \textbf{Dashboard y métricas.} El dashboard ofrece una visión agregada de la actividad del grupo activo. Su función es resumir el estado general del trabajo mediante totales, distribuciones e indicadores sobre campañas, sesiones, observaciones, residuos y fotografías.
+\item \textbf{Analítica y exportación.} Esta parte funcional está orientada a explorar los datos registrados y preparar su reutilización. Permite trabajar con consultas filtradas, revisar subconjuntos de información y establecer la base para generar salidas exportables en fases posteriores del desarrollo.
+\end{itemize}
+\sprintHoursTable{2}
 \subsection{Implementación realizada}
 \subsection{Pruebas realizadas}
 
@@ -179,9 +148,31 @@ La cobertura de este sprint resulta relevante para la calidad científica del si
 
 \clearpage
 \section{Sprint 3: Sincronización, mapas y exportación científica}
-\subsection{Objetivo del sprint}
-\subsection{Parte del proyecto abordada}
-\subsection{Tiempo invertido y reparto del trabajo}
+\subsection{Características y objetivos del sprint}
+
+El tercer sprint tuvo como objetivo completar el ciclo de trabajo entre la
+aplicación móvil y el servidor, especialmente en escenarios donde la
+conectividad no estuviera garantizada. En esta iteración se abordó la
+sincronización de cambios pendientes, la descarga de información remota, la
+conservación de datos locales hasta su envío y la gestión de resultados
+individuales dentro de los procesos de sincronización.
+
+Junto a ello, se incorporaron funcionalidades de visualización geográfica y
+configuración del usuario. Esto permitió que OmniLitter pasase de ser una
+herramienta centrada en la captura y consulta básica de datos a ofrecer un flujo
+más completo de trabajo: registro en campo, persistencia local, sincronización
+con el backend, representación espacial de la información y adaptación de
+ciertas preferencias a las necesidades del usuario.
+
+\begin{itemize}[leftmargin=1.4em]
+\item \textbf{Trabajo offline y sincronización II.} Esta funcionalidad continúa el trabajo offline desarrollado previamente, ampliándolo con la sincronización entre la aplicación móvil y el backend cuando vuelve a existir conectividad. Gestiona los cambios pendientes, agrupa operaciones, conserva los datos hasta confirmar su envío y permite que sesiones, observaciones y progresos capturados en campo acaben integrados en el sistema central.
+\item \textbf{Sesiones de muestreo III.} Esta parte funcional continúa la evolución de las sesiones de muestreo, ampliándolas para que puedan modificarse localmente y sincronizarse después con el servidor. Incluye la creación, actualización del progreso y finalización de sesiones, además del uso de rutas y áreas muestreadas como información útil para mapas, análisis y exportaciones.
+\item \textbf{Observaciones III.} Esta funcionalidad continúa la ampliación de las observaciones, centrándose ahora en el paso de los registros creados en el dispositivo al backend. Su objetivo es que los datos capturados sin conexión, junto con sus elementos asociados, queden publicados posteriormente y cada operación de sincronización pueda evaluarse de forma individual.
+\item \textbf{Visualización geográfica.} Esta funcionalidad permite interpretar los datos desde una perspectiva espacial. El mapa representa observaciones, rutas y áreas muestreadas, facilitando la identificación de zonas ya recorridas, puntos de registro y posibles concentraciones de residuos.
+\item \textbf{Analítica y exportación II.} Esta parte funcional continúa la base de analítica y exportación del sprint anterior, ampliándola hacia la reutilización externa de los datos de OmniLitter. Las exportaciones en CSV y GeoJSON permiten trasladar observaciones, resúmenes o información geográfica a herramientas de análisis científico, hojas de cálculo o sistemas cartográficos.
+\item \textbf{Perfil y configuración.} Esta funcionalidad agrupa las opciones que permiten adaptar la aplicación al usuario y al contexto de uso. Incluye datos de perfil, cambio de contraseña, selección de idioma y preferencias de sincronización, de forma que el comportamiento del sistema pueda ajustarse a las condiciones del dispositivo y de la conexión.
+\end{itemize}
+\sprintHoursTable{3}
 \subsection{Implementación realizada}
 \subsection{Pruebas realizadas}
 
@@ -213,9 +204,31 @@ La ausencia de una prueba automatizada específica para sincronización se consi
 
 \clearpage
 \section{Sprint 4: Cierre funcional y refinamiento}
-\subsection{Objetivo del sprint}
-\subsection{Parte del proyecto abordada}
-\subsection{Tiempo invertido y reparto del trabajo}
+\subsection{Características y objetivos del sprint}
+
+El cuarto sprint tuvo un carácter principalmente orientado a la consolidación
+del producto. Una vez implementados los principales flujos funcionales, esta
+iteración se centró en reforzar funcionalidades ya existentes, cerrar aspectos
+pendientes detectados durante el desarrollo, mejorar la experiencia de usuario y
+asegurar una versión más estable y presentable para la validación funcional del
+Trabajo de Fin de Grado.
+
+En esta etapa se revisaron tanto la administración web como el modelo científico
+que condiciona campañas, sesiones y observaciones. También se realizaron
+ajustes de interfaz, limpieza de elementos no utilizados y refinamientos en las
+validaciones. El objetivo final fue reducir inconsistencias, mejorar la
+coherencia general del sistema y preparar una versión suficientemente completa
+para su evaluación.
+
+\begin{itemize}[leftmargin=1.4em]
+\item \textbf{Configuración y administración II.} Esta funcionalidad continúa la organización de usuarios, grupos y permisos, ampliándola con ajustes administrativos necesarios para operar la plataforma con coherencia desde el portal web. Abarca la gestión de usuarios, grupos, membresías y permisos, asegurando que cada rol actúe dentro del alcance que le corresponde.
+\item \textbf{Campañas II.} Esta parte funcional continúa la funcionalidad de campañas, ampliando su papel organizativo mediante la relación con el catálogo científico del sistema. La campaña no solo organiza el trabajo de campo, sino que también queda vinculada a entornos y tipologías controladas, lo que ayuda a mantener una clasificación más consistente.
+\item \textbf{Sesiones de muestreo IV.} Esta funcionalidad continúa la evolución de las sesiones de muestreo, ampliándolas como registros editables y validados científicamente. Permite ajustar datos de la salida de campo, asociar el entorno correspondiente y aplicar reglas compartidas con el catálogo para mantener coherencia entre la campaña planificada y el muestreo realizado.
+\item \textbf{Observaciones IV.} Esta parte funcional continúa la mejora progresiva de las observaciones, centrándose en la calidad final de los registros de residuos. Las observaciones pueden revisarse y corregirse manteniendo reglas de coherencia, rangos científicos y datos estructurados que después serán utilizados en consultas, métricas y exportaciones.
+\item \textbf{Taxonomía y catálogo científico.} Esta funcionalidad proporciona las referencias controladas que dan uniformidad a la información científica del sistema. Los catálogos de entornos, tipologías y rangos permiten clasificar campañas, sesiones y observaciones con valores consistentes y reutilizables.
+\item \textbf{Interfaz pública y limpieza final.} Esta parte funcional afecta a la presentación general y al cierre del producto. La interfaz pública actúa como primera pantalla de acceso y presentación de la plataforma, mientras que la limpieza final reduce elementos innecesarios y facilita una validación más clara del sistema desarrollado.
+\end{itemize}
+\sprintHoursTable{4}
 \subsection{Implementación realizada}
 \subsection{Pruebas realizadas}
 
@@ -248,8 +261,7 @@ Esta validación permitió comprobar que las reglas principales del sistema segu
 \clearpage
 \section{Resumen global del desarrollo}
 \subsection{Funcionalidades implementadas}
-\subsection{Evolución del sistema}
-\subsection{Cobertura de requisitos}
+\subsection{Estructura de releases}
 \subsection{Pruebas manuales funcionales}
 
 Las pruebas manuales realizadas sobre OmniLitter tienen como objetivo validar el comportamiento funcional del sistema desde la perspectiva del usuario final, comprobando que los principales flujos de la aplicación se ejecutan correctamente en condiciones reales de uso. Estas pruebas abarcan tanto el portal web como la aplicación móvil, incluyendo autenticación, gestión de grupos y campañas, creación de sesiones de muestreo, registro de observaciones, funcionamiento sin conexión, sincronización posterior de datos y consulta de la información registrada. Para facilitar su trazabilidad dentro de la memoria, las pruebas se organizan por casos de uso, permitiendo justificar de forma clara qué partes del sistema han sido verificadas.
