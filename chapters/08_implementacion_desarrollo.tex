@@ -182,6 +182,39 @@ Formulario móvil de observación & SCH-14 a SCH-16 & Validación compartida de 
 Estas pruebas protegen reglas que no deben depender únicamente de la interfaz. Aunque los formularios ayuden a evitar datos incorrectos, los esquemas compartidos y los servicios de backend garantizan que la validación se mantiene ante datos reutilizados por distintos clientes o enviados directamente a la API.
 
 \subsection{Desviaciones e incidencias}
+
+Durante el primer sprint se detectaron varios ajustes propios de la puesta en
+marcha de una arquitectura con backend, portal web y aplicación móvil. Las
+desviaciones se concentraron principalmente en la definición del flujo de
+dominio y en la configuración inicial de las distintas plataformas.
+
+\begin{table}[H]
+\centering
+\caption{Desviaciones e incidencias del Sprint 1}
+\label{tab:desviaciones_sprint1}
+\small
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.22}
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{2.6cm}|>{\raggedright\arraybackslash}X|>{\raggedright\arraybackslash}X|>{\raggedright\arraybackslash}X|}
+\hline
+\textbf{Tipo} & \textbf{Desviación o incidencia} & \textbf{Causa} & \textbf{Efecto sobre el sprint} \\
+\hline
+Ajuste funcional & Incorporación explícita de campañas al flujo grupo--campaña--sesión--observación. & El backlog inicial no contemplaba con suficiente detalle la campaña como entidad intermedia del flujo de trabajo. & Fue necesario crear una tarea adicional y adaptar parte de lo ya implementado para mantener la coherencia del modelo. \\
+\hline
+Configuración técnica & Mayor esfuerzo de configuración inicial entre web, móvil y API. & La solución debía coordinar dos clientes distintos conectados a un backend común. & Se produjo una carga inicial superior de configuración y pequeñas refactorizaciones durante la integración. \\
+\hline
+Validación en entorno móvil & Ralentización de algunas pruebas de la aplicación móvil. & Existía una curva de aprendizaje asociada al uso de emuladores móviles. & Las comprobaciones móviles requirieron más tiempo, sin alterar el alcance funcional previsto para el sprint. \\
+\hline
+Ajuste de permisos & Revisión del sistema de permisos basado en grupo activo y pertenencia. & Los roles globales no resultaban suficientes para diferenciar investigadores, administradores de grupo y superadministradores. & Se reajustaron filtros de datos, API y pantallas de administración para reflejar correctamente la visibilidad por contexto. \\
+\hline
+\end{tabularx}
+\end{table}
+
+En conjunto, estas desviaciones no comprometieron el objetivo del sprint, pero
+sí obligaron a consolidar con mayor precisión el modelo de dominio y las reglas
+de autorización. El efecto principal fue un esfuerzo adicional de ajuste
+arquitectónico que dejó una base más coherente para los sprints posteriores.
+
 \subsection{Resultado del sprint}
 
 \clearpage
@@ -364,6 +397,37 @@ Dashboard de métricas científicas & WEB-EXP-01 a WEB-EXP-12 & Formatos soporta
 La cobertura de este sprint resulta relevante para la calidad científica del sistema. Una observación no debe almacenarse sin ítems, con coordenadas imposibles, con cantidades no positivas o con ficheros de imagen no soportados. Además, las pruebas de permisos aseguran que cada usuario consulta únicamente la información que corresponde a su ámbito de autorización.
 
 \subsection{Desviaciones e incidencias}
+
+En el segundo sprint las incidencias estuvieron relacionadas con la evolución
+del flujo de campo hacia un funcionamiento más próximo al uso real. La
+introducción de persistencia local, captura con GPS y fotografías exigió ajustes
+de configuración y validación adicionales.
+
+\begin{table}[H]
+\centering
+\caption{Desviaciones e incidencias del Sprint 2}
+\label{tab:desviaciones_sprint2}
+\small
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.22}
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{2.6cm}|>{\raggedright\arraybackslash}X|>{\raggedright\arraybackslash}X|>{\raggedright\arraybackslash}X|}
+\hline
+\textbf{Tipo} & \textbf{Desviación o incidencia} & \textbf{Causa} & \textbf{Efecto sobre el sprint} \\
+\hline
+Configuración técnica & Mayor esfuerzo inicial en la sincronización y configuración de SQLite. & La persistencia local requería preparar repositorios, almacenamiento y gestión de datos pendientes. & La funcionalidad necesitó más tiempo de configuración del estimado inicialmente. \\
+\hline
+Validación en dispositivo & Dificultad para probar GPS en tiempo real y fotografías desde el emulador. & El entorno emulado no reproducía adecuadamente algunos comportamientos físicos del dispositivo. & Fue necesario dedicar tiempo adicional a probar el proyecto con Expo Go en un dispositivo real. \\
+\hline
+Ajuste de permisos & Reestructuración de permisos por roles en el portal web. & Se detectó la necesidad de coordinar de forma más homogénea los permisos entre la web y la aplicación móvil. & Se incorporó el ajuste asociado a \texttt{BUG.02}, reforzando la consistencia entre plataformas. \\
+\hline
+\end{tabularx}
+\end{table}
+
+El impacto del sprint fue moderado y se concentró en la validación técnica de
+funcionalidades dependientes del dispositivo. Los ajustes realizados permitieron
+mejorar la fiabilidad del flujo offline y mantener una política de permisos más
+uniforme entre las distintas capas del sistema.
+
 \subsection{Resultado del sprint}
 
 \clearpage
@@ -528,6 +592,37 @@ Sincronización móvil-backend & Sin suite automatizada específica & La sincron
 La ausencia de una prueba automatizada específica para sincronización se considera una limitación de la validación automática. No obstante, se documenta de forma explícita para mantener la trazabilidad y evitar que la memoria presente como automatizada una comprobación que realmente fue funcional y manual.
 
 \subsection{Desviaciones e incidencias}
+
+Durante el tercer sprint se produjeron ajustes de planificación derivados de la
+necesidad de equilibrar el cierre técnico con la calidad visual de la aplicación
+y la preparación de la documentación. También se detectaron inconsistencias de
+datos al trabajar con información de ejemplo.
+
+\begin{table}[H]
+\centering
+\caption{Desviaciones e incidencias del Sprint 3}
+\label{tab:desviaciones_sprint3}
+\small
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.22}
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{2.6cm}|>{\raggedright\arraybackslash}X|>{\raggedright\arraybackslash}X|>{\raggedright\arraybackslash}X|}
+\hline
+\textbf{Tipo} & \textbf{Desviación o incidencia} & \textbf{Causa} & \textbf{Efecto sobre el sprint} \\
+\hline
+Refinamiento visual & Refactorización estética de la aplicación móvil para alinearla mejor con la identidad del proyecto. & La interfaz móvil necesitaba mayor coherencia visual con los componentes definidos en Figma. & Se reajustó el tiempo disponible para otras tareas del sprint, sin modificar los objetivos funcionales principales. \\
+\hline
+Replanificación & Aplazamiento de la configuración en la aplicación, incluido el módulo de inglés. & Se priorizó disponer de mayor margen para el cierre de funcionalidades y la redacción de la memoria. & La tarea se trasladó a una fase posterior, dejando constancia del reajuste en la planificación. \\
+\hline
+Consistencia de datos & Inconsistencias entre sesiones, entornos, tipologías y catálogo utilizado por la aplicación móvil. & Los datos de ejemplo y la información devuelta por la API no estaban completamente alineados. & Fue necesario revisar los datos seed y ajustar la información expuesta por la API para evitar discrepancias. \\
+\hline
+\end{tabularx}
+\end{table}
+
+Estas desviaciones supusieron ajustes de alcance interno y ordenación de tareas,
+pero no alteraron el propósito general del sprint. El resultado fue una mayor
+coherencia visual y de datos, junto con una planificación más realista del
+trabajo pendiente.
+
 \subsection{Resultado del sprint}
 
 \clearpage
@@ -678,6 +773,35 @@ Aplicación móvil & Sin suite automatizada específica & Los ajustes visuales y
 Esta validación permitió comprobar que las reglas principales del sistema seguían funcionando tras los cambios finales. Se mantiene como limitación que la aplicación móvil no dispone de una suite automatizada configurada.
 
 \subsection{Desviaciones e incidencias}
+
+El cuarto sprint tuvo un carácter de cierre y refinamiento, por lo que las
+desviaciones fueron reducidas. Las incidencias detectadas se vincularon
+principalmente a la actualización de pruebas tras refactorizaciones realizadas
+en módulos ya implementados.
+
+\begin{table}[H]
+\centering
+\caption{Desviaciones e incidencias del Sprint 4}
+\label{tab:desviaciones_sprint4}
+\small
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.22}
+\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{2.6cm}|>{\raggedright\arraybackslash}X|>{\raggedright\arraybackslash}X|>{\raggedright\arraybackslash}X|}
+\hline
+\textbf{Tipo} & \textbf{Desviación o incidencia} & \textbf{Causa} & \textbf{Efecto sobre el sprint} \\
+\hline
+Cierre funcional & Desviaciones mínimas durante las refactorizaciones finales. & El sprint estaba orientado a cerrar implementación y consolidar funcionalidades existentes. & No se produjo un impacto relevante sobre el desarrollo previsto. \\
+\hline
+Pruebas automatizadas & Refactorización de tests unitarios de la API. & Las refactorizaciones posteriores a los módulos desarrollados en el Sprint 3 exigieron adaptar parte de la suite de pruebas. & Aumentó la carga dedicada a validación respecto a la estimación inicial, sin afectar al alcance funcional del cierre. \\
+\hline
+\end{tabularx}
+\end{table}
+
+En términos globales, el sprint mantuvo el plan previsto y las incidencias se
+gestionaron como parte natural del proceso de estabilización. El principal
+efecto fue un incremento limitado del esfuerzo de pruebas para asegurar la
+coherencia de la versión final.
+
 \subsection{Resultado del sprint}
 
 \clearpage
