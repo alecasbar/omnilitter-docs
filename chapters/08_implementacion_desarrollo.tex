@@ -57,7 +57,6 @@ explotación de datos.
 \item \textbf{Observaciones.} La observación es el registro básico de un residuo encontrado durante una sesión. Esta funcionalidad recoge la información necesaria para describirlo, como taxonomía, coordenadas, cantidades, materiales, categorías y notas, manteniendo además su relación con la sesión, la campaña, el grupo y el usuario responsable.
 \end{itemize}
 
-\sprintHoursTable{1}
 \subsection{Implementación realizada}
 
 El primer sprint se dedicó a construir la base técnica sobre la que se apoyaría
@@ -217,6 +216,25 @@ arquitectónico que dejó una base más coherente para los sprints posteriores.
 
 \subsection{Resultado del sprint}
 
+El resultado del primer sprint fue la obtención de una primera versión funcional de OmniLitter, concebida como una base mínima pero operativa sobre la que construir el resto del sistema. Esta versión permitió comprobar que la arquitectura planteada para el Trabajo de Fin de Grado era técnicamente viable, al integrar de forma coordinada los principales bloques del proyecto: backend, portal web, aplicación móvil y paquete compartido de validaciones y tipos comunes.
+
+Al finalizar la iteración, el sistema ya disponía de los elementos esenciales para representar el flujo principal de trabajo previsto en OmniLitter. En concreto, se implementó una primera base de autenticación de usuarios, la organización de la información mediante grupos de trabajo, la gestión inicial de campañas y sesiones de muestreo, así como el registro básico de observaciones desde la aplicación móvil. Aunque estas funcionalidades no constituían todavía una versión completa del producto final, sí permitían recorrer de forma coherente el flujo fundamental del sistema: acceso del usuario, pertenencia a un grupo, creación o selección de una campaña, apertura de una sesión de muestreo y registro de observaciones asociadas.
+
+Desde el punto de vista técnico, este sprint tuvo especial importancia porque permitió validar las decisiones iniciales de arquitectura. La separación entre plataformas, el uso de una API como punto central de comunicación, la existencia de un paquete compartido entre aplicaciones y la persistencia de datos en una base de datos relacional demostraron ser adecuados para soportar el crecimiento posterior del proyecto. Además, la integración entre la aplicación móvil y el backend permitió comprobar que el sistema podía evolucionar hacia escenarios más avanzados, como la captura de datos en campo, la gestión de evidencias fotográficas, la persistencia local y la sincronización diferida.
+
+Desde el punto de vista funcional, el sprint consolidó la estructura básica del dominio de OmniLitter. Durante su desarrollo se identificó la necesidad de introducir de forma explícita el concepto de campaña dentro del flujo de trabajo, ya que este elemento resultaba imprescindible para organizar correctamente las sesiones y las observaciones. Esta adaptación supuso un reajuste respecto a la planificación inicial, pero permitió obtener un modelo más coherente con las necesidades reales del sistema y con la forma en que se espera que los usuarios organicen las actividades de muestreo.
+
+Asimismo, la iteración permitió detectar y resolver decisiones relevantes relacionadas con la gestión de permisos. Inicialmente, el control de acceso podía plantearse únicamente a partir de roles generales, pero el desarrollo del sprint puso de manifiesto que era necesario considerar también la pertenencia de cada usuario a un grupo concreto y su rol dentro de ese grupo. Esta decisión resultó especialmente importante para garantizar que la información quedase correctamente segmentada y que cada usuario solo pudiera acceder a los datos correspondientes a su contexto de trabajo.
+
+En términos académicos, el primer sprint aportó una primera evidencia clara de trazabilidad entre los requisitos definidos, el diseño del sistema y la implementación realizada. Las funcionalidades desarrolladas materializaron los requisitos iniciales relacionados con autenticación, organización por grupos, campañas, sesiones y observaciones. A su vez, las incidencias surgidas durante la iteración reflejaron un proceso normal de refinamiento del dominio, propio de un desarrollo incremental, en el que algunas decisiones se ajustan conforme se contrastan con la implementación real.
+
+El grado de cumplimiento del sprint se considera adecuado. Aunque fue necesario introducir ciertos ajustes sobre la planificación inicial, estos no comprometieron el objetivo principal de la iteración. Por el contrario, contribuyeron a mejorar la consistencia del sistema y a dejar una base más sólida para los siguientes ciclos de desarrollo. Al cierre del sprint, OmniLitter contaba con una estructura funcional suficiente para demostrar la viabilidad del proyecto y para continuar incorporando funcionalidades de mayor complejidad en las iteraciones posteriores.
+
+En consecuencia, este primer sprint cumplió su papel como punto de partida del desarrollo incremental. Su principal aportación no fue únicamente la entrega de una serie de funcionalidades iniciales, sino la validación de la arquitectura, del modelo de datos básico y del flujo principal de uso. Gracias a ello, los siguientes sprints pudieron centrarse en ampliar la captura de información en campo, mejorar la experiencia de usuario, incorporar persistencia local, reforzar la gestión de permisos y avanzar hacia una versión más completa y próxima a los objetivos finales del Trabajo de Fin de Grado.
+
+
+\sprintHoursTable{1}
+
 \clearpage
 \section{Sprint 2: Captura de campo y análisis inicial}
 \subsection{Características y objetivos del sprint}
@@ -242,7 +260,6 @@ inicial de análisis de la información registrada.
 \item \textbf{Dashboard y métricas.} El dashboard ofrece una visión agregada de la actividad del grupo activo. Su función es resumir el estado general del trabajo mediante totales, distribuciones e indicadores sobre campañas, sesiones, observaciones, residuos y fotografías.
 \item \textbf{Analítica y exportación.} Esta parte funcional está orientada a explorar los datos registrados y preparar su reutilización. Permite trabajar con consultas filtradas, revisar subconjuntos de información y establecer la base para generar salidas exportables en fases posteriores del desarrollo.
 \end{itemize}
-\sprintHoursTable{2}
 \subsection{Implementación realizada}
 
 El segundo sprint amplió la base anterior hacia un flujo de campo más completo.
@@ -267,13 +284,11 @@ los avisos que proporcione el sistema operativo. Sobre esas lecturas se añadió
 válidas, una fecha de registro interpretable, una precisión no superior a 15
 metros, una separación mínima de 2,5 metros respecto al punto anterior y una
 velocidad implícita no superior a 8 m/s. La distancia entre dos puntos se
-calcula mediante la fórmula de Haversine \cite{sinnott1984haversine}, por ser
+calcula mediante la fórmula de Haversine, por ser
 suficiente para estimar recorridos cortos sobre coordenadas geográficas sin
 introducir una dependencia geoespacial adicional. Estos umbrales no proceden de
 una norma externa, sino de una decisión de diseño del proyecto para reducir
-saltos espurios del GPS sin perder desplazamientos reales de muestreo; de hecho,
-el historial del repositorio recoge una iteración explícita de mejora contra
-ruido GPS en el commit \texttt{3ba0838}.
+saltos espurios del GPS sin perder desplazamientos reales de muestreo.
 
 El backend repite parte de esta limpieza antes de persistir el progreso de la
 sesión. En \texttt{apps/api/src/modules/sessions/sessions.service.ts} se
@@ -430,6 +445,25 @@ uniforme entre las distintas capas del sistema.
 
 \subsection{Resultado del sprint}
 
+El resultado del segundo sprint fue una evolución significativa de OmniLitter desde una versión funcional mínima hacia una herramienta más cercana a un escenario real de trabajo de campo. Mientras que el primer sprint permitió validar la estructura general del sistema y el flujo básico de campañas, sesiones y observaciones, esta segunda iteración se centró en enriquecer la captura de información, mejorar la utilidad científica de los datos registrados y reforzar la conexión entre la aplicación móvil, el backend y el portal web.
+
+Al cierre del sprint, la aplicación móvil ya permitía registrar observaciones con un mayor nivel de detalle, incorporando coordenadas geográficas, fotografías asociadas y metadatos relevantes para contextualizar la recogida de información. Este avance resultó especialmente importante, ya que las observaciones dejaron de ser simples registros textuales o básicos para convertirse en unidades de información más completas, verificables y útiles desde el punto de vista del análisis posterior. La inclusión de datos espaciales y evidencias visuales aumentó la calidad del registro y aproximó el sistema a las necesidades reales de una campaña de monitorización ambiental.
+
+Otro resultado relevante fue la introducción de una primera capacidad de persistencia local en la aplicación móvil. Esta funcionalidad permitió avanzar hacia uno de los objetivos fundamentales del proyecto: garantizar que el trabajo de campo pueda realizarse en contextos donde la conectividad no siempre esté disponible o sea estable. Aunque la sincronización completa se abordaría en iteraciones posteriores, este sprint dejó preparada la base necesaria para almacenar información localmente y reducir la dependencia inmediata de la conexión con el servidor. Desde el punto de vista técnico, este avance supuso un paso importante en la adaptación de OmniLitter a las condiciones reales de uso fuera de un entorno controlado.
+
+En paralelo, el portal web comenzó a consolidarse como una herramienta de supervisión y consulta de los datos recogidos desde la aplicación móvil. La posibilidad de visualizar observaciones, consultar información asociada y disponer de primeras métricas permitió comprobar que los datos generados en campo podían ser transferidos conceptualmente al entorno de análisis y revisión. De este modo, el sistema dejó de funcionar como un conjunto de módulos aislados y empezó a mostrar un ciclo de trabajo más completo: captura de datos desde la aplicación móvil, validación y almacenamiento mediante el backend, y consulta posterior desde el portal web.
+
+Desde una perspectiva académica, este sprint aportó una evidencia clara de integración funcional entre las distintas capas del sistema. No se trató únicamente de añadir nuevas pantallas o servicios independientes, sino de ampliar el flujo principal del proyecto con información más rica y con mayor valor para el usuario final. La iteración permitió demostrar que la arquitectura definida en el sprint anterior era capaz de soportar funcionalidades más complejas, como la gestión de imágenes, el tratamiento de coordenadas, el almacenamiento local y la explotación inicial de datos desde el portal web.
+
+Durante el desarrollo del sprint también se identificaron algunas dificultades técnicas relevantes, especialmente relacionadas con la configuración de SQLite en la aplicación móvil, la gestión de ficheros locales y las pruebas en dispositivos o emuladores. Estas incidencias ralentizaron parte del proceso de validación, pero no impidieron alcanzar los objetivos principales de la iteración. Por el contrario, permitieron detectar de forma temprana limitaciones propias del entorno móvil y ajustar la implementación para que el sistema resultante fuera más robusto de cara a los siguientes sprints.
+
+El grado de cumplimiento del sprint se considera adecuado, ya que se alcanzaron los avances funcionales previstos y se reforzó de forma clara el valor práctico de OmniLitter. La aplicación móvil incorporó capacidades más representativas del trabajo de campo, el backend amplió su papel como capa de validación y almacenamiento, y el portal web comenzó a ofrecer una visión inicial de los datos registrados. Todo ello contribuyó a consolidar el sistema como una plataforma integrada, en la que las distintas partes del proyecto cumplen funciones complementarias dentro de un mismo flujo de trabajo.
+
+En consecuencia, el segundo sprint supuso un punto de maduración importante dentro del desarrollo incremental. Su principal aportación fue transformar la base funcional inicial en un sistema más orientado al uso real, incorporando información geográfica, evidencias fotográficas, metadatos y persistencia local. Además, dejó preparado el proyecto para abordar en las siguientes iteraciones aspectos clave como la sincronización completa entre dispositivo y servidor, la representación espacial de las observaciones, la mejora de la experiencia de usuario y la consolidación del ciclo completo de captura, consulta y análisis de datos ambientales.
+
+
+\sprintHoursTable{2}
+
 \clearpage
 \section{Sprint 3: Sincronización, mapas y exportación científica}
 \subsection{Características y objetivos del sprint}
@@ -456,7 +490,6 @@ ciertas preferencias a las necesidades del usuario.
 \item \textbf{Analítica y exportación II.} Esta parte funcional continúa la base de analítica y exportación del sprint anterior, ampliándola hacia la reutilización externa de los datos de OmniLitter. Las exportaciones en CSV y GeoJSON permiten trasladar observaciones, resúmenes o información geográfica a herramientas de análisis científico, hojas de cálculo o sistemas cartográficos.
 \item \textbf{Perfil y configuración.} Esta funcionalidad agrupa las opciones que permiten adaptar la aplicación al usuario y al contexto de uso. Incluye datos de perfil, cambio de contraseña, selección de idioma y preferencias de sincronización, de forma que el comportamiento del sistema pueda ajustarse a las condiciones del dispositivo y de la conexión.
 \end{itemize}
-\sprintHoursTable{3}
 \subsection{Implementación realizada}
 
 El tercer sprint se orientó a cerrar el ciclo técnico entre la aplicación móvil,
@@ -625,6 +658,27 @@ trabajo pendiente.
 
 \subsection{Resultado del sprint}
 
+El resultado del tercer sprint fue un avance especialmente relevante en la madurez funcional de OmniLitter, ya que permitió cerrar gran parte del ciclo de trabajo previsto para el sistema. Si en las iteraciones anteriores se había construido la base funcional y se había enriquecido la captura de información en campo, este sprint consolidó la conexión entre el uso offline de la aplicación móvil, la sincronización con el backend, la consulta desde el portal web, la visualización geográfica y la exportación de datos para su posterior reutilización.
+
+Al finalizar la iteración, OmniLitter ya permitía conservar información en el dispositivo móvil cuando no existía conectividad, sincronizar los datos con el servidor una vez recuperada la conexión y poner esa información a disposición del portal web. Este resultado supuso un salto cualitativo respecto a los sprints anteriores, ya que el sistema dejó de depender de un uso conectado en todo momento y comenzó a aproximarse a las condiciones reales de una campaña de monitorización ambiental, donde el trabajo de campo puede desarrollarse en zonas con cobertura limitada o inestable.
+
+Desde el punto de vista funcional, el sprint permitió completar un recorrido de uso mucho más representativo del producto final. El usuario podía registrar sesiones y observaciones desde la aplicación móvil, mantener dichos datos almacenados localmente, sincronizarlos posteriormente con el backend y consultarlos desde el portal web. A partir de esta información, el sistema ofrecía mecanismos iniciales de interpretación mediante listados, métricas, mapas y opciones de exportación. De este modo, OmniLitter empezó a comportarse como una plataforma integrada y no únicamente como un conjunto de funcionalidades independientes.
+
+Uno de los resultados más importantes de esta iteración fue la consolidación de la sincronización como elemento central del sistema. Esta funcionalidad permitió conectar de forma efectiva el contexto de captura de datos en campo con el entorno de análisis y supervisión. La aplicación móvil asumió el papel de herramienta de recogida de información, el backend actuó como punto de validación y consolidación de los datos, y el portal web se convirtió en el espacio desde el que revisar, representar y reutilizar la información obtenida. Esta separación de responsabilidades reforzó la coherencia de la arquitectura planteada inicialmente.
+
+La incorporación de la visualización geográfica también aportó un valor significativo al proyecto. La representación de sesiones y observaciones sobre mapas permitió contextualizar espacialmente los datos registrados y comprobar que la información georreferenciada capturada desde la aplicación móvil podía ser utilizada posteriormente desde el portal web. En un sistema orientado a la monitorización ambiental, esta capacidad resulta especialmente relevante, ya que la ubicación de los residuos y la delimitación de las zonas de muestreo son elementos fundamentales para interpretar correctamente los datos.
+
+Asimismo, la exportación de información supuso otro avance importante en la utilidad práctica de OmniLitter. Esta funcionalidad permitió plantear el sistema no solo como una herramienta de registro y consulta interna, sino también como una fuente de datos reutilizables en otros entornos de análisis. Desde una perspectiva académica, este aspecto resulta especialmente valioso, ya que conecta la implementación realizada con uno de los objetivos habituales en proyectos de carácter científico: facilitar la explotación posterior de los datos recogidos.
+
+Durante el desarrollo del sprint se produjeron algunas desviaciones relacionadas con la coordinación entre los datos locales y remotos, la coherencia visual de determinadas pantallas y la validación completa del flujo de sincronización. Estas desviaciones se gestionaron mediante ajustes de planificación y refinamientos técnicos, priorizando en todo momento la estabilidad del recorrido funcional principal. Aunque la sincronización se validó mediante pruebas manuales completas y recorridos funcionales de extremo a extremo, se dejó documentada como limitación la ausencia de una suite automatizada específica para este proceso.
+
+El grado de cumplimiento del sprint se considera alto, ya que se alcanzó uno de los hitos más importantes del desarrollo incremental: demostrar que los datos podían capturarse en campo, persistirse localmente, sincronizarse con el servidor y explotarse posteriormente desde el portal web. Este resultado aportó una evidencia clara de integración entre los tres componentes principales del proyecto y permitió validar que la arquitectura definida era capaz de soportar el flujo completo de uso previsto para OmniLitter.
+
+En consecuencia, el tercer sprint representó un punto de consolidación dentro del desarrollo del Trabajo de Fin de Grado. Su principal aportación fue transformar las funcionalidades construidas en iteraciones anteriores en un flujo integrado y coherente, capaz de conectar la recogida de información en campo con su posterior análisis y reutilización. Gracias a este avance, el proyecto llegó al sprint final con las funcionalidades centrales ya implementadas, quedando pendiente principalmente el refinamiento de la experiencia de usuario, la validación final, la preparación del despliegue y el cierre documental de la solución desarrollada.
+
+
+\sprintHoursTable{3}
+
 \clearpage
 \section{Sprint 4: Cierre funcional y refinamiento}
 \subsection{Características y objetivos del sprint}
@@ -651,7 +705,6 @@ para su evaluación.
 \item \textbf{Taxonomía y catálogo científico.} Esta funcionalidad proporciona las referencias controladas que dan uniformidad a la información científica del sistema. Los catálogos de entornos y tipologías permiten clasificar las sesiones con valores consistentes y reutilizables, mientras que los esquemas compartidos validan taxonomía, coordenadas, cantidades y parámetros de muestreo.
 \item \textbf{Interfaz pública y limpieza final.} Esta parte funcional afecta a la presentación general y al cierre del producto. La interfaz pública actúa como primera pantalla de acceso y presentación de la plataforma, mientras que la limpieza final reduce elementos innecesarios y facilita una validación más clara del sistema desarrollado.
 \end{itemize}
-\sprintHoursTable{4}
 \subsection{Implementación realizada}
 
 El cuarto sprint tuvo un carácter de integración final y refinamiento funcional.
@@ -803,6 +856,29 @@ efecto fue un incremento limitado del esfuerzo de pruebas para asegurar la
 coherencia de la versión final.
 
 \subsection{Resultado del sprint}
+
+El resultado del cuarto sprint fue la consolidación final de OmniLitter como una versión integrada, estable y suficientemente completa para ser evaluada dentro del marco del Trabajo de Fin de Grado. Tras haber construido en los sprints anteriores la base funcional, la captura avanzada de datos, la persistencia local, la sincronización, la consulta web, la visualización geográfica y la exportación de información, esta última iteración se orientó principalmente al cierre del sistema, al refinamiento de funcionalidades existentes y a la preparación de una versión más presentable y coherente.
+
+Durante este sprint se reforzaron especialmente las capacidades de administración del portal web, la gestión de usuarios, grupos y permisos, así como los ajustes relacionados con la cuenta de usuario. Estas mejoras permitieron completar aspectos necesarios para que el sistema no solo funcionase desde el punto de vista técnico, sino que también ofreciera una experiencia más ordenada y consistente para los distintos perfiles de usuario. La administración web adquirió así un papel más completo dentro de la plataforma, facilitando la supervisión y organización de la información gestionada por OmniLitter.
+
+Otro resultado relevante fue la consolidación del catálogo científico utilizado para clasificar las observaciones. Esta parte del sistema resultaba especialmente importante, ya que OmniLitter no se limita a registrar información genérica, sino que pretende estructurar los datos de residuos de forma útil para su análisis posterior. La integración del catálogo permitió reforzar la coherencia de los datos recogidos y aportar mayor valor académico y científico a la solución desarrollada. De este modo, las observaciones registradas quedaron mejor alineadas con el objetivo del proyecto: facilitar la monitorización y el estudio de residuos en distintos entornos.
+
+El sprint también permitió mejorar la edición y revisión posterior de los datos. Esta funcionalidad resulta importante porque, en un contexto real de trabajo de campo, la información capturada puede requerir correcciones, ampliaciones o validaciones posteriores. Al incorporar mecanismos de revisión y ajuste, el sistema se hizo más flexible y se aproximó mejor a las necesidades reales de los usuarios, evitando que el flujo de trabajo terminase únicamente en el momento de la captura inicial desde la aplicación móvil.
+
+Desde el punto de vista de integración, el cuarto sprint permitió comprobar que los principales módulos desarrollados a lo largo del proyecto funcionaban de manera coordinada dentro de una misma solución. La aplicación móvil, el backend y el portal web quedaron conectados en un flujo completo que abarca la captura de observaciones en campo, la persistencia local, la sincronización con el servidor, la consulta desde la web, la representación en mapas, la obtención de métricas, la exportación de datos y la administración del sistema. Este resultado es especialmente relevante, ya que evidencia que el proyecto no se compone de funcionalidades aisladas, sino de una plataforma estructurada en torno a un proceso de uso común.
+
+Además, este sprint tuvo un papel fundamental en la estabilización del sistema. Las pruebas regresivas y los recorridos manuales finales permitieron verificar que las modificaciones introducidas durante el cierre no afectaban negativamente a las funcionalidades principales implementadas en iteraciones anteriores. En particular, se revisaron los flujos más representativos del proyecto, prestando atención a la autenticación, la gestión de grupos, la creación y consulta de campañas y sesiones, el registro de observaciones, la sincronización, la visualización web y la exportación de datos. Esta validación final permitió aumentar la confianza en la consistencia del sistema desarrollado.
+
+También se preparó la documentación necesaria para el despliegue y uso de la plataforma, incluyendo indicaciones sobre configuración, variables de entorno, construcción de las aplicaciones y puesta en marcha de los distintos componentes. Este aspecto resultó relevante para cerrar el proyecto desde una perspectiva académica, ya que permite justificar no solo la implementación de la solución, sino también su capacidad para ser instalada, ejecutada y evaluada en un entorno controlado. La documentación de despliegue contribuyó, por tanto, a hacer el sistema más reproducible y comprensible para terceros.
+
+Las incidencias detectadas durante el sprint fueron reducidas y se concentraron principalmente en ajustes derivados de refactorizaciones, adaptación de pruebas y correcciones menores de coherencia visual o funcional. Estas incidencias no alteraron el alcance principal del proyecto, sino que formaron parte del proceso normal de estabilización de una versión final. Su impacto fue limitado y permitió cerrar el desarrollo con una base técnica más ordenada y preparada para posibles ampliaciones futuras.
+
+El grado de cumplimiento del sprint se considera alto, ya que se alcanzó el objetivo principal de transformar el prototipo funcional construido durante las iteraciones anteriores en una versión final más integrada, documentada y apta para evaluación. El sprint no se centró únicamente en añadir nuevas funcionalidades, sino en asegurar que las ya desarrolladas funcionasen correctamente dentro de un mismo flujo, reforzando la calidad global del sistema y su presentación como producto software.
+
+En consecuencia, el cuarto sprint supuso el cierre natural del proceso de desarrollo incremental de OmniLitter. Su principal aportación fue consolidar el sistema, reducir inconsistencias, completar funcionalidades de administración y revisión, preparar la documentación de despliegue y validar los recorridos principales de uso. Como resultado, el proyecto alcanzó un estado suficientemente maduro para demostrar los objetivos planteados en el Trabajo de Fin de Grado, dejando además identificadas sus limitaciones y una base técnica preparada para futuras líneas de mejora.
+
+
+\sprintHoursTable{4}
 
 \clearpage
 \section{Resumen global del desarrollo}
