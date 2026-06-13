@@ -580,15 +580,6 @@ vistas agregadas, mientras que el investigador mantiene un alcance restringido a
 sus campañas, sesiones u observaciones. Estas reglas completaron la separación
 de responsabilidades iniciada en los sprints anteriores.
 
-El archivado de grupos se implementó como una operación transaccional. Al
-archivar un grupo, las campañas activas del grupo pasan a finalizadas, se marca
-que ese cierre procede del archivado y se elimina ese grupo como grupo activo de
-los usuarios que lo tuvieran seleccionado. La restauración distingue quién
-realizó el archivado: si lo hizo un superadministrador, solo otro
-superadministrador puede restaurarlo. Además, el portal puede ofrecer la
-reactivación de campañas finalizadas automáticamente por el archivado sin
-reactivar campañas que ya hubieran acabado por otros motivos.
-
 La copia de seguridad administrativa también quedó implementada como una
 exportación JSON distinta de la analítica científica. Para un grupo concreto
 incluye campañas, sesiones, observaciones, ítems, fotografías, miembros e
