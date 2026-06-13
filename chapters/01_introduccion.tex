@@ -2,82 +2,192 @@
 
 \section{Contexto y motivación}
 
-La contaminación por residuos en entornos terrestres y acuáticos constituye uno de los principales problemas del medio ambiente a nivel mundial. La acumulación de residuos en los distintos tipos de entornos genera un impacto negativo sobre los ecosistemas, la biodiversidad y la calidad de vida de las personas. Con el objetivo de comprender la magnitud del problema y desarrollar estrategias eficaces de prevención y mitigación, organizaciones, administraciones públicas e instituciones científicas impulsan programas de monitorización y análisis de residuos en diferentes compartimentos ambientales.
+La contaminación por residuos en entornos terrestres y acuáticos constituye uno de
+los principales problemas ambientales actuales. La presencia de basura en ríos,
+playas, zonas costeras, bosques, áreas urbanas y otros espacios naturales afecta
+a los ecosistemas, a la biodiversidad y a la calidad de vida de las personas.
+Para comprender la magnitud del problema y evaluar la eficacia de las medidas de
+prevención o mitigación, las administraciones públicas, las instituciones
+científicas y las organizaciones ambientales impulsan programas de monitorización
+de residuos en distintos compartimentos ambientales.
 
-La utilidad de estos programas depende de que los datos recogidos sean comparables, estén correctamente georreferenciados y conserven información suficiente sobre cómo, cuándo y dónde se han obtenido. En el caso de las basuras fluviales, el Joint Research Centre de la Comisión Europea señala la falta de información sistemática sobre la cantidad de residuos transportados por los ríos y la ausencia de metodologías armonizadas capaces de generar datos cuantitativos comparables \cite{gonzalez2016riverine}. De forma similar, trabajos recientes subrayan la necesidad de armonizar las técnicas de monitorización de macroplásticos en ecosistemas acuáticos y terrestres \cite{gallitelli2024macroplastics}.
+La utilidad de estos programas depende de que los datos recogidos sean
+comparables, estén correctamente georreferenciados y conserven información
+suficiente sobre cómo, cuándo y dónde se han obtenido. En el caso de las basuras
+fluviales, el Joint Research Centre de la Comisión Europea señala la falta de
+información sistemática sobre la cantidad de residuos transportados por los ríos
+y la ausencia de metodologías armonizadas capaces de generar datos cuantitativos
+comparables \cite{gonzalez2016riverine}. De forma similar, trabajos recientes
+subrayan la necesidad de armonizar las técnicas de monitorización de
+macroplásticos en ecosistemas acuáticos y terrestres
+\cite{gallitelli2024macroplastics}.
 
-La obtención de datos reales y útiles requiere la participación de diferentes personas y grupos dispuestos a realizar campañas de monitorización en los entornos afectados. No obstante, los registros manuales, las hojas de cálculo aisladas o las campañas de limpieza sin un protocolo común suelen producir información dispersa, difícil de comparar y con metadatos insuficientes para un análisis científico posterior.
+Un antecedente directo de este proyecto es el trabajo realizado para la
+monitorización de macrobasuras flotantes en ríos, donde se desarrolló una
+aplicación para dispositivos tipo \textit{tablet} capaz de registrar los ítems
+observados, su tamaño y su posición geográfica durante sesiones de
+monitorización \cite{gonzalezfernandez2017harmonized}. Este antecedente refuerza
+la idea de que la herramienta de captura no debe limitarse a digitalizar un
+formulario, sino que debe orientar la observación y conservar desde el inicio los
+datos necesarios para que los registros puedan compararse posteriormente.
 
-Teniendo en cuenta lo anterior, el cliente ha planteado la necesidad de desarrollar una herramienta que solucione el problema.
+En este contexto, el cliente planteó la necesidad de renovar y ampliar la
+aplicación \textit{Floating Litter Monitoring}. La herramienta original estaba
+orientada principalmente a la monitorización de residuos en ríos y mares,
+mientras que el nuevo proyecto debía extender esa capacidad a una mayor variedad
+de entornos naturales y urbanos, incorporar una gestión más flexible de usuarios
+y grupos, mejorar la recogida de evidencias y permitir la consulta posterior de
+los datos desde un portal web.
 
-En respuesta a esta necesidad, se propone el desarrollo de OmniLitter. Esta plataforma incluirá tanto un portal web como una aplicación móvil, para la monitorización y registro de residuos para un posterior análisis.
+Como respuesta a esta necesidad se propone el desarrollo de OmniLitter, una
+plataforma formada por una aplicación móvil, un portal web y un backend
+centralizado. Su finalidad es facilitar la recogida, gestión y análisis de datos
+de residuos mediante una solución que combine trabajo de campo, sincronización de
+información, control de permisos y explotación posterior de los datos
+recopilados.
 
 \section{Problema abordado}
 
-Para hacer un seguimiento de los residuos se necesita que diferentes personas colaboren, que se realicen campañas en lugares diversos y que se recoja información suficiente para analizar patrones espaciales y temporales. Si no se dispone de herramientas especializadas, aparecen problemas de información dispersa, falta de orden en los registros y dificultad para integrar los datos obtenidos por distintos participantes.
+La monitorización de residuos requiere la participación de distintas personas y
+grupos que realizan campañas en lugares y momentos diferentes. Si la información
+se registra mediante formularios no normalizados, hojas de cálculo aisladas o
+campañas de limpieza sin un protocolo común, los datos resultantes suelen quedar
+dispersos, son difíciles de comparar y pierden parte de su valor para análisis
+científicos posteriores.
 
-Generalmente, se recoge la información en la naturaleza, donde no siempre hay conexión a Internet. Esto limita el uso de aplicaciones que necesitan estar siempre conectadas a servidores remotos. Por lo tanto, es necesario tener mecanismos que permitan guardar la información en el dispositivo y sincronizarla después cuando haya conexión a la red.
+Además, la captura de datos se realiza habitualmente en la naturaleza, donde la
+conectividad a Internet puede ser limitada o inexistente. Esta situación dificulta
+el uso de soluciones que dependen de una conexión permanente con servidores
+remotos. Por ello, resulta necesario que la aplicación móvil pueda almacenar
+sesiones, observaciones, fotografías y metadatos en el propio dispositivo, y que
+sincronice esa información con el servidor cuando vuelva a existir conexión.
 
-El proyecto también requiere el uso de clasificaciones de residuos estandarizadas, la asociación de fotos a cada observación, el registro preciso de la ubicación geográfica y la captura de metadatos de muestreo, como protocolo, entorno, duración, transecto o área observada. Hacer todo esto a mano aumenta el riesgo de errores y dificulta el uso posterior de los datos.
+El proyecto también exige registrar datos con suficiente calidad científica. Cada
+observación debe asociarse a una taxonomía de residuos, una localización
+geográfica, una fecha y hora, evidencias fotográficas y metadatos de muestreo
+como el entorno, la tipología, el método empleado, la duración, el transecto o el
+área observada. La precisión de la posición GPS y el estado de sincronización de
+cada registro también son relevantes para interpretar correctamente los datos
+recogidos.
 
-El cliente necesita una solución de software que permita gestionar campañas de seguimiento, registrar observaciones geolocalizadas desde dispositivos móviles, operar sin conexión a Internet y centralizar toda la información recopilada en una infraestructura común accesible desde un portal web.
+A estas necesidades se suma la organización colaborativa del trabajo. Los
+usuarios pertenecen a grupos, los grupos gestionan campañas, las campañas
+contienen sesiones de muestreo y las sesiones agrupan observaciones. Esta
+estructura requiere mecanismos de autenticación, control de permisos y aislamiento
+de datos para que cada equipo pueda gestionar su información de forma segura y
+privada.
+
+Por tanto, el problema abordado no consiste únicamente en crear un formulario
+digital de recogida de residuos. El reto es diseñar una plataforma que conecte la
+captura offline en campo con una infraestructura común de almacenamiento,
+administración, visualización y exportación, manteniendo la trazabilidad y la
+comparabilidad de los datos desde su origen.
 
 \section{Objetivos}
 
-El objetivo principal de este Trabajo Fin de Grado es diseñar, desarrollar e implementar una plataforma software denominada OmniLitter que facilite la recogida y el posterior análisis de datos relacionados con la monitorización de residuos, de una forma sencilla, eficiente y precisa.
+El objetivo principal de este Trabajo Fin de Grado es diseñar, desarrollar e
+implementar OmniLitter, una plataforma software multiplataforma que facilite la
+monitorización de residuos en distintos entornos naturales y permita transformar
+observaciones de campo en datos estructurados, comparables y reutilizables.
 
-Para alcanzar este objetivo general se establecen los siguientes objetivos específicos:
+Para alcanzar este objetivo general se establecen los siguientes objetivos
+específicos:
 
 \begin{enumerate}
-    \item Diseñar una arquitectura software que permita la integración de una aplicación móvil, un portal web y un backend centralizado.
+    \item Diseñar una arquitectura software que integre una aplicación móvil, un
+    portal web, un backend centralizado y una base de datos común.
 
-    \item Desarrollar una aplicación móvil destinada a la captura de observaciones durante campañas de monitorización.
+    \item Organizar la información del sistema mediante grupos de trabajo,
+    campañas, sesiones de muestreo y observaciones geolocalizadas.
 
-    \item Permitir el funcionamiento de la aplicación móvil en condiciones de conectividad limitada mediante mecanismos de almacenamiento local y sincronización diferida.
+    \item Desarrollar una aplicación móvil destinada a la captura de datos en
+    campo, incluyendo residuos observados, fotografías, ubicación, fecha, hora y
+    metadatos de muestreo.
 
-    \item Registrar información geográfica asociada a cada observación utilizando los sensores de posicionamiento disponibles en los dispositivos móviles.
+    \item Permitir el funcionamiento de la aplicación móvil en condiciones de
+    conectividad limitada mediante persistencia local y sincronización diferida
+    con el servidor.
 
-    \item Incorporar la gestión de fotografías y metadatos de muestreo como evidencias asociadas a las observaciones registradas.
+    \item Incorporar taxonomías estandarizadas, entornos, tipologías y métodos
+    de muestreo configurables para favorecer la calidad científica de la
+    información registrada.
 
-    \item Implementar un portal web que facilite la administración de campañas, usuarios y datos recopilados.
+    \item Implementar mecanismos de autenticación, roles, permisos y aislamiento
+    de datos entre grupos de trabajo.
 
-    \item Centralizar la información obtenida en una base de datos común que garantice la integridad y consistencia de los datos.
+    \item Desarrollar un portal web que facilite la administración de usuarios,
+    grupos y campañas, así como la consulta de sesiones y observaciones
+    recopiladas.
 
-    \item Utilizar taxonomías estandarizadas y protocolos de muestreo configurables para favorecer la calidad científica y la comparabilidad de la información registrada.
+    \item Proporcionar herramientas de visualización y explotación de datos,
+    incluyendo mapas, paneles informativos y exportación en formatos adecuados
+    para análisis posterior.
 
-    \item Aplicar metodologías y herramientas de ingeniería del software para garantizar la calidad, mantenibilidad y escalabilidad de la solución desarrollada.
+    \item Garantizar la integridad, trazabilidad y consistencia de la información
+    almacenada mediante un backend centralizado y una API autenticada.
+
+    \item Aplicar metodologías y herramientas de ingeniería del software para
+    documentar, probar y validar la solución desarrollada dentro del alcance
+    académico del proyecto.
 \end{enumerate}
 
 \section{Alcance del proyecto}
 
-El presente Trabajo Fin de Grado aborda el diseño, desarrollo e implementación de una plataforma software denominada OmniLitter, orientada a facilitar la monitorización y el análisis de la contaminación por residuos en distintos ecosistemas terrestres y acuáticos.
+El presente Trabajo Fin de Grado aborda el diseño, desarrollo e implementación de
+una versión funcional de una plataforma software denominada OmniLitter, orientada
+a facilitar la monitorización y el análisis de la contaminación por residuos en
+distintos ecosistemas terrestres, acuáticos y urbanos, dentro del alcance
+académico del proyecto.
 
-La solución desarrollada está compuesta por una aplicación móvil destinada a la recogida de información en campo, un portal web para la gestión y explotación de los datos recopilados, y un backend centralizado encargado de la lógica de negocio y la persistencia de la información.
+La solución desarrollada está compuesta por una aplicación móvil destinada a la
+recogida de información en campo, un portal web para la gestión y explotación de
+los datos recopilados, y un backend centralizado encargado de la autenticación,
+la lógica de negocio, la sincronización y la persistencia de la información.
 
 Dentro del alcance del proyecto se incluyen las siguientes funcionalidades:
 
 \begin{itemize}
-    \item Diseño e implementación de la arquitectura completa del sistema, incluyendo aplicación móvil, portal web, backend y base de datos.
-    
-    \item Registro de observaciones de residuos utilizando una taxonomía jerárquica estandarizada que garantice la consistencia científica de los datos.
-    
-    \item Captura automática de información geográfica y temporal asociada a cada observación mediante los sensores disponibles en los dispositivos móviles.
-    
-    \item Gestión de fotografías y metadatos asociados a las observaciones registradas.
-    
-    \item Gestión de sesiones de muestreo, incluyendo información contextual como el entorno analizado, el protocolo empleado, la duración de la sesión, el tipo de transecto o cuadrante y las características del área estudiada.
-    
-    \item Funcionamiento en modo offline mediante almacenamiento local de la información y sincronización posterior con el servidor cuando exista conectividad.
-    
-    \item Administración de campañas, usuarios, grupos y permisos mediante un portal web de gestión.
-    
-    \item Visualización de observaciones y campañas mediante mapas interactivos y paneles informativos.
-    
-    \item Exportación de los datos recopilados en formatos adecuados para su posterior explotación y análisis científico.
-    
-    \item Implementación de mecanismos de autenticación, control de acceso y protección de la información almacenada.
-    
-    \item Elaboración de la documentación técnica y académica asociada al desarrollo del sistema.
+    \item Diseño e implementación de la arquitectura completa del sistema,
+    incluyendo aplicación móvil, portal web, backend y base de datos.
+
+    \item Registro de observaciones de residuos utilizando una taxonomía
+    jerárquica estandarizada que garantice la consistencia científica de los
+    datos.
+
+    \item Captura automática de información geográfica y temporal asociada a cada
+    observación mediante los sensores disponibles en los dispositivos móviles.
+
+    \item Gestión de fotografías y metadatos asociados a las observaciones
+    registradas.
+
+    \item Gestión de campañas y sesiones de muestreo, incluyendo información
+    contextual como el entorno analizado, el método empleado, la duración de la
+    sesión, el tipo de transecto o cuadrante y las características del área
+    estudiada.
+
+    \item Funcionamiento en modo offline mediante almacenamiento local de la
+    información y sincronización posterior con el servidor cuando exista
+    conectividad.
+
+    \item Administración de campañas, usuarios, grupos y permisos mediante un
+    portal web de gestión.
+
+    \item Visualización de observaciones, sesiones y campañas mediante mapas
+    interactivos y paneles informativos.
+
+    \item Exportación de los datos recopilados en formatos adecuados para su
+    posterior explotación y análisis científico.
+
+    \item Implementación de mecanismos de autenticación, control de acceso y
+    protección de la información almacenada.
+
+    \item Elaboración de la documentación técnica, manuales, pruebas y memoria
+    académica asociada al desarrollo del sistema.
 \end{itemize}
 
-De esta forma, el alcance del proyecto se centra en proporcionar una plataforma funcional y completa para la recogida, gestión y consulta de datos relacionados con la monitorización de residuos, estableciendo una base tecnológica que permita futuras ampliaciones y desarrollos.
+Quedan fuera del alcance del Trabajo Fin de Grado el mantenimiento
+post-producción, el soporte técnico continuo tras la entrega y la definición de
+nuevos protocolos científicos oficiales. De esta forma, el alcance del proyecto
+se centra en proporcionar una plataforma funcional para la recogida, gestión,
+consulta y explotación de datos relacionados con la monitorización de residuos,
+estableciendo una base tecnológica que permita futuras ampliaciones y desarrollos.

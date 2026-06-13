@@ -1,9 +1,94 @@
 \chapter{Conclusiones y trabajo futuro}
 
+Este capítulo cierra la memoria. Revisa en qué medida se han cumplido los objetivos
+planteados al inicio del proyecto, reconoce las limitaciones del sistema entregado,
+recoge las lecciones aprendidas durante el desarrollo y apunta las líneas por las que
+OmniLitter podría seguir evolucionando.
+
 \section{Cumplimiento de objetivos}
+
+El objetivo general del proyecto era diseñar, desarrollar e implementar una plataforma
+que facilitara la recogida y el análisis posterior de datos de monitorización de
+residuos de forma sencilla, eficiente y precisa. El sistema entregado cumple ese
+objetivo: integra una aplicación móvil de captura, un portal web de gestión y análisis,
+y una API central con base de datos PostgreSQL, y está desplegado y accesible desde
+Internet.
+
+Los objetivos específicos también se han alcanzado. La arquitectura integra los tres
+componentes alrededor de una única API, lo que evita duplicar la lógica de negocio. La
+aplicación móvil permite trabajar por sesiones de muestreo, registrar observaciones
+clasificadas con una taxonomía jerárquica, asociar fotografías y capturar la
+localización mediante GPS. El funcionamiento sin conexión y la sincronización diferida,
+que eran el requisito más delicado del proyecto, quedan resueltos mediante una base de
+datos local y una cola de salida que sube los datos pendientes al recuperar cobertura.
+
+Por el lado del portal web, se cubren la gestión de usuarios, grupos, campañas y
+sesiones, la consulta de observaciones con filtros, el mapa interactivo, el dashboard de
+métricas y la exportación científica en CSV, JSON y GeoJSON. La información se centraliza en
+una base de datos común con control de integridad y aislamiento por grupo. Para cerrar
+el ciclo de ingeniería del software, el proyecto se ha desarrollado en un monorepo con
+tipos y validaciones compartidas, pruebas automatizadas sobre las partes críticas e
+integración continua.
 
 \section{Limitaciones}
 
+El sistema cubre el alcance previsto, pero conviene dejar constancia de sus límites.
+
+La aplicación móvil se validó mediante pruebas manuales funcionales y no dispone de una
+suite de pruebas automatizadas, a diferencia de la API, el portal web y el paquete
+compartido. La sincronización entre la aplicación y el servidor se comprobó con
+recorridos manuales completos, pero no cuenta con una prueba de integración automática
+contra una base de datos real.
+
+La resolución de conflictos sigue una estrategia de \textit{last-write-wins} con
+granularidad de registro. Es suficiente para el modelo de uso de OmniLitter, donde cada
+sesión pertenece a un único observador, pero no contempla la edición concurrente intensa
+del mismo dato por varios usuarios. En cuanto al despliegue, no se han realizado pruebas
+de carga ni se ha configurado un escalado horizontal, porque el volumen previsto es el
+propio de un Trabajo de Fin de Grado.
+
+Por último, hay funcionalidades que se dejaron fuera del alcance de forma consciente: la
+identificación automática de residuos a partir de imágenes, la publicación en las
+tiendas de aplicaciones y el soporte de más idiomas además del español y el inglés. El
+mantenimiento evolutivo posterior a la entrega tampoco forma parte del ámbito académico
+del trabajo.
+
 \section{Lecciones aprendidas}
 
+La lección más clara es que los requisitos de un proyecto real no se cierran en una
+única fase inicial. La definición evolucionó a partir de las reuniones con el cliente y
+de la validación con prototipos, y fueron precisamente los mockups los que permitieron
+transformar necesidades generales en requisitos concretos y detectar cambios antes de
+escribir código.
+
+En lo técnico, el trabajo sin conexión y la sincronización resultaron ser la parte más
+costosa del desarrollo. Garantizar que no se pierden datos ante cortes de red o cierres
+de la aplicación obligó a diseñar con cuidado la cola de salida, los estados de
+sincronización y la generación de identificadores en el cliente. El uso de un monorepo
+con esquemas de validación compartidos entre la aplicación, el portal y la API ayudó a
+mantener la coherencia de los datos y a reducir errores en la frontera entre cliente y
+servidor.
+
+Trabajar para un cliente del dominio científico también enseñó a valorar los metadatos.
+Una observación no vale solo por el residuo que registra, sino por el contexto que la
+acompaña, y esa idea condicionó buena parte del modelo de datos y de los protocolos de
+muestreo.
+
 \section{Líneas de trabajo futuro}
+
+OmniLitter deja una base sobre la que es natural seguir construyendo. 
+Entre las posibles líneas de trabajo futuro destaca la incorporación de técnicas
+de visión artificial para identificar automáticamente residuos a partir de las
+fotografías registradas, la publicación de la aplicación en las
+tiendas oficiales con una versión de producción para iOS y Android, una resolución de
+conflictos más fina con detección por campo, el soporte de más idiomas y la
+incorporación de una suite de pruebas automatizadas para la aplicación móvil y de
+pruebas de integración para la sincronización.
+
+Más allá de la evolución técnica, el proyecto tiene recorrido real. En la última
+reunión de validación, en la que se mostró a Daniel el funcionamiento completo del
+sistema, el cliente manifestó su intención de presentar OmniLitter a otros compañeros
+para proponer su uso en futuros proyectos, y de plantear su aplicación en un proyecto
+real de la Unión Europea contando con el equipo de desarrollo para su mantenimiento
+posterior. Es una valoración que confirma que la plataforma responde a una necesidad
+real y que abre una posible continuidad del trabajo más allá del ámbito académico.

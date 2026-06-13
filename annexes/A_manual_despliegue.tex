@@ -52,18 +52,19 @@ En todos los casos, Docker Desktop debe estar en ejecución antes de continuar.
 
 \subsection{Clonar el repositorio e instalar dependencias}
 
-Un único comando instala todos los paquetes del monorepo (web, móvil, API y
-compartido).
+El siguiente bloque clona el repositorio e instala todos los paquetes del monorepo
+(web, móvil, API y compartido).
 
 \begin{lstlisting}[language=bash]
-git clone https://github.com/alecasbar/OmniLitter.git
+git clone https://github.com/Omnilitter-TFG/OmniLitter.git
 cd OmniLitter
 pnpm install
 \end{lstlisting}
 
 A continuación se copia la plantilla de variables de entorno. El fichero \texttt{.env}
 incluye valores listos para desarrollo local, por lo que no es necesario cambiar nada
-para empezar.
+para arrancar la aplicación. Las credenciales de correo y otros secretos incluidos en
+la plantilla son valores de ejemplo y deben sustituirse en un despliegue real.
 
 \begin{lstlisting}[language=bash]
 cp .env.example .env        # En Windows: Copy-Item .env.example .env
@@ -71,12 +72,21 @@ cp .env.example .env        # En Windows: Copy-Item .env.example .env
 
 \subsection{Opción A: arranque con Docker (recomendada)}
 
-Esta opción levanta PostgreSQL, la API y el portal web con una sola orden, sin
-necesidad de instalar PostgreSQL en la máquina. La primera vez tarda unos minutos
-mientras construye las imágenes.
+Esta opción levanta PostgreSQL, la API y el portal web sin necesidad de instalar
+PostgreSQL en la máquina. La primera vez tarda unos minutos mientras construye las
+imágenes.
 
 \begin{lstlisting}[language=bash]
 pnpm docker:up
+\end{lstlisting}
+
+El comando anterior deja los contenedores en ejecución y muestra sus logs. En otra
+terminal, una vez PostgreSQL esté disponible, se aplican las migraciones y se cargan
+los datos semilla:
+
+\begin{lstlisting}[language=bash]
+pnpm db:migrate
+pnpm db:seed
 \end{lstlisting}
 
 Una vez listos los contenedores, los servicios quedan disponibles en las direcciones de
@@ -108,12 +118,14 @@ y ejecutar el resto en local.
 docker compose up postgres -d
 pnpm db:migrate
 pnpm db:seed
-pnpm dev
+pnpm --parallel --filter @omnilitter/api --filter @omnilitter/web dev
 \end{lstlisting}
 
 En esta modalidad el portal web se sirve con Vite en \texttt{http://localhost:5173} y la
 API en \texttt{http://localhost:3000/api}. Cada paquete puede arrancarse por separado
-con los filtros de pnpm, por ejemplo \texttt{pnpm -{}-filter @omnilitter/api dev}.
+con los filtros de pnpm, por ejemplo \texttt{pnpm -{}-filter @omnilitter/api dev}. El
+script \texttt{pnpm dev} del monorepo también existe, pero arranca web, API y móvil a la
+vez.
 
 \section{Aplicación móvil}
 
@@ -128,7 +140,7 @@ pnpm --filter @omnilitter/mobile android   # Android (Android Studio o dispositi
 pnpm --filter @omnilitter/mobile ios        # iOS (solo macOS, requiere Xcode)
 
 # Arranques posteriores
-pnpm --filter @omnilitter/mobile dev
+pnpm --filter @omnilitter/mobile dev:client
 \end{lstlisting}
 
 La variable \texttt{EXPO\_PUBLIC\_API\_URL} del fichero \texttt{.env} debe apuntar a la
@@ -144,12 +156,10 @@ se genera un APK con EAS a partir del perfil \texttt{preview}. Requiere una cuen
 Expo para iniciar sesión.
 
 \begin{lstlisting}[language=bash]
-cd apps/mobile
-pnpm install
 npm install -g eas-cli
 eas login          # inicia sesion con la cuenta de Expo
 eas whoami         # comprueba la sesion activa
-eas build --platform android --profile preview
+pnpm --filter @omnilitter/mobile build:android:apk
 \end{lstlisting}
 
 El APK resultante usa distribución interna, por lo que se instala directamente en el
