@@ -1,1 +1,187 @@
 \chapter{Manual de instalación y despliegue}
+\label{anexo:manual_despliegue}
+
+\lstset{
+  basicstyle=\ttfamily\small,
+  breaklines=true,
+  columns=fullflexible,
+  keepspaces=true,
+  frame=single,
+  framesep=4pt,
+  xleftmargin=4pt,
+  aboveskip=0.8em,
+  belowskip=0.8em
+}
+
+Este anexo recoge los pasos reproducibles para poner en marcha OmniLitter en una
+máquina local desde cero. La descripción de los entornos de nube y de la estrategia de
+despliegue se encuentra en el capítulo de despliegue y operación. Los comandos son
+válidos para macOS y Linux; cuando Windows requiere una orden distinta, se indica de
+forma explícita.
+
+\section{Requisitos previos}
+
+Antes de empezar conviene tener instaladas las herramientas de la
+tabla~\ref{tab:requisitos_instalacion}.
+
+\begin{table}[H]
+\centering
+\caption{Requisitos previos de instalación.}
+\label{tab:requisitos_instalacion}
+\small
+\begin{tabularx}{\textwidth}{p{3.2cm} p{3.2cm} X}
+\toprule
+\textbf{Herramienta} & \textbf{Versión mínima} & \textbf{Comprobación} \\
+\midrule
+Node.js & 20.x LTS & \texttt{node -{}-version} \\
+pnpm & 9.x & \texttt{pnpm -{}-version} \\
+Docker Desktop & Reciente & \texttt{docker -{}-version} \\
+Git & Cualquiera & \texttt{git -{}-version} \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+En macOS y Linux, Node.js puede instalarse con \texttt{nvm} y pnpm de forma global. En
+Windows se recomienda usar Windows Terminal con PowerShell e instalar las herramientas
+con \texttt{winget}. Docker Desktop necesita activar WSL 2 en Windows durante su
+instalación. Si PowerShell bloquea la ejecución de scripts, hay que permitirla una sola
+vez con \texttt{Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser}.
+En todos los casos, Docker Desktop debe estar en ejecución antes de continuar.
+
+\section{Puesta en marcha}
+
+\subsection{Clonar el repositorio e instalar dependencias}
+
+Un único comando instala todos los paquetes del monorepo (web, móvil, API y
+compartido).
+
+\begin{lstlisting}[language=bash]
+git clone https://github.com/alecasbar/OmniLitter.git
+cd OmniLitter
+pnpm install
+\end{lstlisting}
+
+A continuación se copia la plantilla de variables de entorno. El fichero \texttt{.env}
+incluye valores listos para desarrollo local, por lo que no es necesario cambiar nada
+para empezar.
+
+\begin{lstlisting}[language=bash]
+cp .env.example .env        # En Windows: Copy-Item .env.example .env
+\end{lstlisting}
+
+\subsection{Opción A: arranque con Docker (recomendada)}
+
+Esta opción levanta PostgreSQL, la API y el portal web con una sola orden, sin
+necesidad de instalar PostgreSQL en la máquina. La primera vez tarda unos minutos
+mientras construye las imágenes.
+
+\begin{lstlisting}[language=bash]
+pnpm docker:up
+\end{lstlisting}
+
+Una vez listos los contenedores, los servicios quedan disponibles en las direcciones de
+la tabla~\ref{tab:urls_docker}. Para detenerlos se usa \texttt{pnpm docker:down}.
+
+\begin{table}[H]
+\centering
+\caption{Servicios disponibles con Docker.}
+\label{tab:urls_docker}
+\small
+\begin{tabularx}{\textwidth}{p{4.5cm} X}
+\toprule
+\textbf{Servicio} & \textbf{Dirección} \\
+\midrule
+Portal web & \texttt{http://localhost:8080} \\
+API REST & \texttt{http://localhost:3000/api} \\
+Documentación de la API (Swagger) & \texttt{http://localhost:3000/api/docs} \\
+PostgreSQL & \texttt{localhost:5433} \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Opción B: desarrollo sin Docker}
+
+Para trabajar con recarga en caliente se puede levantar solo la base de datos en Docker
+y ejecutar el resto en local.
+
+\begin{lstlisting}[language=bash]
+docker compose up postgres -d
+pnpm db:migrate
+pnpm db:seed
+pnpm dev
+\end{lstlisting}
+
+En esta modalidad el portal web se sirve con Vite en \texttt{http://localhost:5173} y la
+API en \texttt{http://localhost:3000/api}. Cada paquete puede arrancarse por separado
+con los filtros de pnpm, por ejemplo \texttt{pnpm -{}-filter @omnilitter/api dev}.
+
+\section{Aplicación móvil}
+
+La aplicación móvil usa Expo en \textit{bare workflow} con \texttt{expo-dev-client}, de
+modo que Expo Go no es compatible y hay que compilar el cliente nativo. La primera vez
+se compila e instala en el emulador o dispositivo, y en arranques posteriores basta con
+iniciar el servidor de desarrollo.
+
+\begin{lstlisting}[language=bash]
+# Primera vez (compila e instala el cliente nativo)
+pnpm --filter @omnilitter/mobile android   # Android (Android Studio o dispositivo)
+pnpm --filter @omnilitter/mobile ios        # iOS (solo macOS, requiere Xcode)
+
+# Arranques posteriores
+pnpm --filter @omnilitter/mobile dev
+\end{lstlisting}
+
+La variable \texttt{EXPO\_PUBLIC\_API\_URL} del fichero \texttt{.env} debe apuntar a la
+API. Si se usa un dispositivo físico, hay que sustituir \texttt{localhost} por la IP
+local de la máquina en la red, por ejemplo \texttt{http://192.168.1.50:3000/api}. En
+Windows solo es posible probar en Android, ya que el simulador de iOS no está
+disponible.
+
+\subsection*{Generar un APK para un dispositivo físico}
+
+Para probar la aplicación en un dispositivo Android real sin el servidor de desarrollo,
+se genera un APK con EAS a partir del perfil \texttt{preview}. Requiere una cuenta de
+Expo para iniciar sesión.
+
+\begin{lstlisting}[language=bash]
+cd apps/mobile
+pnpm install
+npm install -g eas-cli
+eas login          # inicia sesion con la cuenta de Expo
+eas whoami         # comprueba la sesion activa
+eas build --platform android --profile preview
+\end{lstlisting}
+
+El APK resultante usa distribución interna, por lo que se instala directamente en el
+dispositivo sin pasar por la tienda. La API contra la que trabaja se decide al compilar:
+basta con definir \texttt{EXPO\_PUBLIC\_API\_URL} con la dirección deseada (la IP local
+de la máquina, la API de Render en \texttt{https://omnilitter-api.onrender.com/api} o la
+API de producción en Azure) antes de lanzar la compilación.
+
+\section{Scripts útiles}
+
+\begin{lstlisting}[language=bash]
+pnpm lint        # Analisis estatico con ESLint en todo el monorepo
+pnpm typecheck   # Validacion de TypeScript en todos los paquetes
+pnpm format      # Formateo del codigo con Prettier
+pnpm build       # Compilacion de todos los paquetes
+pnpm test        # Ejecucion de los tests
+\end{lstlisting}
+
+\section{Solución de problemas frecuentes}
+
+\begin{description}
+  \item[Error de versión de Node al instalar.] Comprobar que la versión es 20 o
+    superior con \texttt{node -{}-version}. Con nvm, ejecutar \texttt{nvm use 20}.
+  \item[Docker no arranca los contenedores.] Asegurarse de que Docker Desktop está
+    abierto. En Windows, si aparece un error de WSL 2, ejecutar \texttt{wsl -{}-install}
+    y \texttt{wsl -{}-update} en una terminal de administrador y reiniciar.
+  \item[El puerto 5433 ya está en uso.] OmniLitter expone PostgreSQL en el \texttt{5433}
+    del equipo para no chocar con una instalación local en el \texttt{5432}. Si el
+    \texttt{5433} también está ocupado, detener el proceso que lo usa o cambiar el mapeo
+    de puerto en \texttt{docker-compose.yml} y en \texttt{.env}.
+  \item[La aplicación móvil no conecta con la API.] Desde un dispositivo físico,
+    \texttt{localhost} no funciona. Buscar la IP local de la máquina (con
+    \texttt{ipconfig} en Windows o \texttt{ifconfig} en macOS y Linux) y ponerla en
+    \texttt{EXPO\_PUBLIC\_API\_URL}.
+\end{description}

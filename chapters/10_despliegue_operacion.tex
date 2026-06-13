@@ -1,13 +1,203 @@
 \chapter{Despliegue y operación}
 
-\section{Arquitectura de despliegue}
+Este capítulo describe cómo se pone en marcha OmniLitter y en qué entornos se ejecuta.
+El sistema se ha pensado para recorrer tres entornos con propósitos distintos: un
+entorno local para el desarrollo y las pruebas, un entorno de preproducción accesible
+desde Internet para validar el sistema completo y mostrarlo desplegado tanto a nuestro tutor como al cliente, y un entorno de producción
+estable para la entrega final. Los tres comparten las mismas imágenes de contenedor y
+la misma configuración basada en variables de entorno, lo que reduce las diferencias
+entre ejecutar el sistema en una máquina de desarrollo y hacerlo en la nube.
 
-\section{Configuración de producción}
+\section{Estrategia de despliegue por entornos}
 
-\section{Despliegue de API y base de datos}
+La separación en entornos permite trabajar sin riesgo sobre el código, validar los
+cambios en un servidor real antes de la entrega y reservar la producción para una
+versión estable. La tabla~\ref{tab:entornos_despliegue} resume cada entorno.
 
-\section{Despliegue del portal web}
+\begin{table}[H]
+\centering
+\caption{Entornos de despliegue de OmniLitter.}
+\label{tab:entornos_despliegue}
+\small
+\begin{tabularx}{\textwidth}{p{2.6cm} p{3.4cm} X}
+\toprule
+\textbf{Entorno} & \textbf{Plataforma} & \textbf{Propósito y componentes} \\
+\midrule
+Local (desarrollo) & Docker Compose o Node en local &
+Desarrollo y pruebas en la máquina del equipo. Levanta PostgreSQL, la API y el portal
+web, y la aplicación móvil se ejecuta en un emulador o dispositivo. \\
+Preproducción & Render &
+Validación e integración sobre un servidor accesible desde Internet, usado también para
+demostraciones. Aloja la API, el portal web y una base de datos PostgreSQL gestionada. \\
+Producción & Microsoft Azure &
+Versión estable de la entrega final. Ejecuta los contenedores de la API y del portal
+web junto con una base de datos PostgreSQL gestionada. \\
+\bottomrule
+\end{tabularx}
+\end{table}
 
-\section{Build y distribución de la aplicación móvil}
+\section{Entorno local de desarrollo}
+
+El entorno local es el punto de partida para cualquier persona que quiera ejecutar el
+proyecto. La instalación paso a paso, con sus requisitos previos para macOS, Linux y
+Windows, se detalla en el anexo~\ref{anexo:manual_despliegue}. Aquí se describe cómo
+está organizado.
+
+\subsection{Orquestación con Docker Compose}
+
+La forma recomendada de levantar el sistema en local es mediante Docker Compose, que
+arranca los tres servicios con una sola orden (\texttt{pnpm docker:up}). El fichero
+\texttt{docker-compose.yml} define:
+
+\begin{itemize}
+  \item \textbf{PostgreSQL 16}, que expone el puerto \texttt{5433} del equipo para no
+    chocar con una instalación local en el \texttt{5432}, y conserva los datos en el
+    volumen \texttt{postgres\_data}.
+  \item \textbf{La API}, construida desde \texttt{docker/api.Dockerfile}, accesible en
+    el puerto \texttt{3000}. Las imágenes subidas se guardan en el volumen
+    \texttt{api\_uploads}.
+  \item \textbf{El portal web}, construido desde \texttt{docker/web.Dockerfile} y
+    servido por Nginx (configurado en \texttt{docker/nginx.conf}) en el puerto
+    \texttt{8080}.
+\end{itemize}
+
+Esta opción no requiere instalar PostgreSQL en la máquina y reproduce una topología
+parecida a la de los entornos en la nube, lo que reduce las sorpresas al desplegar.
+
+\subsection{Ejecución sin contenedores}
+
+Durante el desarrollo activo resulta cómodo trabajar con recarga en caliente. Para ello
+se puede levantar únicamente la base de datos en Docker
+(\texttt{docker compose up postgres -d}), aplicar las migraciones y los datos semilla
+(\texttt{pnpm db:migrate} y \texttt{pnpm db:seed}) y arrancar los servicios en modo
+desarrollo (\texttt{pnpm dev}). En esta modalidad el portal web se sirve con Vite en el
+puerto \texttt{5173} y la API en el \texttt{3000}. Cada paquete puede arrancarse también
+por separado mediante los filtros de pnpm.
+
+\subsection{Aplicación móvil y emulador}
+
+La aplicación móvil utiliza Expo en \textit{bare workflow} con \texttt{expo-dev-client},
+por lo que Expo Go no es compatible y es necesario compilar el cliente nativo. La
+primera ejecución compila e instala la aplicación en un emulador o dispositivo mediante
+\texttt{expo run:android} o \texttt{expo run:ios}, y en arranques posteriores basta con
+iniciar el servidor de desarrollo. La variable \texttt{EXPO\_PUBLIC\_API\_URL} indica a
+la aplicación la dirección de la API, que debe ser la IP local de la máquina cuando se
+usa un dispositivo físico.
+
+Para probar la aplicación en un dispositivo real sin depender del servidor de
+desarrollo, se genera un APK de Android con EAS a partir del perfil \texttt{preview},
+cuya distribución es interna y se instala directamente en el dispositivo. La dirección
+de la API que utiliza ese APK se fija al compilar mediante la variable
+\texttt{EXPO\_PUBLIC\_API\_URL}, de modo que el mismo procedimiento permite construir una
+versión que apunte a la API local, a la de preproducción o a la de producción. Los
+comandos concretos para generar el APK se recogen en el anexo~\ref{anexo:manual_despliegue}.
+
+\section{Preproducción en Render}
+
+El entorno de preproducción está desplegado en Render y permite usar el sistema
+completo desde Internet sin instalar nada. La API y el portal web se publican como
+servicios independientes a partir del mismo repositorio, y se apoyan en una base de
+datos PostgreSQL gestionada por la propia plataforma. Las direcciones públicas son:
+
+\begin{itemize}
+  \item API: \texttt{https://omnilitter-api.onrender.com}
+  \item Portal web: \texttt{https://omnilitter-web.onrender.com}
+\end{itemize}
+
+Este entorno cumple dos funciones. Por un lado, sirve para validar que el sistema
+funciona igual en un servidor real que en local, incluyendo la comunicación entre el
+portal, la API y la base de datos sobre HTTPS. Por otro, ofrece un punto de acceso
+estable para las demostraciones y para que la aplicación móvil se conecte a una API
+real sin depender de la máquina de desarrollo.
+
+Para la aplicación móvil se generó además un APK con \texttt{EXPO\_PUBLIC\_API\_URL}
+apuntando a la API de Render. Este APK se instala en cualquier dispositivo Android y
+trabaja contra el entorno de preproducción sin necesidad de configurar nada en local,
+lo que resulta práctico para mostrar el sistema al tutor y al cliente.
+
+\section{Producción en Azure}
+
+% TODO (Alejandro): confirmar la arquitectura y el estado real del despliegue en Azure
+% antes de la entrega. A fecha de redacción el entorno de producción está pendiente de
+% desplegar; revisar los nombres concretos de los servicios cuando esté en marcha.
+El entorno de producción se despliega en Microsoft Azure y aloja la versión estable
+destinada a la entrega final. Las imágenes de contenedor de la API y del portal web,
+generadas por la integración continua, se ejecutan como servicios gestionados, mientras
+que la base de datos se aloja en una instancia gestionada de PostgreSQL y los archivos
+subidos se conservan en almacenamiento persistente.
+
+Reservar un entorno propio para producción permite mantener una versión estable e
+independiente del trabajo de desarrollo y de las pruebas de preproducción. La elección
+de Azure responde, además, a su disponibilidad dentro del entorno académico y a su
+integración con los flujos de contenedores ya utilizados en el proyecto.
+
+Del mismo modo que en preproducción, la aplicación móvil dispone de un APK con
+\texttt{EXPO\_PUBLIC\_API\_URL} apuntando a la API de producción, de manera que la
+versión instalable de la entrega final trabaja directamente contra el entorno de Azure.
+
+\section{Integración y entrega continua}
+
+El repositorio incorpora varios flujos de trabajo de GitHub Actions que automatizan la
+validación y la publicación de artefactos. La tabla~\ref{tab:workflows_ci} los resume.
+
+\begin{table}[H]
+\centering
+\caption{Flujos de integración y entrega continua.}
+\label{tab:workflows_ci}
+\small
+\begin{tabularx}{\textwidth}{p{2.8cm} p{3.6cm} X}
+\toprule
+\textbf{Flujo} & \textbf{Disparador} & \textbf{Función} \\
+\midrule
+\texttt{ci.yml} & \textit{push} y \textit{pull request} a \texttt{develop} y
+\texttt{main} & Instala dependencias, ejecuta el análisis estático, genera el cliente
+de Prisma y lanza la compilación y los tests del monorepo. \\
+\texttt{docker.yml} & \textit{push} a \texttt{main} y ejecución manual &
+Construye las imágenes de la API y del portal web y las publica en el registro de
+contenedores de GitHub (GHCR). \\
+\texttt{expo-preview.yml} & Ejecución manual &
+Genera una versión de previsualización de Android con EAS para probar la aplicación en
+un dispositivo real. \\
+\texttt{release.yml} & Etiqueta \texttt{v*} &
+Crea la \textit{release} en GitHub asociada a la versión etiquetada. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+De esta forma, cada cambio que llega a las ramas principales se valida de forma
+automática antes de integrarse, y las imágenes de contenedor que consumen los entornos
+de nube se generan de manera reproducible a partir del código fuente.
+
+\section{Configuración y gestión de secretos}
+
+La configuración del sistema se centraliza en variables de entorno, tomando como
+plantilla el fichero \texttt{.env.example}. Este enfoque evita escribir credenciales en
+el código y permite que cada entorno use sus propios valores sin modificar la
+aplicación. Las variables principales son:
+
+\begin{itemize}
+  \item \texttt{DATABASE\_URL}: cadena de conexión a PostgreSQL.
+  \item \texttt{JWT\_ACCESS\_SECRET} y \texttt{JWT\_REFRESH\_SECRET}, junto con sus
+    tiempos de expiración, para la firma de los \textit{tokens} de acceso y refresco.
+  \item \texttt{UPLOADS\_DIR}: ruta donde la API almacena las fotografías subidas.
+  \item Parámetros \texttt{SMTP\_*}: configuración del correo saliente usado en la
+    recuperación de contraseña.
+  \item \texttt{VITE\_API\_URL} y \texttt{EXPO\_PUBLIC\_API\_URL}: dirección de la API
+    que utilizan el portal web y la aplicación móvil.
+\end{itemize}
+
+En local estos valores se toman del fichero \texttt{.env}, mientras que en Render y en
+Azure se definen como secretos y variables propias de cada plataforma. Los entornos de
+nube se sirven siempre sobre HTTPS, de modo que las credenciales y los datos viajan
+cifrados en tránsito.
 
 \section{Limitaciones operativas}
+
+El despliegue cubre las necesidades del proyecto, pero conviene dejar constancia de sus
+límites. La operación no incluye una estrategia de escalado horizontal probada ni
+pruebas de carga, ya que el volumen previsto es el propio de un Trabajo de Fin de Grado.
+Las copias de seguridad y la monitorización se apoyan en las funciones que ofrecen las
+plataformas gestionadas, sin un sistema de observabilidad propio. La aplicación móvil se
+distribuye como versión de previsualización para Android y no se publica en las tiendas
+oficiales, tal como se indica en el alcance del proyecto. Por último, el mantenimiento
+evolutivo posterior a la entrega queda fuera del ámbito académico del trabajo.
