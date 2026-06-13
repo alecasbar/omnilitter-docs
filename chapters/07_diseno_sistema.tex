@@ -33,7 +33,7 @@ La figura~\ref{fig:arquitectura} muestra un diagrama de la arquitectura del sist
 
 \input{figures/arquitectura}
 
-\subsubsection{Justificación de las decisiones arquitectónicas principales}
+\subsection{Justificación de las decisiones arquitectónicas principales}
 
 \textbf{API REST como único punto de acceso.}
 Centralizar la lógica de negocio en la API evita duplicidades entre los dos clientes y
@@ -56,28 +56,44 @@ el dispositivo es, por tanto, un requisito no negociable para la viabilidad del 
 \section{Diseño de la base de datos}
 % ------------------------------------------------------------
 
-\subsubsection{Modelo relacional}
+\subsection{Modelo relacional}
 
-El modelo de datos de OmniLitter se compone de diez entidades que se agrupan en tres
-áreas funcionales:
+El modelo de datos final de OmniLitter está formado por quince entidades. Para que
+el diagrama resulte legible y sean más visibles las relaciones, se ha
+dividido en tres bloques funcionales, cada uno con su propio diagrama
+entidad-relación:
 
 \begin{itemize}
-  \item \textbf{Gestión de acceso:} \texttt{USER}, \texttt{GROUP}, \texttt{MEMBERSHIP}.
-  \item \textbf{Organización científica:} \texttt{CAMPAIGN}, \texttt{SURVEY\_SESSION}.
-  \item \textbf{Datos de campo:} \texttt{OBSERVATION}, \texttt{PHOTO},
-    \texttt{TAXONOMY\_ITEM}, \texttt{FAVORITE}, \texttt{AUDIT\_LOG}.
+  \item \textbf{Usuarios, grupos, campañas y catálogo:} \texttt{users},
+    \texttt{groups}, \texttt{memberships},\allowbreak{}
+    \texttt{group\_}\allowbreak{}\texttt{invitations},
+    \texttt{campaigns}, \texttt{environments}, \texttt{typologies} y
+    \texttt{typology\_clusters}. Recoge la gestión de acceso, la pertenencia a grupos
+    de investigación, las invitaciones, la organización de campañas y el catálogo
+    global de entornos y tipologías.
+  \item \textbf{Muestreo, observaciones y taxonomía:} \texttt{sampling\_sessions},
+    \texttt{observations}, \texttt{litter\_items}, \texttt{observation\_photos} y
+    \texttt{taxonomy\_items}. Es el núcleo operativo del sistema, donde se registran
+    las sesiones de campo, las observaciones de residuos, su desglose y clasificación
+    y las fotografías asociadas.
+  \item \textbf{Autenticación y seguridad:} \texttt{users}, \texttt{refresh\_tokens}
+    y \texttt{password\_reset\_tokens}. Agrupa las entidades que dan soporte al inicio
+    de sesión, la renovación de tokens y el restablecimiento de contraseña.
 \end{itemize}
 
-La figura~\ref{fig:modelo_er} muestra el diagrama entidad-relación del sistema.
+La entidad \texttt{sampling\_sessions} aparece en los dos primeros bloques porque
+sirve de unión entre la organización de campañas y la captura de datos en campo. Las
+figuras~\ref{fig:modelo_er_gestion},~\ref{fig:modelo_er_muestreo}
+y~\ref{fig:modelo_er_seguridad} muestran cada uno de estos bloques.
 
 \input{figures/modelo_er}
 
-\subsubsection{Descripción de entidades}
+\subsection{Descripción de entidades}
 
 La tabla~\ref{tab:entidades} describe los atributos clave de cada entidad y su
 propósito en el sistema.
 
-\begin{longtable}{p{3.2cm} p{4.2cm} p{6.6cm}}
+\begin{longtable}{p{3.0cm} p{4.4cm} p{6.6cm}}
   \caption{Descripción de entidades del modelo de datos.}
   \label{tab:entidades} \\
   \toprule
@@ -91,107 +107,212 @@ propósito en el sistema.
   \bottomrule
   \endfoot
 
-  \texttt{USER} &
-    \texttt{id (UUID)}, \texttt{email}, \texttt{password\_hash}, \texttt{name},
-    \texttt{is\_active}, \texttt{last\_login} &
-    Representa a cada persona registrada en el sistema. Las contraseñas se almacenan
-    como \textit{hash} bcrypt y nunca en texto plano. \\[4pt]
+  \texttt{users} &
+    \texttt{id}, \texttt{name}, \texttt{email}, \texttt{password\_hash},
+    \texttt{role}, \texttt{is\_active}, \texttt{last\_login\_at},
+    \texttt{active\_group\_id (FK)} &
+    Persona registrada en el sistema. La contraseña se guarda como \textit{hash} y
+    nunca en texto plano. El campo \texttt{role} indica el rol global
+    (\texttt{SUPERADMIN} o \texttt{USUARIO}) y \texttt{active\_group\_id} apunta al
+    grupo con el que el usuario está trabajando en cada momento. \\[4pt]
 
-  \texttt{GROUP} &
-    \texttt{id (UUID)}, \texttt{name}, \texttt{description}, \texttt{is\_active} &
-    Equipo de investigación. Un grupo puede ser archivado sin eliminar sus datos
-    históricos, preservando la trazabilidad científica. \\[4pt]
+  \texttt{groups} &
+    \texttt{id}, \texttt{name}, \texttt{description}, \texttt{status},
+    \texttt{archived\_by\_role} &
+    Grupo de investigación. Un grupo puede archivarse sin borrar sus datos
+    históricos, lo que conserva la trazabilidad de las campañas. El campo
+    \texttt{archived\_by\_role} registra el rol que lo archivó, para condicionar quién
+    puede restaurarlo. \\[4pt]
 
-  \texttt{MEMBERSHIP} &
-    \texttt{user\_id (FK)}, \texttt{group\_id (FK)},
-    \texttt{role (admin|editor|viewer)}, \texttt{joined\_at} &
-    Tabla de unión que asocia usuarios con grupos asignándoles un rol. Un mismo usuario
-    puede tener roles distintos en grupos distintos. \\[4pt]
+  \texttt{memberships} &
+    \texttt{user\_id (FK)}, \texttt{group\_id (FK)}, \texttt{role},
+    \texttt{created\_at} &
+    Tabla de unión entre usuarios y grupos, con clave primaria compuesta. El campo
+    \texttt{role} toma los valores \texttt{ADMIN} o \texttt{FIELD\_RESEARCHER}, de
+    modo que un mismo usuario puede tener un rol distinto en cada grupo. \\[4pt]
 
-  \texttt{CAMPAIGN} &
-    \texttt{id (UUID)}, \texttt{group\_id (FK)}, \texttt{name},
-    \texttt{start\_date}, \texttt{end\_date}, \texttt{status} &
-    Proyecto científico de muestreo. Agrupa varias sesiones de campo bajo un
-    objetivo común (p.ej., «Monitoreo anual Playa de la Caleta 2026»). \\[4pt]
+  \texttt{group\_}\allowbreak{}\texttt{invitations} &
+    \texttt{id}, \texttt{group\_id (FK)}, \texttt{email},
+    \texttt{invited\_by\_id (FK)}, \texttt{status}, \texttt{responded\_at} &
+    Invitación de un usuario a un grupo a partir de su correo. El campo
+    \texttt{status} sigue el ciclo \texttt{PENDING}, \texttt{ACCEPTED} o
+    \texttt{REJECTED}. \\[4pt]
 
-  \texttt{SURVEY\_SESSION} &
-    \texttt{id (UUID)}, \texttt{campaign\_id (FK)}, \texttt{observer\_id (FK)},
-    \texttt{environment}, \texttt{transect\_width}, \texttt{duration\_minutes},
-    \texttt{gps\_start\_lat/lng}, \texttt{start\_time}, \texttt{end\_time},
-    \texttt{taxonomy\_version}, \texttt{app\_version}, \texttt{sync\_state},
-    \texttt{device\_id} &
-    Sesión de muestreo individual en campo. Registra todos los metadatos científicos
-    necesarios para la reproducibilidad: protocolo, versión de taxonomía utilizada y
-    versión de la aplicación. El campo \texttt{sync\_state} gestiona el ciclo de vida
-    de la sincronización. \\[4pt]
+  \texttt{campaigns} &
+    \texttt{id}, \texttt{name}, \texttt{description}, \texttt{status},
+    \texttt{starts\_at}, \texttt{ends\_at}, \texttt{finished\_by\_archive},
+    \texttt{group\_id (FK)} &
+    Proyecto de muestreo asociado a un grupo. Agrupa varias sesiones de campo bajo un
+    objetivo común. El estado evoluciona entre \texttt{DRAFT}, \texttt{ACTIVE},
+    \texttt{FINISHED} y \texttt{ARCHIVED}. \\[4pt]
 
-  \texttt{OBSERVATION} &
-    \texttt{id (UUID)}, \texttt{session\_id (FK)},
-    \texttt{taxonomy\_item\_id (FK)}, \texttt{quantity}, \texttt{size},
-    \texttt{color\_hex}, \texttt{gps\_lat/lng}, \texttt{timestamp},
-    \texttt{taxonomy\_version}, \texttt{comments}, \texttt{sync\_state} &
-    Registro de un ítem de residuo observado. Constituye la unidad mínima de dato
-    científico del sistema. \\[4pt]
+  \texttt{typology\_clusters} &
+    \texttt{id}, \texttt{code}, \texttt{name\_es}, \texttt{name\_en} &
+    Agrupación que relaciona un entorno con el conjunto de tipologías compatibles. Al
+    existir como entidad propia, los entornos y las tipologías se asocian mediante
+    clave foránea en lugar de por texto. \\[4pt]
 
-  \texttt{PHOTO} &
-    \texttt{id (UUID)}, \texttt{observation\_id (FK)}, \texttt{file\_path},
-    \texttt{file\_size\_bytes}, \texttt{exif\_data (JSONB)}, \texttt{uploaded\_at} &
-    Imagen asociada a una observación. Los metadatos EXIF (coordenadas GPS
-    embebidas en la imagen, fecha de captura, modelo de cámara) se almacenan en
-    formato JSONB para máxima flexibilidad. \\[4pt]
+  \texttt{environments} &
+    \texttt{id}, \texttt{code}, \texttt{name\_es}, \texttt{name\_en},
+    \texttt{typology\_cluster\_id (FK)}, \texttt{is\_active} &
+    Catálogo global de tipos de entorno de muestreo, como playa, ribera, bosque,
+    carretera o campo de cultivo. Cada entorno cuelga de un \texttt{typology\_cluster}
+    y dispone de nombre en español e inglés. \\[4pt]
 
-  \texttt{TAXONOMY\_ITEM} &
-    \texttt{id (UUID)}, \texttt{code}, \texttt{name\_es}, \texttt{name\_en},
-    \texttt{category}, \texttt{subcategory}, \texttt{parent\_id (FK self-ref)},
+  \texttt{typologies} &
+    \texttt{id}, \texttt{code}, \texttt{name\_es}, \texttt{name\_en},
+    \texttt{typology\_cluster\_id (FK)}, \texttt{is\_active} &
+    Catálogo global de subentornos o tipologías. Comparten \texttt{typology\_cluster}
+    con su entorno, lo que permite ofrecer en la app solo las tipologías coherentes
+    con el entorno elegido. \\[4pt]
+
+  \texttt{sampling\_sessions} &
+    \texttt{id}, \texttt{campaign\_id (FK)}, \texttt{observer\_id (FK)},
+    \texttt{environment\_id (FK)}, \texttt{typology\_id (FK)},
+    \texttt{environment\_name\_snapshot}, \texttt{typology\_name\_snapshot},
+    \texttt{name}, \texttt{sampling\_method}, \texttt{grid\_cell\_size\_meters},
+    \texttt{transect\_width\_meters}, \texttt{duration\_minutes},
+    \texttt{gps\_start\_lat/lng}, \texttt{gps\_end\_lat/lng}, \texttt{start\_time},
+    \texttt{end\_time}, \texttt{status}, \texttt{taxonomy}, \texttt{track\_points},
+    \texttt{sampled\_area}, \texttt{sync\_state} &
+    Sesión de muestreo realizada en campo. Referencia el entorno y la tipología del
+    catálogo y, al mismo tiempo, guarda su nombre en los campos \textit{snapshot}.
+    Registra el método de muestreo (\texttt{LIBRE}, \texttt{CUADRICULA} o
+    \texttt{TRANSECTO}), sus parámetros, la duración y las coordenadas de inicio y
+    fin. Los campos \texttt{track\_points} y \texttt{sampled\_area} almacenan el
+    recorrido y el área muestreada, y \texttt{sync\_state} controla el estado de
+    sincronización. \\[4pt]
+
+  \texttt{observations} &
+    \texttt{id}, \texttt{session\_id (FK)}, \texttt{observer\_id (FK)},
+    \texttt{taxonomy\_item\_id (FK)}, \texttt{latitude}, \texttt{longitude},
+    \texttt{observed\_at}, \texttt{sync\_status}, \texttt{notes},
+    \texttt{photo\_urls} &
+    Registro de un residuo avistado dentro de una sesión. Conserva la posición
+    (\texttt{latitude} y \texttt{longitude}), el instante de captura y la referencia
+    a la taxonomía. Es la unidad básica de dato científico del sistema. \\[4pt]
+
+  \texttt{litter\_items} &
+    \texttt{id}, \texttt{observation\_id (FK)}, \texttt{category}, \texttt{quantity},
+    \texttt{material}, \texttt{notes} &
+    Desglose de los residuos contabilizados en una observación. El campo
+    \texttt{category} usa la clasificación por material (\texttt{PLASTIC},
+    \texttt{METAL}, \texttt{GLASS} y demás categorías) y \texttt{quantity} recoge la
+    cantidad como entero positivo. \\[4pt]
+
+  \texttt{observation\_photos} &
+    \texttt{id}, \texttt{observation\_id (FK)}, \texttt{uploaded\_by\_id (FK)},
+    \texttt{file\_path}, \texttt{file\_name}, \texttt{mime\_type}, \texttt{file\_size},
+    \texttt{checksum\_sha256}, \texttt{width}, \texttt{height}, \texttt{source},
+    \texttt{captured\_at}, \texttt{exif\_data}, \texttt{metadata} &
+    Fotografía asociada a una observación. Almacena los datos del fichero, un
+    \texttt{checksum} SHA-256 para verificar la integridad tras la sincronización y
+    los metadatos EXIF de la imagen cuando están disponibles. \\[4pt]
+
+  \texttt{taxonomy\_items} &
+    \texttt{id}, \texttt{code}, \texttt{name\_es}, \texttt{name\_en},
+    \texttt{category}, \texttt{subcategory}, \texttt{parent\_id (FK)},
     \texttt{version}, \texttt{is\_active} &
-    Catálogo de tipos de residuo basado en la \textit{Joint List of Litter Categories}.
-    La estructura jerárquica autorreferenciada (categoría → subcategoría → ítem)
-    permite navegar la taxonomía sin conexión, ya que se descarga completa
-    al iniciar sesión. \\[4pt]
+    Catálogo jerárquico de tipos de residuo basado en listas comunes de categorías.
+    La referencia \texttt{parent\_id} hacia la propia entidad permite organizar la
+    taxonomía por niveles y descargarla completa para usarla sin conexión. \\[4pt]
 
-  \texttt{FAVORITE} &
-    \texttt{user\_id (FK)}, \texttt{taxonomy\_item\_id (FK)}, \texttt{created\_at} &
-    Ítems de taxonomía marcados como favoritos por el usuario para agilizar la
-    captura de observaciones en campo. \\[4pt]
+  \texttt{refresh\_tokens} &
+    \texttt{id}, \texttt{token\_hash}, \texttt{user\_id (FK)}, \texttt{expires\_at},
+    \texttt{revoked\_at} &
+    Token de renovación de sesión. Se guarda únicamente su \textit{hash}, junto con la
+    fecha de expiración y, en su caso, la de revocación. \\[4pt]
 
-  \texttt{AUDIT\_LOG} &
-    \texttt{id}, \texttt{user\_id (FK)}, \texttt{action\_type},
-    \texttt{entity\_type}, \texttt{entity\_id}, \texttt{metadata (JSONB)},
-    \texttt{timestamp}, \texttt{ip\_address} &
-    Registro de auditoría que almacena las acciones relevantes sobre el sistema
-    (inicio de sesión, creación y edición de observaciones, exportaciones de datos,
-    cambios de configuración). Garantiza la trazabilidad exigida en entornos de
-    investigación científica. \\
+  \texttt{password\_reset\_tokens} &
+    \texttt{id}, \texttt{token\_hash}, \texttt{user\_id (FK)}, \texttt{expires\_at},
+    \texttt{used\_at} &
+    Token de restablecimiento de contraseña. Es de un solo uso: el campo
+    \texttt{used\_at} marca el momento en que se consume y lo invalida. \\
 
 \end{longtable}
 
-\subsubsection{Decisiones de diseño de la base de datos}
+\subsection{Decisiones de diseño de la base de datos}
 
 \textbf{UUID como clave primaria en registros sincronizables.}
 Los registros que pueden crearse en el dispositivo móvil antes de comunicarse con el
-servidor utilizan UUID v4 generados en el cliente. Esto resuelve el problema de
-colisiones de claves en escenarios de creación offline: dos dispositivos diferentes
-que creen una observación sin conexión obtendrán identificadores globalmente únicos
-que no entrarán en conflicto cuando se sincronicen con el servidor.
+servidor utilizan identificadores UUID generados en el propio cliente. Esto resuelve
+las colisiones de claves en escenarios de creación offline: dos dispositivos que creen
+una sesión o una observación sin conexión obtienen identificadores únicos que no chocan
+al sincronizarse con el servidor.
 
-\textbf{Rol en \texttt{MEMBERSHIP}, no en \texttt{USER}.}
-El rol de un investigador no es una propiedad intrínseca de la persona, sino de su
-relación con un grupo concreto. Un mismo investigador puede ser administrador en su
-grupo principal y colaborador invitado en otro grupo. Modelar el rol en la tabla de
-unión es, por tanto, la decisión correcta desde el punto de vista semántico.
+\textbf{Modelo de roles en dos niveles.}
+El control de acceso separa el rol global del usuario, almacenado en
+\texttt{users.role} con los valores \texttt{SUPERADMIN} o \texttt{USUARIO}, del rol que
+tiene dentro de cada grupo, almacenado en \texttt{memberships.role} como \texttt{ADMIN}
+o \texttt{FIELD\_RESEARCHER}. El rol operativo no es una propiedad fija de la persona,
+sino de su relación con un grupo concreto, por lo que un mismo investigador puede
+administrar un grupo y participar como investigador de campo en otro. El superadmin
+queda reservado a la administración global de la plataforma.
 
-\textbf{Versión de taxonomía en sesiones y observaciones.}
-La taxonomía de residuos evoluciona con el tiempo a medida que la comunidad científica
-añade o reorganiza categorías. Registrar la versión exacta utilizada en cada sesión
-permite reconstruir con exactitud qué definición se aplicó a cada observación, lo que
-es un requisito básico de reproducibilidad científica.
+\textbf{Catálogo normalizado de entornos con copia histórica en la sesión.}
+El catálogo de entornos y tipologías se modela con tres entidades relacionadas por
+clave foránea, no por texto. La entidad \texttt{typology\_clusters} agrupa cada entorno
+con las tipologías compatibles, y tanto \texttt{environments} como \texttt{typologies}
+cuelgan del mismo \textit{cluster}. Así, al elegir un entorno la aplicación ofrece solo
+las tipologías coherentes con él. Cada registro del catálogo guarda su nombre en español
+e inglés (\texttt{name\_es} y \texttt{name\_en}), lo que permite al superadmin configurar
+ambos idiomas desde el portal.
 
-\textbf{JSONB para metadatos heterogéneos.}
-Los campos \texttt{exif\_data} y \texttt{metadata} utilizan el tipo JSONB de PostgreSQL
-para almacenar datos cuya estructura puede variar (distintos modelos de cámara incluyen
-campos EXIF diferentes, distintas acciones de auditoría tienen distintos contextos).
-Esta decisión evita la proliferación de columnas opcionales con valor nulo y preserva
-la flexibilidad para añadir nuevos atributos sin migrar el esquema.
+Cuando se crea una sesión, esta referencia el entorno y la tipología mediante clave
+foránea real (\texttt{environment\_id} y \texttt{typology\_id}) y, al mismo tiempo, copia
+su nombre en los campos \texttt{environment\_name\_snapshot} y
+\texttt{typology\_name\_snapshot}. La clave foránea mantiene la integridad con el catálogo
+vigente, mientras que la copia conserva el valor utilizado en el momento del muestreo
+aunque el catálogo cambie después. Esta combinación evita inconsistencias en los datos
+históricos y simplifica la sincronización de la app, que no necesita resolver referencias
+contra un catálogo que pudo cambiar mientras el dispositivo estaba sin conexión.
+
+\textbf{Separación entre observación y desglose de residuos.}
+Una observación representa un punto avistado, con sus coordenadas e instante de
+captura, mientras que \texttt{litter\_items} recoge los residuos contabilizados en ese
+punto, con su categoría por material y su cantidad. Separar ambos conceptos permite
+asociar varios tipos de residuo a una misma observación sin duplicar la información de
+posición, y deja la clasificación detallada en manos de \texttt{taxonomy\_items}.
+
+\textbf{Precisión geográfica con tipo decimal.}
+Las coordenadas de las observaciones se almacenan con tipo \texttt{decimal} de precisión
+fija (nueve dígitos, seis de ellos decimales) en lugar de coma flotante. Así se obtiene
+una precisión cercana a los diez centímetros y se evitan los errores de redondeo propios
+del punto flotante, algo necesario para una herramienta cuya utilidad depende de la
+calidad de la georreferenciación.
+
+\textbf{Estados de sincronización en sesiones y observaciones.}
+Tanto \texttt{sampling\_sessions} como \texttt{observations} incluyen un campo de estado
+de sincronización basado en el enum \texttt{SyncStatus} (\texttt{SYNCED},
+\texttt{PENDING}, \texttt{FAILED} o \texttt{CONFLICT}). Este campo sostiene el flujo de
+trabajo sin conexión, ya que permite distinguir qué registros están pendientes de
+subir, cuáles se han confirmado en el servidor y cuáles han fallado.
+
+\textbf{Estrategias de borrado según el tipo de relación.}
+El esquema aplica reglas de borrado coherentes con el valor de cada relación. Los datos
+estrictamente dependientes se eliminan en cascada junto a su contenedor: las membresías
+e invitaciones de un grupo, las sesiones de una campaña y las observaciones, residuos y
+fotos asociados a una sesión. En cambio, las referencias al autor
+(\texttt{observer\_id} y \texttt{uploaded\_by\_id}) usan una regla restrictiva, de modo
+que no se puede borrar un usuario que tenga datos de campo asociados y se preserva la
+autoría. Las campañas pueden quedar sin grupo mediante \texttt{SetNull} para mantener el
+histórico si se elimina el grupo, y el ítem taxonómico de una observación también se
+puede poner a nulo para no perder el registro científico.
+
+En el catálogo ambiental se combinan restricciones y copia histórica. El entorno de una
+sesión usa una relación restrictiva, porque toda sesión debe conservar un contexto
+ambiental válido. La tipología puede ponerse a nulo si se elimina del catálogo, pero la
+sesión mantiene \texttt{typology\_name\_snapshot}; de forma equivalente,
+\texttt{environment\_name\_snapshot} conserva el nombre visible del entorno utilizado en
+campo. Así se evita que las tareas de mantenimiento del catálogo degraden los datos ya
+registrados.
+
+\textbf{JSON para datos de estructura variable.}
+Los campos \texttt{track\_points}, \texttt{sampled\_area}, \texttt{exif\_data} y
+\texttt{metadata} se almacenan como JSON. El recorrido y el área muestreada tienen una
+geometría que depende del método de muestreo, y los metadatos EXIF varían según el
+modelo de cámara. Guardar estos datos como JSON evita multiplicar columnas opcionales
+y permite ampliar la información asociada sin migrar el esquema.
 
 % ------------------------------------------------------------
 \section{Diseño de la API REST}
@@ -203,69 +324,133 @@ recursos identificados por URI y representaciones en formato JSON. Todos los
 \texttt{Authorization: Bearer <token>}, donde el \textit{token} es un JWT firmado
 emitido en el \textit{endpoint} de autenticación.
 
-La tabla~\ref{tab:endpoints} recoge los \textit{endpoints} principales agrupados
-por recurso.
+El cuadro~\ref{tab:endpoints} recoge los \textit{endpoints} principales agrupados
+por módulo funcional. En lugar de presentar todas las rutas en una única tabla
+continua, se separan por bloque para que resulte más visible qué parte de la API
+atiende cada conjunto de operaciones.
 
-\begin{longtable}{p{1.5cm} p{5.5cm} p{2cm} p{4cm}}
-  \caption{Principales \textit{endpoints} de la API REST de OmniLitter.}
-  \label{tab:endpoints} \\
-  \toprule
-  \textbf{Método} & \textbf{Ruta} & \textbf{Protegido} & \textbf{Descripción} \\
+\begin{center}
+  \captionof{table}{Principales \textit{endpoints} de la API REST de OmniLitter.}
+  \label{tab:endpoints}
+\end{center}
+
+\def\omniendpointheader{%
+  \textbf{HTTP} & \textbf{Ruta} & \textbf{Acceso} & \textbf{Uso} \\
   \midrule
-  \endfirsthead
-  \toprule
-  \textbf{Método} & \textbf{Ruta} & \textbf{Protegido} & \textbf{Descripción} \\
-  \midrule
-  \endhead
-  \bottomrule
-  \endfoot
+}
 
-  \multicolumn{4}{l}{\textit{Autenticación}} \\[2pt]
-  POST & \texttt{/api/auth/login} & No & Emite JWT de acceso y refresco \\
-  POST & \texttt{/api/auth/refresh} & No & Renueva el JWT de acceso \\
-  POST & \texttt{/api/auth/logout} & Sí & Invalida el \textit{token} de refresco \\[6pt]
+\begin{tcolorbox}[breakable,title=Autenticación,colback=gray!4,colframe=black!55,fonttitle=\bfseries]
+\footnotesize
+\begin{tabularx}{\linewidth}{@{}p{1.25cm}p{5.35cm}p{1.9cm}X@{}}
+\omniendpointheader
+\texttt{POST} & \path{/api/auth/login} & Público & Emite JWT de acceso y refresco \\
+\texttt{POST} & \path{/api/auth/register} & Público & Registra una cuenta nueva \\
+\texttt{POST} & \path{/api/auth/recover-password} & Público & Inicia la recuperación de contraseña \\
+\texttt{POST} & \path{/api/auth/reset-password} & Público & Restablece la contraseña con un \textit{token} \\
+\texttt{POST} & \path{/api/auth/refresh} & Público & Renueva el JWT de acceso \\
+\texttt{POST} & \path{/api/auth/logout} & Usuario & Invalida el \textit{token} de refresco \\
+\end{tabularx}
+\end{tcolorbox}
 
-  \multicolumn{4}{l}{\textit{Usuarios}} \\[2pt]
-  GET  & \texttt{/api/users} & Sí (admin) & Lista todos los usuarios \\
-  POST & \texttt{/api/users} & Sí (admin) & Crea un nuevo usuario \\
-  GET  & \texttt{/api/users/:id} & Sí & Obtiene un usuario \\
-  PATCH & \texttt{/api/users/:id} & Sí (admin) & Actualiza datos o estado \\[6pt]
+\begin{tcolorbox}[breakable,title=Usuarios,colback=gray!4,colframe=black!55,fonttitle=\bfseries]
+\footnotesize
+\begin{tabularx}{\linewidth}{@{}p{1.25cm}p{5.35cm}p{1.9cm}X@{}}
+\omniendpointheader
+\texttt{GET} & \path{/api/users} & Admin & Lista todos los usuarios \\
+\texttt{POST} & \path{/api/users} & Admin & Crea un usuario \\
+\texttt{GET} & \path{/api/users/me} & Usuario & Datos del usuario autenticado \\
+\texttt{GET} & \path{/api/users/me/groups} & Usuario & Grupos del usuario y grupo activo \\
+\texttt{PATCH} & \path{/api/users/:id} & Admin & Actualiza datos, rol o estado \\
+\end{tabularx}
+\end{tcolorbox}
 
-  \multicolumn{4}{l}{\textit{Grupos}} \\[2pt]
-  GET  & \texttt{/api/groups} & Sí & Lista grupos del usuario autenticado \\
-  POST & \texttt{/api/groups} & Sí (admin) & Crea un grupo \\
-  PATCH & \texttt{/api/groups/:id} & Sí (admin) & Edita nombre/descripción \\
-  DELETE & \texttt{/api/groups/:id/archive} & Sí (admin) & Archiva un grupo \\
-  POST & \texttt{/api/groups/:id/members} & Sí (admin) & Añade miembro \\
-  DELETE & \texttt{/api/groups/:id/members/:uid} & Sí (admin) & Elimina miembro \\[6pt]
+\begin{tcolorbox}[breakable,title=Grupos e invitaciones,colback=gray!4,colframe=black!55,fonttitle=\bfseries]
+\footnotesize
+\begin{tabularx}{\linewidth}{@{}p{1.25cm}p{5.35cm}p{1.9cm}X@{}}
+\omniendpointheader
+\texttt{GET} & \path{/api/groups} & Usuario & Lista grupos del usuario \\
+\texttt{POST} & \path{/api/groups} & Admin & Crea un grupo \\
+\texttt{PUT} & \path{/api/groups/:id} & Admin & Edita un grupo \\
+\texttt{GET} & \path{/api/groups/:id/backup} & Admin & Descarga copia de seguridad JSON \\
+\texttt{POST} & \path{/api/group-invitations/:id/accept} & Usuario & Acepta una invitación \\
+\end{tabularx}
+\end{tcolorbox}
 
-  \multicolumn{4}{l}{\textit{Sesiones de muestreo}} \\[2pt]
-  GET  & \texttt{/api/sessions} & Sí & Lista sesiones accesibles \\
-  POST & \texttt{/api/sessions} & Sí & Crea una sesión \\
-  GET  & \texttt{/api/sessions/:id} & Sí & Obtiene una sesión con observaciones \\
-  PATCH & \texttt{/api/sessions/:id} & Sí & Actualiza metadatos \\[6pt]
+\begin{tcolorbox}[breakable,title=Campañas,colback=gray!4,colframe=black!55,fonttitle=\bfseries]
+\footnotesize
+\begin{tabularx}{\linewidth}{@{}p{1.25cm}p{5.35cm}p{1.9cm}X@{}}
+\omniendpointheader
+\texttt{GET} & \path{/api/campaigns} & Usuario & Lista campañas del grupo activo \\
+\texttt{POST} & \path{/api/campaigns} & Admin & Crea una campaña \\
+\texttt{PUT} & \path{/api/campaigns/:id} & Admin & Edita una campaña \\
+\end{tabularx}
+\end{tcolorbox}
 
-  \multicolumn{4}{l}{\textit{Observaciones}} \\[2pt]
-  GET  & \texttt{/api/sessions/:id/observations} & Sí & Lista observaciones de sesión \\
-  POST & \texttt{/api/sessions/:id/observations} & Sí & Registra una observación \\
-  GET  & \texttt{/api/observations} & Sí & Lista todas (filtros opcionales) \\[6pt]
+\begin{tcolorbox}[breakable,title=Catálogo científico,colback=gray!4,colframe=black!55,fonttitle=\bfseries]
+\footnotesize
+\begin{tabularx}{\linewidth}{@{}p{1.25cm}p{5.35cm}p{1.9cm}X@{}}
+\omniendpointheader
+\texttt{GET} & \path{/api/catalog/environments} & Usuario & Lista entornos del catálogo \\
+\texttt{POST} & \path{/api/catalog/environments} & Superadmin & Crea un entorno \\
+\texttt{GET} & \path{/api/catalog/typologies} & Usuario & Lista tipologías del catálogo \\
+\end{tabularx}
+\end{tcolorbox}
 
-  \multicolumn{4}{l}{\textit{Fotos}} \\[2pt]
-  POST & \texttt{/api/observations/:id/photos} & Sí & Sube una foto (multipart) \\
-  GET  & \texttt{/api/photos/:id} & Sí & Sirve el archivo de imagen \\[6pt]
+\begin{tcolorbox}[breakable,title=Sesiones de muestreo,colback=gray!4,colframe=black!55,fonttitle=\bfseries]
+\footnotesize
+\begin{tabularx}{\linewidth}{@{}p{1.25cm}p{5.35cm}p{1.9cm}X@{}}
+\omniendpointheader
+\texttt{GET} & \path{/api/sessions} & Usuario & Lista sesiones accesibles \\
+\texttt{POST} & \path{/api/sessions} & Usuario & Crea una sesión \\
+\texttt{GET} & \path{/api/sessions/:id} & Usuario & Obtiene una sesión con observaciones \\
+\texttt{GET} & \path{/api/sessions/tracks} & Usuario & Recorridos y áreas muestreadas \\
+\texttt{PATCH} & \path{/api/sessions/:id} & Usuario & Actualiza metadatos o estado \\
+\end{tabularx}
+\end{tcolorbox}
 
-  \multicolumn{4}{l}{\textit{Taxonomía}} \\[2pt]
-  GET  & \texttt{/api/taxonomy} & Sí & Descarga la taxonomía completa \\
-  GET  & \texttt{/api/taxonomy?version=:v} & Sí & Descarga versión específica \\[6pt]
+\begin{tcolorbox}[breakable,title=Observaciones y fotos,colback=gray!4,colframe=black!55,fonttitle=\bfseries]
+\footnotesize
+\begin{tabularx}{\linewidth}{@{}p{1.25cm}p{5.35cm}p{1.9cm}X@{}}
+\omniendpointheader
+\texttt{GET} & \path{/api/observations} & Usuario & Lista observaciones con filtros \\
+\texttt{POST} & \path{/api/observations} & Usuario & Registra una observación \\
+\texttt{GET} & \path{/api/observations/:id/photos} & Usuario & Lista fotos de una observación \\
+\texttt{POST} & \path{/api/observations/:id/photos} & Usuario & Sube una foto \textit{multipart} \\
+\texttt{GET} & \path{/api/observations/:id/photos/:pid/file} & Usuario & Sirve el archivo de imagen \\
+\end{tabularx}
+\end{tcolorbox}
 
-  \multicolumn{4}{l}{\textit{Sincronización}} \\[2pt]
-  POST & \texttt{/api/sync/batch} & Sí & Sube cola de registros pendientes \\
-  GET  & \texttt{/api/sync/changes} & Sí & Descarga cambios desde \texttt{last\_sync} \\[6pt]
+\begin{tcolorbox}[breakable,title=Taxonomía,colback=gray!4,colframe=black!55,fonttitle=\bfseries]
+\footnotesize
+\begin{tabularx}{\linewidth}{@{}p{1.25cm}p{5.35cm}p{1.9cm}X@{}}
+\omniendpointheader
+\texttt{GET} & \path{/api/taxonomy/items} & Usuario & Descarga la taxonomía filtrable por versión \\
+\end{tabularx}
+\end{tcolorbox}
 
-  \multicolumn{4}{l}{\textit{Exportación}} \\[2pt]
-  GET  & \texttt{/api/export/csv} & Sí (admin) & Exporta observaciones en CSV científico \\
+\begin{tcolorbox}[breakable,title=Métricas,colback=gray!4,colframe=black!55,fonttitle=\bfseries]
+\footnotesize
+\begin{tabularx}{\linewidth}{@{}p{1.25cm}p{5.35cm}p{1.9cm}X@{}}
+\omniendpointheader
+\texttt{GET} & \path{/api/metrics} & Usuario & Métricas agregadas para el dashboard \\
+\texttt{GET} & \path{/api/metrics/observations} & Usuario & Datos por observación para analítica \\
+\end{tabularx}
+\end{tcolorbox}
 
-\end{longtable}
+\begin{tcolorbox}[breakable,title=Sincronización,colback=gray!4,colframe=black!55,fonttitle=\bfseries]
+\footnotesize
+\begin{tabularx}{\linewidth}{@{}p{1.25cm}p{5.35cm}p{1.9cm}X@{}}
+\omniendpointheader
+\texttt{POST} & \path{/api/sync/batch} & Usuario & Sube el lote de registros pendientes \\
+\texttt{GET} & \path{/api/sync/changes} & Usuario & Descarga cambios desde la última sincronización \\
+\end{tabularx}
+\end{tcolorbox}
+
+La exportación científica no dispone de un \textit{endpoint} propio: el portal web
+genera los ficheros CSV (observaciones, ítems, resumen y un formato científico con
+diccionario de columnas) y GeoJSON a partir de los datos ya consultados. El contrato
+completo de la API se documenta con OpenAPI y puede explorarse de forma interactiva en
+\texttt{/api/docs} mediante Swagger UI.
 
 \section{Seguridad y control de acceso}
 
@@ -285,53 +470,58 @@ y colaboradora en otro, con permisos diferentes en cada contexto.
 \section{Diseño del portal web}
 % ------------------------------------------------------------
 
-\subsubsection{Arquitectura de componentes}
+\subsection{Arquitectura de componentes}
 
 El portal web se diseña como una \textit{Single Page Application} (SPA) con
-React 18 y TypeScript, empaquetada con Vite y estilizada con Tailwind CSS. La
-navegación entre páginas es gestionada por React Router, que define dos niveles de rutas:
+React 18 y TypeScript, empaquetada con Vite y estilizada con Tailwind CSS. El
+enrutado se resuelve en el cliente con la API \texttt{History} del navegador
+(\texttt{pushState} y \texttt{replaceState}), sin una librería de enrutado externa, y
+distingue dos niveles de rutas:
 
 \begin{itemize}
   \item \textbf{Rutas públicas:} la página de inicio (\texttt{/}) y el formulario
     de inicio de sesión (\texttt{/login}), accesibles sin autenticación.
-  \item \textbf{Rutas protegidas:} todas las páginas bajo \texttt{/app/*}, protegidas
-    por un componente \texttt{PrivateRoute} que verifica el estado de autenticación y
-    redirige al \textit{login} si no existe sesión activa.
+  \item \textbf{Rutas protegidas:} las páginas privadas bajo \texttt{/app/*}, que
+    comprueban el estado de autenticación antes de renderizarse y redirigen al
+    \textit{login} si no existe una sesión activa.
 \end{itemize}
 
 La estructura de componentes sigue una jerarquía de tres niveles: el \texttt{Layout}
 general (barra lateral, encabezado, selector de grupo activo) envuelve las páginas
 individuales, que a su vez utilizan componentes reutilizables (tarjetas de estadística,
-tablas filtrables, modales de confirmación).
+tablas filtrables, modales de confirmación). Las vistas geográficas se construyen con
+Leaflet a través de \texttt{react-leaflet}, con agrupación de marcadores y una capa de
+mapa de calor, y los gráficos del dashboard y de la analítica se generan con Recharts.
 
-\subsubsection{Gestión de estado}
+\subsection{Gestión de estado}
 
-En el prototipo inicial del portal web, \texttt{localStorage} se utiliza como mecanismo de
-persistencia de la sesión del usuario entre recargas de página, almacenando el estado
-necesario para simular autenticación, rol y grupo activo. En la implementación integrada,
-este comportamiento se vincula con los \textit{tokens} emitidos por el backend y con una
-estrategia de refresco de sesión.
+El portal no utiliza una librería de gestión de estado externa. El estado de la
+aplicación se mantiene en componentes React y se transmite mediante propiedades, algo
+suficiente para la escala del portal. La sesión del usuario se conserva entre recargas
+en el almacenamiento del navegador, donde se guardan los \textit{tokens} de acceso y
+refresco emitidos por el backend, y se renueva de forma automática cuando el token de
+acceso expira.
 
-En el prototipo inicial, la comunicación entre el selector de grupo activo (ubicado en la
-barra lateral) y el componente Dashboard se resolvía mediante un evento personalizado
-del DOM (\texttt{omnilitter:groupChanged}). Esta solución es suficiente para el
-prototipo; en una evolución posterior podría sustituirse por un contexto global o
-una librería de estado si la complejidad de la interfaz aumentara.
+El grupo activo forma parte de ese estado de sesión. Al cambiarlo, las vistas que
+dependen del grupo (campañas, observaciones, mapa, dashboard y analítica) recargan su
+contenido para reflejar únicamente los datos del grupo seleccionado.
 
-\subsubsection{Flujo de navegación y control de acceso por rol}
+\subsection{Flujo de navegación y control de acceso por rol}
 
-Las secciones de \textbf{Grupos} y \textbf{Usuarios} son exclusivas del rol de
-administrador y no aparecen en la barra de navegación para los colaboradores.
-El Dashboard ajusta el contenido mostrado según el rol: los administradores ven
-estadísticas globales del grupo activo, mientras que los colaboradores ven únicamente
-sus propias métricas. La tabla de observaciones filtra los registros por autor para los
-colaboradores y muestra todos para los administradores.
+Las secciones de gestión de grupos y usuarios están reservadas al rol de
+administrador. El control efectivo de acceso lo aplica el backend, que rechaza
+cualquier operación no autorizada aunque la vista llegue a cargarse; la interfaz, por
+su parte, oculta o deshabilita las acciones de administración para los colaboradores.
+El Dashboard ajusta el contenido según el rol: los administradores ven las estadísticas
+del grupo activo, mientras que los colaboradores ven sus propias métricas. La tabla de
+observaciones muestra a cada colaborador sus registros y al administrador los de todo
+el grupo.
 
 % ------------------------------------------------------------
 \section{Diseño de la aplicación móvil}
 % ------------------------------------------------------------
 
-\subsubsection{Stack tecnológico y estructura de pantallas}
+\subsection{Stack tecnológico y estructura de pantallas}
 
 La aplicación móvil está planteada con \textbf{React Native} y \textbf{Expo}, usando
 \textit{development builds} o \textit{prebuild} cuando sea necesario acceder a
@@ -351,7 +541,7 @@ La navegación está organizada en dos niveles:
     sin el \textit{tab bar}.
 \end{itemize}
 
-\subsubsection{Gestión de estado global}
+\subsection{Gestión de estado global}
 
 El estado global de la aplicación se gestiona mediante el patrón
 \textbf{Context + useReducer} de React, sin dependencias externas de gestión de
@@ -361,7 +551,7 @@ con acciones tipadas en TypeScript. Este patrón proporciona la predictibilidad 
 Redux con una superficie de código significativamente menor, adecuada para la escala
 del proyecto.
 
-\subsubsection{Base de datos local con SQLite}
+\subsection{Base de datos local con SQLite}
 
 SQLite, integrado en Expo mediante \texttt{expo-sqlite}, actúa como base de datos
 local de la aplicación móvil. Se elige por ser una solución madura, ligera y
@@ -371,12 +561,15 @@ y sobre la cola de sincronización, reduciendo la complejidad respecto a incorpo
 una capa adicional de abstracción.
 
 El esquema local replica el subconjunto del modelo de datos necesario para la
-operación en campo: \texttt{survey\_sessions}, \texttt{observations}, \texttt{photos}
-y \texttt{sync\_queue}, además de la taxonomía completa cargada al iniciar sesión.
-La tabla \texttt{sync\_queue} registra las operaciones pendientes de subida al
-servidor junto con su \textit{payload}, número de intentos y estado de sincronización.
+operación en campo: \texttt{sampling\_sessions}, \texttt{observations},
+\texttt{litter\_items} y \texttt{taxonomy\_items}, junto con las tablas de apoyo de
+usuarios, grupos, campañas y catálogo (\texttt{environments} y \texttt{typologies})
+que se descargan al iniciar sesión. Las operaciones pendientes de subida se registran
+en una tabla \textit{outbox} (\texttt{sync\_outbox}) que guarda, por cada cambio, el
+\textit{endpoint} y el \textit{payload} de la petición, el número de intentos, el
+último error y el estado de sincronización.
 
-\subsubsection{Flujo de captura de una observación}
+\subsection{Flujo de captura de una observación}
 
 El flujo principal de la aplicación sigue esta secuencia:
 
@@ -385,18 +578,25 @@ El flujo principal de la aplicación sigue esta secuencia:
     el tipo de entorno y los parámetros del transecto.
   \item Para cada ítem encontrado, abre la pantalla de nueva observación, selecciona
     el tipo de residuo a través del modal de taxonomía (organizado en cuadrícula visual
-    por categorías e iconos), e introduce cantidad, tamaño, color y comentarios.
+    por categorías e iconos), e introduce la cantidad, el tamaño, el color y
+    comentarios.
   \item Opcionalmente captura una foto geolocalizada del residuo.
   \item Al finalizar la sesión de campo, revisa el resumen y puede iniciar la
     sincronización manualmente o dejar que se realice en segundo plano al recuperar
     cobertura de red.
 \end{enumerate}
 
+El tamaño y el color se recogen en el formulario como ayuda a la caracterización del
+residuo, pero no se modelan como columnas propias. El ítem de residuo
+(\texttt{litter\_items}) almacena la categoría, la cantidad y el material, y estas dos
+anotaciones se serializan dentro de su campo de notas, de donde la aplicación las
+vuelve a leer al editar la observación.
+
 % ------------------------------------------------------------
 \section{Sincronización offline}
 % ------------------------------------------------------------
 
-\subsubsection{Patrón Outbox Queue}
+\subsection{Patrón Outbox Queue}
 
 El mecanismo de sincronización se diseña siguiendo el patrón \textbf{Outbox Queue}
 (cola de salida), ampliamente utilizado en sistemas distribuidos con conectividad
@@ -404,24 +604,25 @@ intermitente. El funcionamiento es el siguiente:
 
 \begin{enumerate}
   \item Cuando el usuario crea o modifica un registro (sesión u observación) en el
-    dispositivo sin conexión, el registro se persiste en SQLite con
-    \texttt{sync\_state = PENDING} y se inserta una entrada en la tabla
-    \texttt{sync\_queue} con el \textit{payload} completo del cambio.
+    dispositivo sin conexión, el registro se persiste en SQLite con estado
+    \texttt{PENDING} y se inserta una entrada en la tabla \texttt{sync\_outbox} con el
+    \textit{payload} completo del cambio.
   \item Cuando el dispositivo recupera conectividad, una tarea de sincronización
     en segundo plano o una acción manual del usuario lee la cola y realiza una petición
     \texttt{POST /api/sync/batch} con todos los registros pendientes.
   \item El servidor procesa los registros en orden, los persiste en PostgreSQL y
     devuelve el estado canónico actualizado.
-  \item El cliente actualiza el \texttt{sync\_state} de los registros procesados a
+  \item El cliente actualiza el estado de los registros procesados a
     \texttt{SYNCED} y descarga los cambios remotos realizados por otros usuarios
-    mediante el endpoint \texttt{GET /api/sync/changes}, enviando
-    \texttt{last\_sync\_timestamp} como parámetro de consulta.
-  \item En caso de error en un registro concreto (conflicto de datos, registro
-    inválido), ese registro pasa a \texttt{sync\_state = ERROR} y se notifica al
-    usuario, sin bloquear la sincronización del resto.
+    mediante el \textit{endpoint} \texttt{GET /api/sync/changes}, enviando la marca de
+    tiempo de la última sincronización como parámetro de consulta.
+  \item Si un registro concreto falla, pasa al estado \texttt{FAILED} cuando los datos
+    son inválidos o la subida no se completa, o a \texttt{CONFLICT} cuando el servidor
+    detecta una versión más reciente. En ambos casos se notifica al usuario sin
+    bloquear la sincronización del resto.
 \end{enumerate}
 
-\subsubsection{Estados de sincronización}
+\subsection{Estados de sincronización}
 
 Cada sesión y observación puede encontrarse en uno de cuatro estados, como muestra
 la tabla~\ref{tab:sync_states}.
@@ -434,19 +635,19 @@ la tabla~\ref{tab:sync_states}.
     \toprule
     \textbf{Estado} & \textbf{Significado} \\
     \midrule
-    \texttt{PENDING}  & El registro existe solo en el dispositivo; aún no se ha
-                        intentado sincronizar. \\
-    \texttt{SYNCING}  & El registro está siendo procesado en la petición de
-                        sincronización actual. \\
+    \texttt{PENDING}  & El registro existe solo en el dispositivo y está pendiente de
+                        subir al servidor. \\
     \texttt{SYNCED}   & El servidor ha confirmado la recepción y persistencia del
                         registro. \\
-    \texttt{ERROR}    & El servidor rechazó el registro (conflicto, datos inválidos).
-                        Requiere intervención manual o reintento. \\
+    \texttt{FAILED}   & La subida no se completó o el servidor rechazó el registro por
+                        datos inválidos. Requiere reintento. \\
+    \texttt{CONFLICT} & El servidor detectó una versión más reciente del registro.
+                        Requiere resolución. \\
     \bottomrule
   \end{tabularx}
 \end{table}
 
-\subsubsection{Resolución de conflictos}
+\subsection{Resolución de conflictos}
 
 La estrategia de resolución de conflictos propuesta es \textbf{last-write-wins} con
 granularidad de registro: si dos usuarios modifican la misma sesión de forma
@@ -455,7 +656,7 @@ independiente mientras están sin conexión, prevalece la versión con el
 de OmniLitter, donde cada sesión de muestreo pertenece a un único observador
 responsable y los conflictos genuinos son infrecuentes.
 
-\subsubsection{Garantía de identificadores únicos en entorno offline}
+\subsection{Garantía de identificadores únicos en entorno offline}
 
 Para que la estrategia Outbox Queue funcione sin depender de un identificador
 asignado por el servidor en el momento de la captura, los registros creados en modo

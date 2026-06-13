@@ -182,10 +182,10 @@ representar el contexto en el que se capturan las observaciones, diferenciando e
 proyecto o campaña de investigación de cada salida concreta de campo.
 
 En la documentación actual, esta tarea se refleja en el modelo relacional mediante
-las entidades \texttt{CAMPAIGN} y \texttt{SURVEY\_SESSION}, y en el contrato de API
+las entidades \texttt{campaigns} y \texttt{sampling\_sessions}, y en el contrato de API
 definido para crear, consultar y actualizar sesiones. Las sesiones almacenan
-metadatos relevantes como entorno, parámetros de muestreo, posición inicial,
-duración, versión de taxonomía y estado de sincronización. Esta información resulta
+metadatos relevantes como entorno, tipología, parámetros de muestreo, posición
+inicial, duración, versión de taxonomía y estado de sincronización. Esta información resulta
 necesaria para que los datos registrados sean interpretables y reproducibles.
 
 T05 depende de T02, ya que las campañas y sesiones deben quedar asociadas a grupos
@@ -223,7 +223,7 @@ La memoria describe una taxonomía jerárquica basada en códigos estables y pre
 para funcionar sin conexión. En el diseño de la aplicación móvil, dicha taxonomía
 se presenta mediante una navegación por categorías y elementos, complementada por
 mecanismos que agilizan la captura en campo, como favoritos. En el backend, la
-taxonomía queda modelada mediante la entidad \texttt{TAXONOMY\_ITEM} y endpoints de
+taxonomía queda modelada mediante la entidad \texttt{taxonomy\_items} y endpoints de
 consulta, de modo que pueda descargarse y asociarse a sesiones y observaciones con
 su versión correspondiente.
 
@@ -258,10 +258,10 @@ La novena tarea se centra en la capa backend y tiene como objetivo funcional
 proporcionar la API necesaria para registrar observaciones y asociarles adjuntos,
 principalmente fotografías tomadas durante la captura de campo.
 
-En el diseño actual, esta tarea se refleja en las entidades \texttt{OBSERVATION} y
-\texttt{PHOTO}, así como en los endpoints definidos para crear observaciones,
-listar observaciones de una sesión y subir fotografías mediante peticiones
-multipart. Las observaciones incluyen el tipo de residuo, cantidad, atributos
+En el diseño actual, esta tarea se refleja en las entidades \texttt{observations},
+\texttt{litter\_items} y \texttt{observation\_photos}, así como en los endpoints
+definidos para crear observaciones, listar observaciones de una sesión y subir
+fotografías mediante peticiones multipart. Las observaciones incluyen el tipo de residuo, cantidad, atributos
 descriptivos, coordenadas, fecha, comentarios, versión de taxonomía y estado de
 sincronización. Los adjuntos se modelan como recursos independientes para conservar
 metadatos y permitir una gestión posterior más flexible.
