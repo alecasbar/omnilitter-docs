@@ -240,10 +240,11 @@ propósito en el sistema.
 
 \textbf{UUID como clave primaria en registros sincronizables.}
 Los registros que pueden crearse en el dispositivo móvil antes de comunicarse con el
-servidor utilizan identificadores UUID generados en el propio cliente. Esto resuelve
-las colisiones de claves en escenarios de creación offline: dos dispositivos que creen
-una sesión o una observación sin conexión obtienen identificadores únicos que no chocan
-al sincronizarse con el servidor.
+servidor utilizan identificadores UUID generados en el propio cliente, definidos como
+identificadores de 128 bits sin necesidad de registro central \cite{rfc9562uuid}. Esto
+resuelve las colisiones de claves en escenarios de creación offline: dos dispositivos
+que creen una sesión o una observación sin conexión obtienen identificadores únicos que
+no chocan al sincronizarse con el servidor.
 
 \textbf{Modelo de roles en dos niveles.}
 El control de acceso separa el rol global del usuario, almacenado en
@@ -459,13 +460,14 @@ completo de la API se documenta con OpenAPI y puede explorarse de forma interact
 
 \section{Seguridad y control de acceso}
 
-El sistema se diseña con autenticación basada en JWT y dos \textit{tokens}: un
+El sistema se diseña con autenticación basada en JWT \cite{rfc7519jwt} y dos \textit{tokens}: un
 \textbf{token de acceso} de corta duración (15 minutos) y un \textbf{token de refresco}
 de larga duración (7 días). El token de acceso se envía en cada petición en el encabezado
 \texttt{Authorization}; el de refresco se utiliza exclusivamente para solicitar un nuevo
 token de acceso cuando el anterior expira.
 
 La autorización sigue un modelo de control de acceso basado en roles (RBAC)
+\cite{nistRbac}
 a nivel de grupo. El \textit{middleware} de autorización verifica, para cada petición,
 que el usuario autenticado posee el rol requerido en el grupo al que pertenece el
 recurso solicitado. Esto permite que una misma persona sea administradora en un grupo
@@ -603,9 +605,12 @@ vuelve a leer al editar la observación.
 
 \subsection{Patrón Outbox Queue}
 
-El mecanismo de sincronización se diseña siguiendo el patrón \textbf{Outbox Queue}
-(cola de salida), ampliamente utilizado en sistemas distribuidos con conectividad
-intermitente. El funcionamiento es el siguiente:
+El mecanismo de sincronización se diseña como una cola de salida local dentro de un
+enfoque \textit{offline-first}. Este tipo de diseño prioriza una fuente local
+persistente y la reconciliación posterior con la fuente remota cuando vuelve la
+conectividad \cite{androidOfflineFirst}. En OmniLitter, esta idea se concreta en una
+tabla \texttt{sync\_outbox} y en estados de sincronización por registro. El
+funcionamiento es el siguiente:
 
 \begin{enumerate}
   \item Cuando el usuario crea o modifica un registro (sesión u observación) en el
@@ -619,7 +624,7 @@ intermitente. El funcionamiento es el siguiente:
     devuelve el estado canónico actualizado.
   \item El cliente actualiza el estado de los registros procesados a
     \texttt{SYNCED} y descarga los cambios remotos realizados por otros usuarios
-    mediante el \textit{endpoint} \texttt{GET /api/sync/changes}, enviando la marca de
+    mediante el \textit{endpoint} \texttt{GET} \path{/api/sync/changes}, enviando la marca de
     tiempo de la última sincronización como parámetro de consulta.
   \item Si un registro concreto falla, pasa al estado \texttt{FAILED} cuando los datos
     son inválidos o la subida no se completa, o a \texttt{CONFLICT} cuando el servidor
@@ -663,8 +668,8 @@ responsable y los conflictos genuinos son infrecuentes.
 
 \subsection{Garantía de identificadores únicos en entorno offline}
 
-Para que la estrategia Outbox Queue funcione sin depender de un identificador
+Para que la cola de salida local funcione sin depender de un identificador
 asignado por el servidor en el momento de la captura, los registros creados en modo
-offline usan \textbf{UUID v4 generados en el cliente}. Esto garantiza que las
+offline usan \textbf{UUID v4 generados en el cliente} \cite{rfc9562uuid}. Esto garantiza que las
 sesiones y observaciones creadas simultáneamente en distintos dispositivos no
 colisionarán al sincronizarse, independientemente del orden de llegada al servidor.
