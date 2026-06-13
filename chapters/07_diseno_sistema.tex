@@ -93,7 +93,11 @@ y~\ref{fig:modelo_er_seguridad} muestran cada uno de estos bloques.
 La tabla~\ref{tab:entidades} describe los atributos clave de cada entidad y su
 propósito en el sistema.
 
-\begin{longtable}{p{3.0cm} p{4.4cm} p{6.6cm}}
+\begingroup
+\small
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{3.8cm}
+                  >{\raggedright\arraybackslash}p{5.3cm}
+                  >{\raggedright\arraybackslash}p{6.0cm}@{}}
   \caption{Descripción de entidades del modelo de datos.}
   \label{tab:entidades} \\
   \toprule
@@ -223,13 +227,14 @@ propósito en el sistema.
     Token de renovación de sesión. Se guarda únicamente su \textit{hash}, junto con la
     fecha de expiración y, en su caso, la de revocación. \\[4pt]
 
-  \texttt{password\_reset\_tokens} &
+  \texttt{password\_reset\_}\allowbreak{}\texttt{tokens} &
     \texttt{id}, \texttt{token\_hash}, \texttt{user\_id (FK)}, \texttt{expires\_at},
     \texttt{used\_at} &
     Token de restablecimiento de contraseña. Es de un solo uso: el campo
     \texttt{used\_at} marca el momento en que se consume y lo invalida. \\
 
 \end{longtable}
+\endgroup
 
 \subsection{Decisiones de diseño de la base de datos}
 
@@ -247,7 +252,7 @@ tiene dentro de cada grupo, almacenado en \texttt{memberships.role} como \texttt
 o \texttt{FIELD\_RESEARCHER}. El rol operativo no es una propiedad fija de la persona,
 sino de su relación con un grupo concreto, por lo que un mismo investigador puede
 administrar un grupo y participar como investigador de campo en otro. El superadmin
-queda reservado a la administración global de la plataforma.
+queda reservado a la administración global de la plataforma, que en principio sería nuestro cliente.
 
 \textbf{Catálogo normalizado de entornos con copia histórica en la sesión.}
 El catálogo de entornos y tipologías se modela con tres entidades relacionadas por
