@@ -84,6 +84,23 @@ campañas, sesiones de muestreo, taxonomía, observaciones e ítems de residuo.
 No se localizaron migraciones incrementales por sprint; el repositorio conserva
 una migración inicial con el estado final consolidado.
 
+El flujo de sesión se diseñó con separación entre token de acceso y token de
+refresco. El access token contiene únicamente el identificador del usuario y su
+rol global, mientras que el refresh token se almacena en base de datos como hash
+y se rota en cada refresco. De este modo, el cierre de sesión, el cambio de
+contraseña o la recuperación de contraseña pueden revocar sesiones existentes
+sin depender solo de la expiración del JWT. La recuperación de contraseña se
+implementó con tokens aleatorios de un solo uso, almacenados como hash
+\texttt{SHA-256} y con caducidad de 30 minutos.
+
+La autorización por grupos se resolvió con funciones de dominio reutilizadas por
+campañas, sesiones, observaciones, métricas y administración. El backend
+distingue entre poder acceder a un grupo, poder administrarlo y resolver el
+alcance completo de grupos visibles para el usuario autenticado. Esta capa es
+la que permite que un superadministrador vea información agregada, que un
+administrador gestione su grupo y que un investigador quede limitado a sus
+propios datos cuando corresponde.
+
 \paragraph{Portal web.}
 El portal web se organizó como una aplicación React \cite{react} con rutas protegidas,
 conservación de sesión en el navegador y un layout común para las áreas
@@ -210,6 +227,40 @@ Esta información permitió representar el avance de una salida de campo mediant
 \texttt{trackPoints} y \texttt{sampledArea}, mientras que cada observación
 incorporó sus propias coordenadas.
 
+Durante una sesión activa se registra el recorrido con
+lecturas periódicas cada tres segundos o cada metro de desplazamiento, según
+los avisos que proporcione el sistema operativo. Sobre esas lecturas se añadió un filtro específico en el servicio móvil
+\texttt{samplingTrack.ts}. Cada punto se acepta solo si contiene coordenadas
+válidas, una fecha de registro interpretable, una precisión no superior a 15
+metros, una separación mínima de 2,5 metros respecto al punto anterior y una
+velocidad implícita no superior a 8 m/s. La distancia entre dos puntos se
+calcula mediante la fórmula de Haversine \cite{sinnott1984haversine}, por ser
+suficiente para estimar recorridos cortos sobre coordenadas geográficas sin
+introducir una dependencia geoespacial adicional. Estos umbrales no proceden de
+una norma externa, sino de una decisión de diseño del proyecto para reducir
+saltos espurios del GPS sin perder desplazamientos reales de muestreo; de hecho,
+el historial del repositorio recoge una iteración explícita de mejora contra
+ruido GPS en el commit \texttt{3ba0838}.
+
+El backend repite parte de esta limpieza antes de persistir el progreso de la
+sesión. En \texttt{apps/api/src/modules/sessions/sessions.service.ts} se
+normalizan los puntos, se ordenan temporalmente, se eliminan duplicados y se
+vuelven a descartar lecturas no plausibles. En servidor se usa una tolerancia
+algo más amplia para no rechazar datos ya capturados en campo: precisión máxima
+de 50 metros, separación mínima de 1,5 metros y la misma velocidad máxima de
+8 m/s. Además, los esquemas compartidos limitan los recorridos a un máximo de
+5000 puntos por actualización y validan latitud, longitud y precisión.
+
+El área muestreada se genera a partir del recorrido filtrado. Para muestreo
+libre se construye una envolvente rectangular con un margen de 3 metros; para
+transectos se usa como margen la mitad de la anchura del transecto, con 5 metros
+como valor por defecto; y para cuadrículas se usa la mitad del tamaño de celda,
+con 10 metros como valor por defecto, ajustando después los límites a pasos de
+celda. Esta geometría se guarda como \texttt{sampledArea}, mientras que los
+puntos crudos aceptados permanecen en \texttt{trackPoints}. Así, el sistema
+conserva tanto la trayectoria original como una superficie simplificada para
+mapas, métricas y exportaciones.
+
 También se añadió la captura y selección de fotografías desde cámara o galería.
 Las imágenes se copiaron al almacenamiento local de la aplicación para poder
 mantenerlas asociadas a observaciones incluso en escenarios de conectividad
@@ -226,6 +277,18 @@ eliminación. Además, se añadieron reglas de validación sobre taxonomía acti
 coordenadas, fechas, cantidades y permisos por grupo. La lógica impidió, por
 ejemplo, registrar observaciones fuera del intervalo temporal permitido para la
 sesión o asociarlas a grupos a los que el usuario no tuviera acceso.
+
+La gestión de fotografías se implementó con endpoints específicos para no
+mezclar la edición de campos científicos de la observación con la transferencia
+de ficheros. El backend recibe las imágenes codificadas en base64, valida que el
+tipo MIME pertenezca a formatos soportados como JPEG, PNG, WebP, HEIC o HEIF,
+rechaza imágenes vacías o superiores a 10 MB y limita cada observación a cinco
+fotografías. Antes de guardar el archivo, normaliza el nombre recibido, calcula
+un \texttt{checksum} \texttt{SHA-256}, lo almacena bajo el directorio de subidas
+configurado y registra metadatos como tamaño, tipo MIME, dimensiones, origen,
+fecha de captura, EXIF y usuario que subió la imagen. Si falla la persistencia
+en base de datos, el archivo físico se elimina para evitar residuos
+inconsistentes.
 
 El modelo consolidado incorporó fotografías de observación, URLs asociadas a
 observaciones y campos espaciales de sesión. Aunque estos cambios aparecen en
@@ -261,7 +324,7 @@ alimentar directamente la supervisión web y las primeras métricas del sistema.
 \toprule
 Bloque implementado & Plataforma & Elementos principales & Finalidad \\
 \midrule
-Localización y recorridos & Móvil & Permisos GPS, puntos de track, área muestreada y filtros de precisión & Registrar contexto espacial de sesiones y observaciones. \\
+Localización y recorridos & Móvil, backend y shared & Permisos GPS, alta precisión opcional, filtro por precisión/distancia/velocidad, puntos de track, área muestreada y validación compartida & Registrar contexto espacial fiable de sesiones y observaciones. \\
 Fotografías de observación & Móvil y backend & Captura desde cámara/galería, almacenamiento local, subida y metadatos & Asociar evidencia visual a los registros de residuos. \\
 Persistencia local inicial & Móvil & SQLite, repositorios por entidad y cola de operaciones pendientes & Permitir revisión y trabajo con conectividad variable. \\
 Validación de observaciones & Backend y shared & Taxonomía activa, fechas, coordenadas, cantidades y permisos & Mantener coherencia científica y control de acceso. \\
@@ -354,6 +417,18 @@ fallo puntual invalidase necesariamente el conjunto completo. Esta estructura
 resultó especialmente adecuada para escenarios de campo, donde los datos pueden
 acumularse en el dispositivo durante periodos sin conexión.
 
+La sincronización no se planteó como una subida genérica de tablas, sino como
+una cola de operaciones de captura con tipos explícitos. El contrato compartido
+define operaciones diferenciadas para crear sesiones, editar sus campos,
+actualizar su progreso, finalizarlas y crear observaciones, agrupadas en lotes
+de hasta 500 elementos. La app móvil genera identificadores de cliente para
+relacionar cada operación enviada con la respuesta del servidor; si una
+operación se acepta, se marca como sincronizada o se elimina de
+\texttt{sync\_outbox}, y si falla se incrementa el contador de intentos y se
+conserva el último error. Para evitar sobrescribir datos locales pendientes, la
+descarga de cambios remotos se omite cuando existe trabajo sin sincronizar en
+el dispositivo.
+
 \paragraph{Mapa y visualización espacial.}
 El portal web incorporó un mapa interactivo basado en React Leaflet \cite{reactleaflet}. Se
 implementaron marcadores de observaciones, agrupación visual, filtros por
@@ -367,6 +442,15 @@ activo. El portal pudo así representar recorridos, superficies muestreadas y
 zonas de concentración de residuos, conectando la captura móvil con una lectura
 geográfica de los resultados.
 
+En la exportación geográfica, el mapa construye una
+\texttt{FeatureCollection} GeoJSON con coordenadas en el orden
+\texttt{[longitud, latitud]}. Cuando el usuario exporta desde el modo de rutas,
+se incluyen primero polígonos de área muestreada, después líneas de recorrido y
+por último puntos de observación, de forma que los visores GIS puedan interpretar
+por separado superficies, trayectorias y registros puntuales. Las propiedades de
+cada elemento incorporan contexto de campaña, sesión, entorno, tipología,
+observador, método de muestreo y distancia cuando procede.
+
 \paragraph{Analítica, exportaciones y configuración.}
 Se ampliaron las utilidades de exportación del portal web con salidas CSV, JSON
 y GeoJSON. El dashboard pudo exportar datos agregados, el mapa generó
@@ -375,6 +459,13 @@ ficheros orientados al tratamiento posterior de observaciones, residuos y
 resúmenes. En backend, las consultas de analítica incluyeron información de
 campaña, grupo, sesión, entorno, observador, coordenadas, taxonomía, método de
 muestreo, duración e ítems.
+
+Las exportaciones CSV se generaron sin depender de librerías externas. El
+servicio web añade marca BOM UTF-8 para conservar acentos al abrir los ficheros
+en hojas de cálculo, utiliza punto y coma como separador habitual en entornos
+españoles y escapa comillas, saltos de línea y separadores. La preferencia de
+formato de exportación se conserva en \texttt{localStorage}, por lo que el
+usuario puede mantener CSV o JSON como formato por defecto entre sesiones.
 
 En la aplicación móvil se incorporaron preferencias de idioma, sincronización y
 precisión de ubicación. La infraestructura de internacionalización también se
@@ -459,10 +550,10 @@ para su evaluación.
 
 \begin{itemize}[leftmargin=1.4em]
 \item \textbf{Configuración y administración II.} Esta funcionalidad continúa la organización de usuarios, grupos y permisos, ampliándola con ajustes administrativos necesarios para operar la plataforma con coherencia desde el portal web. Abarca la gestión de usuarios, grupos, membresías y permisos, asegurando que cada rol actúe dentro del alcance que le corresponde.
-\item \textbf{Campañas II.} Esta parte funcional continúa la funcionalidad de campañas, ampliando su papel organizativo mediante la relación con el catálogo científico del sistema. La campaña no solo organiza el trabajo de campo, sino que también queda vinculada a entornos y tipologías controladas, lo que ayuda a mantener una clasificación más consistente.
+\item \textbf{Campañas II.} Esta parte funcional continúa la funcionalidad de campañas, reforzando su papel organizativo dentro del grupo y su relación con las sesiones asociadas. La clasificación científica fina no queda fijada en la campaña, sino en cada sesión de muestreo, lo que permite que una misma campaña agrupe salidas realizadas en entornos o tipologías distintas.
 \item \textbf{Sesiones de muestreo IV.} Esta funcionalidad continúa la evolución de las sesiones de muestreo, ampliándolas como registros editables y validados científicamente. Permite ajustar datos de la salida de campo, asociar el entorno correspondiente y aplicar reglas compartidas con el catálogo para mantener coherencia entre la campaña planificada y el muestreo realizado.
 \item \textbf{Observaciones IV.} Esta parte funcional continúa la mejora progresiva de las observaciones, centrándose en la calidad final de los registros de residuos. Las observaciones pueden revisarse y corregirse manteniendo reglas de coherencia, rangos científicos y datos estructurados que después serán utilizados en consultas, métricas y exportaciones.
-\item \textbf{Taxonomía y catálogo científico.} Esta funcionalidad proporciona las referencias controladas que dan uniformidad a la información científica del sistema. Los catálogos de entornos, tipologías y rangos permiten clasificar campañas, sesiones y observaciones con valores consistentes y reutilizables.
+\item \textbf{Taxonomía y catálogo científico.} Esta funcionalidad proporciona las referencias controladas que dan uniformidad a la información científica del sistema. Los catálogos de entornos y tipologías permiten clasificar las sesiones con valores consistentes y reutilizables, mientras que los esquemas compartidos validan taxonomía, coordenadas, cantidades y parámetros de muestreo.
 \item \textbf{Interfaz pública y limpieza final.} Esta parte funcional afecta a la presentación general y al cierre del producto. La interfaz pública actúa como primera pantalla de acceso y presentación de la plataforma, mientras que la limpieza final reduce elementos innecesarios y facilita una validación más clara del sistema desarrollado.
 \end{itemize}
 \sprintHoursTable{4}
@@ -489,6 +580,22 @@ vistas agregadas, mientras que el investigador mantiene un alcance restringido a
 sus campañas, sesiones u observaciones. Estas reglas completaron la separación
 de responsabilidades iniciada en los sprints anteriores.
 
+El archivado de grupos se implementó como una operación transaccional. Al
+archivar un grupo, las campañas activas del grupo pasan a finalizadas, se marca
+que ese cierre procede del archivado y se elimina ese grupo como grupo activo de
+los usuarios que lo tuvieran seleccionado. La restauración distingue quién
+realizó el archivado: si lo hizo un superadministrador, solo otro
+superadministrador puede restaurarlo. Además, el portal puede ofrecer la
+reactivación de campañas finalizadas automáticamente por el archivado sin
+reactivar campañas que ya hubieran acabado por otros motivos.
+
+La copia de seguridad administrativa también quedó implementada como una
+exportación JSON distinta de la analítica científica. Para un grupo concreto
+incluye campañas, sesiones, observaciones, ítems, fotografías, miembros e
+invitaciones, junto con metadatos de exportación y un resumen de totales. El
+superadministrador dispone además de una copia global de todos los grupos
+activos, útil como respaldo operativo del estado de la plataforma.
+
 \paragraph{Edición móvil y sincronización de cambios.}
 La aplicación móvil incorporó edición local de sesiones y observaciones ya
 creadas. Los repositorios locales permitieron actualizar campos editables y
@@ -497,6 +604,15 @@ tenía una creación pendiente, las modificaciones se integraron sobre el estado
 local antes de enviarlo, evitando duplicar operaciones innecesarias. En backend,
 los servicios de sesiones y observaciones añadieron operaciones de actualización
 posterior sujetas a permisos, estado y titularidad.
+
+En el caso de las sesiones, la edición posterior distingue entre campos de
+descripción y campos que afectan al muestreo. Si la sesión no está finalizada,
+pueden actualizarse método, tamaño de cuadrícula, anchura de transecto, entorno
+o tipología, y el backend recalcula el área muestreada a partir del recorrido ya
+almacenado. En observaciones, la actualización se limita a taxonomía,
+coordenadas, fecha, notas e ítems; las fotografías se gestionan mediante sus
+endpoints dedicados para mantener separado el ciclo de vida de archivos y datos
+estructurados.
 
 \paragraph{Catálogo científico y configuración web.}
 El catálogo de entornos y tipologías se gestionó desde un módulo específico de
