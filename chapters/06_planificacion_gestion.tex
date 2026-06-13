@@ -5,525 +5,453 @@
 \chapter{Planificación y gestión}
 \label{sec:planificacion_gestion}
 
-El desarrollo de OmniLitter se ha planteado de forma iterativa, combinando tareas
-de análisis, diseño, prototipado e implementación. Esta aproximación resulta
-adecuada para un proyecto con cliente real, ya que permite validar decisiones antes
-de invertir esfuerzo en una implementación definitiva.
-
 \section{Metodología de trabajo}
 
-La metodología seguida se basa en ciclos cortos de trabajo:
-
-\begin{enumerate}
-  \item Recogida de necesidades con el cliente y tutores.
-  \item Definición de requisitos funcionales, no funcionales y de datos científicos.
-  \item Elaboración de prototipos funcionales para validar flujos de usuario.
-  \item Revisión con el cliente y refinamiento del prototipo.
-  \item Diseño de la arquitectura, base de datos y componentes del sistema.
-  \item Implementación progresiva de las partes finales del proyecto.
-\end{enumerate}
-
-Aunque no se ha aplicado una metodología ágil formal completa, el proyecto adopta
-una forma de trabajo incremental: cada avance genera un artefacto revisable
-(documento de requisitos, prototipo, diagrama, módulo de código o capítulo de memoria)
-que se contrasta antes de continuar.
-
-\section{Herramientas de gestión}
-
-Para trasladar esta aproximación a la ejecución diaria del proyecto se ha utilizado
-un backlog funcional agrupado por sprints. Cada elemento del backlog representa una
-capacidad observable del sistema y se ha ordenado según sus dependencias técnicas y
-funcionales. De este modo, las tareas iniciales no se han tratado como actividades
-aisladas, sino como una secuencia de construcción progresiva: primero se establece
-la infraestructura común de autenticación y permisos, después se consolida la
-navegación de los clientes y, finalmente, se habilitan los primeros flujos de
-captura y persistencia de datos.
-
-\section{Backlog y organización por sprints}
-
-La planificación del desarrollo se ha estructurado mediante un backlog funcional
-priorizado. Este backlog recoge las funcionalidades necesarias para transformar los
-requisitos validados en la Sección~\ref{sec:requisitos} en incrementos implementables,
-manteniendo la coherencia con la arquitectura de tres capas definida para OmniLitter:
-portal web, aplicación móvil y backend REST con persistencia relacional.
-
-\subsubsection{Sprint 1: Infraestructura, autenticación y flujo básico de captura}
-
-El primer bloque de trabajo corresponde al Sprint 1 y concentra las tareas T01 a
-T10. Estas tareas constituyen la base inicial del sistema, ya que introducen la
-configuración funcional común, la autenticación, el control de acceso por grupos,
-la navegación del portal web, la administración inicial, el modelo de sesiones de
-muestreo, la taxonomía y el flujo básico de creación de observaciones desde la
-aplicación móvil. Su selección responde a una decisión de planificación: antes de
-incorporar módulos analíticos, exportaciones avanzadas o sincronización completa,
-era necesario disponer de una estructura mínima que conectara usuarios, grupos,
-sesiones, observaciones y clientes.
-
-\begin{table}[H]
-  \centering
-  \small
-  \caption{Resumen del backlog inicial integrado en el Sprint 1.}
-  \label{tab:backlog_sprint1_resumen}
-  \begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{1.1cm}
-                                >{\raggedright\arraybackslash}X
-                                >{\raggedright\arraybackslash}p{3.0cm}
-                                >{\raggedright\arraybackslash}p{3.0cm}}
-    \toprule
-    \textbf{ID} & \textbf{Funcionalidad} & \textbf{Área} & \textbf{Dependencias} \\
-    \midrule
-    T01 & Login y logout común en app y portal & Backend, web y app & Ninguna \\
-    T02 & Roles, permisos y grupo activo & Backend y web & T01 \\
-    T03 & Portal web: layout, navegación y rutas protegidas & Web & T01, T02 \\
-    T04 & Portal admin: usuarios, grupos y membresías & Web y backend & T02, T03 \\
-    T05 & Campañas y sesiones de muestreo en backend & Backend & T02 \\
-    T06 & Aplicación móvil: navegación principal y perfil & Aplicación móvil & T01 \\
-    T07 & Aplicación móvil: taxonomía jerárquica, búsqueda y favoritos & Aplicación móvil y backend & T06, T01 \\
-    T08 & Aplicación móvil: creación de sesión de muestreo & Aplicación móvil y backend & T05, T06 \\
-    T09 & API de observaciones y adjuntos para captura de campo & Backend & T05, T07 \\
-    T10 & Aplicación móvil: formulario de observación & Aplicación móvil & T07, T08, T09 \\
-    \bottomrule
-  \end{tabularx}
-\end{table}
-
-La tabla anterior se incluye únicamente como síntesis de orientación. La
-planificación real del proyecto se entiende a partir de la relación entre las
-tareas, sus dependencias y el impacto que tienen en el producto final, como se
-describe en los apartados siguientes.
-
-\subsubsection*{T01 -- Login y logout común en app y portal}
-
-La primera tarea tiene como objetivo funcional establecer un mecanismo común de
-inicio y cierre de sesión para los dos clientes del sistema: el portal web y la
-aplicación móvil. Su papel dentro del backlog es fundacional, ya que permite
-identificar al usuario antes de aplicar permisos, seleccionar grupos de trabajo o
-registrar datos científicos asociados a una persona concreta.
-
-En el estado actual documentado del proyecto, esta tarea se materializa en los
-flujos de autenticación representados en los prototipos y en el diseño de la API REST,
-donde se definen los puntos de entrada de autenticación, renovación de sesión y
-cierre de sesión mediante tokens JWT. En el portal web se contempla la existencia
-de rutas públicas y protegidas, mientras que en la aplicación móvil el acceso al
-perfil y a las pantallas principales parte igualmente de una sesión activa. La
-dependencia de esta tarea es nula, por lo que actúa como punto de arranque del
-resto del Sprint 1.
-
-Su impacto en el producto final es directo: proporciona la base de seguridad
-necesaria para que OmniLitter pueda diferenciar usuarios, asociar observaciones a
-investigadores concretos y mantener una experiencia coherente entre web y móvil.
-Además, permite que las tareas posteriores no dupliquen lógica de identificación
-en cada capa.
-
-\subsubsection*{T02 -- Roles, permisos y grupo activo}
-
-La segunda tarea persigue introducir el modelo de autorización basado en roles y
-grupos. Su objetivo funcional es que el sistema no solo conozca qué usuario ha
-iniciado sesión, sino también qué permisos tiene dentro de cada grupo de
-investigación y cuál es el grupo activo sobre el que se filtran las operaciones.
-
-La descripción incluida en la memoria se corresponde con el modelo de
-membresías definido en el diseño de datos, donde el rol no pertenece directamente
-al usuario, sino a su relación con un grupo determinado. Esta decisión permite que
-una misma persona pueda actuar como administradora en un grupo y como colaboradora
-en otro. En el portal web, el concepto de grupo activo condiciona la información
-mostrada en el dashboard y en los listados, mientras que las secciones de
-administración se reservan a perfiles con permisos suficientes.
-
-La tarea depende de T01, porque la asignación de permisos solo puede aplicarse a
-usuarios autenticados. Su impacto es especialmente relevante para el producto final:
-garantiza el aislamiento de datos entre equipos de investigación, permite cumplir
-los requisitos de privacidad por grupo y prepara la base para la administración de
-usuarios, campañas y sesiones.
-
-\subsubsection*{T03 -- Portal web: layout, navegación y rutas protegidas}
-
-Esta tarea tiene como objetivo funcional construir la estructura navegable del
-portal web. En términos de planificación, representa el paso desde la autenticación
-y el control de acceso hacia una interfaz organizada, capaz de separar las páginas
-públicas de las secciones internas del sistema.
-
-El diseño documentado contempla un portal web de tipo \textit{Single Page
-Application} con React, TypeScript, Vite y React Router. La navegación se organiza
-mediante rutas públicas, como la página de inicio y el formulario de acceso, y rutas
-protegidas bajo el área interna de la aplicación. Estas rutas protegidas verifican
-la existencia de una sesión activa y redirigen al usuario si no dispone de acceso.
-El layout general integra elementos persistentes, como barra lateral, cabecera y
-selector de grupo activo, que sirven de soporte para las pantallas posteriores.
-
-T03 depende de T01 y T02, ya que la navegación protegida necesita autenticación y
-debe adaptarse a los permisos del usuario. Su impacto en el producto final consiste
-en proporcionar una experiencia web consistente, extensible y preparada para alojar
-el dashboard, los listados, la administración y los módulos de análisis que se
-incorporen en etapas posteriores.
-
-\subsubsection*{T04 -- Portal admin: usuarios, grupos y membresías}
-
-La cuarta tarea amplía el portal web con capacidades administrativas. Su objetivo
-funcional es permitir la gestión de usuarios, grupos de investigación y membresías,
-de forma que la estructura organizativa del sistema pueda mantenerse desde el
-propio portal sin intervención directa sobre la base de datos.
-
-El diseño documentado se apoya en el modelo de datos formado por usuarios,
-grupos y membresías, así como en el diseño de endpoints de la API para listar,
-crear, actualizar o archivar grupos y gestionar miembros. En la interfaz web, estas
-funciones se vinculan al rol de administrador y se ocultan a usuarios colaboradores,
-manteniendo la separación de responsabilidades dentro del sistema.
-
-Esta tarea depende de T02, porque la administración solo tiene sentido una vez
-definido el modelo de roles, y de T03, porque necesita integrarse dentro de la
-navegación protegida del portal. Su impacto final es permitir que OmniLitter sea
-operable por equipos reales, facilitando la incorporación de investigadores, la
-creación de grupos y la asignación de permisos sin romper el aislamiento de datos.
-
-\subsubsection*{T05 -- Campañas y sesiones de muestreo en backend}
-
-La quinta tarea introduce en el backend las entidades que estructuran la actividad
-científica del sistema: campañas y sesiones de muestreo. Su objetivo funcional es
-representar el contexto en el que se capturan las observaciones, diferenciando el
-proyecto o campaña de investigación de cada salida concreta de campo.
-
-En la documentación actual, esta tarea se refleja en el modelo relacional mediante
-las entidades \texttt{campaigns} y \texttt{sampling\_sessions}, y en el contrato de API
-definido para crear, consultar y actualizar sesiones. Las sesiones almacenan
-metadatos relevantes como entorno, tipología, parámetros de muestreo, posición
-inicial, duración, versión de taxonomía y estado de sincronización. Esta información resulta
-necesaria para que los datos registrados sean interpretables y reproducibles.
-
-T05 depende de T02, ya que las campañas y sesiones deben quedar asociadas a grupos
-y usuarios con permisos adecuados. Su impacto en el producto final es central:
-convierte la captura de residuos en un proceso científicamente contextualizado y
-prepara las dependencias necesarias para la creación de observaciones y adjuntos.
-
-\subsubsection*{T06 -- Aplicación móvil: navegación principal y perfil}
-
-La sexta tarea traslada la base de autenticación a la aplicación móvil. Su objetivo
-funcional es establecer la navegación principal de la app y una pantalla de perfil
-que represente al usuario autenticado, sirviendo como punto de entrada para las
-funcionalidades de campo.
-
-El diseño documentado plantea una aplicación móvil con React Native y Expo,
-organizada mediante navegación de primer nivel y flujos de pila. Las secciones
-principales se estructuran alrededor de la actividad de campo: inicio, sesiones,
-mapa, sincronización y perfil. Esta organización permite separar las acciones de
-captura de datos de las pantallas informativas y de configuración, manteniendo una
-interfaz adecuada para su uso en condiciones reales de muestreo.
-
-T06 depende de T01 porque la navegación móvil parte de una sesión válida. Su impacto
-en el producto final consiste en proporcionar una estructura estable para que el
-usuario pueda iniciar sesiones, consultar su estado y acceder posteriormente a la
-taxonomía, la captura de observaciones y la sincronización.
-
-\subsubsection*{T07 -- Aplicación móvil: taxonomía jerárquica, búsqueda y favoritos}
-
-La séptima tarea tiene como objetivo funcional incorporar en la aplicación móvil la
-taxonomía de residuos de forma navegable, con soporte para búsqueda y elementos
-favoritos. Esta funcionalidad resulta crítica porque la selección del tipo de
-residuo es uno de los datos principales de cada observación.
-
-La memoria describe una taxonomía jerárquica basada en códigos estables y preparada
-para funcionar sin conexión. En el diseño de la aplicación móvil, dicha taxonomía
-se presenta mediante una navegación por categorías y elementos, complementada por
-mecanismos que agilizan la captura en campo, como favoritos. En el backend, la
-taxonomía queda modelada mediante la entidad \texttt{taxonomy\_items} y endpoints de
-consulta, de modo que pueda descargarse y asociarse a sesiones y observaciones con
-su versión correspondiente.
-
-T07 depende de T06, porque se integra en la navegación móvil, y de T01, porque la
-descarga o disponibilidad de la taxonomía se vincula al contexto del usuario. Su
-impacto en el producto final es doble: mejora la usabilidad durante el trabajo de
-campo y refuerza la calidad científica de los datos al mantener una clasificación
-controlada y trazable.
-
-\subsubsection*{T08 -- Aplicación móvil: creación de sesión de muestreo}
-
-La octava tarea permite iniciar desde la aplicación móvil una nueva sesión de
-muestreo. Su objetivo funcional es que el investigador pueda registrar el contexto
-de la salida de campo antes de introducir observaciones individuales.
-
-El diseño documentado define un flujo de creación de sesión en el que se
-recogen datos como nombre, tipo de entorno, parámetros del transecto y coordenadas
-de inicio cuando estén disponibles. Esta información se relaciona con el diseño de
-persistencia local mediante SQLite, pensado para que las sesiones puedan crearse
-sin conexión y sincronizarse posteriormente con el backend. En la arquitectura
-general, la sesión actúa como contenedor de las observaciones generadas durante una
-jornada o tramo de muestreo.
-
-T08 depende de T05, porque necesita el modelo backend de campañas y sesiones, y de
-T06, porque se integra dentro de la navegación móvil. Su impacto en el producto
-final es esencial: habilita el trabajo de campo de forma ordenada y permite asociar
-cada observación a un contexto metodológico claro.
-
-\subsubsection*{T09 -- API de observaciones y adjuntos para captura de campo}
-
-La novena tarea se centra en la capa backend y tiene como objetivo funcional
-proporcionar la API necesaria para registrar observaciones y asociarles adjuntos,
-principalmente fotografías tomadas durante la captura de campo.
-
-En el diseño actual, esta tarea se refleja en las entidades \texttt{observations},
-\texttt{litter\_items} y \texttt{observation\_photos}, así como en los endpoints
-definidos para crear observaciones, listar observaciones de una sesión y subir
-fotografías mediante peticiones multipart. Las observaciones incluyen el tipo de residuo, cantidad, atributos
-descriptivos, coordenadas, fecha, comentarios, versión de taxonomía y estado de
-sincronización. Los adjuntos se modelan como recursos independientes para conservar
-metadatos y permitir una gestión posterior más flexible.
-
-T09 depende de T05, porque toda observación debe pertenecer a una sesión, y de T07,
-porque el tipo de residuo procede de la taxonomía. Su impacto en el producto final
-es convertir el backend en receptor de los datos científicos de campo, preparando
-la posterior visualización en el portal, la sincronización y las exportaciones.
-
-\subsubsection*{T10 -- Aplicación móvil: formulario de observación}
-
-La décima tarea completa el primer flujo funcional de campo al incorporar en la
-aplicación móvil el formulario de observación. Su objetivo funcional es permitir
-que el usuario registre cada residuo observado con los datos mínimos necesarios
-para su análisis posterior.
-
-La memoria recoge este flujo como una secuencia en la que el investigador selecciona
-un elemento de la taxonomía, introduce cantidad y atributos complementarios, añade
-comentarios y, cuando procede, incorpora una fotografía geolocalizada. El formulario
-se apoya en la navegación y en la sesión activa de la aplicación móvil, y se relaciona con
-el backend a través de la API de observaciones y adjuntos. En un escenario
-\textit{offline-first}, los registros se almacenan localmente y se preparan para su
-sincronización diferida.
-
-T10 depende de T07, T08 y T09, ya que necesita taxonomía, sesión activa y una API de
-persistencia para consolidar los datos. Su impacto en el producto final es
-especialmente visible: representa el punto en el que OmniLitter pasa de ser una
-estructura de gestión a una herramienta efectiva de captura de datos científicos en
-campo, dejando preparada la base para módulos posteriores como mapas, análisis,
-exportación y sincronización avanzada.
-
-\subsubsection{Sprint 2: Captura avanzada de observaciones y flujo offline}
-
-Durante el segundo sprint se abordaron las funcionalidades necesarias para completar
-el flujo de trabajo de campo en la aplicación móvil y permitir la posterior explotación
-de los datos desde el portal web. Este sprint se centró especialmente en la captura
-precisa de observaciones, el soporte offline, la gestión de fotografías y la validación
-de la información registrada.
-
-\begin{table}[H]
-  \centering
-  \caption{Resumen del backlog del Sprint 2: captura avanzada y flujo offline.}
-  \label{tab:backlog_sprint2_resumen}
-  \begin{tabularx}{\textwidth}{lXlX}
-    \toprule
-    \textbf{ID} & \textbf{Funcionalidad} & \textbf{Área} & \textbf{Dependencias} \\
-    \midrule
-    T11 & Aplicación móvil: GPS en sesión y observación & Aplicación móvil & T08, T10 \\
-    T12 & Aplicación móvil: fotos por observación y metadatos & Aplicación móvil y backend & T09, T10, T11 \\
-    T13 & Aplicación móvil: revisión, edición y eliminación antes de sincronizar & Aplicación móvil & T08, T10, T12 \\
-    T14 & Backend: validación científica y permisos de observaciones & Backend & T09, T10, T11, T12 \\
-    T15 & Aplicación móvil: persistencia offline del flujo de campo & Aplicación móvil & T07, T08, T10, T11, T12 \\
-    T16 & Portal web: listado de sesiones y observaciones con filtros & Web y backend & T04, T05, T09, T14 \\
-    T17 & Portal web: ficha de observación con fotos & Web & T12, T16 \\
-    \bottomrule
-  \end{tabularx}
-\end{table}
-
-\begin{tcolorbox}[title=T11 -- GPS en sesión y observación,colback=gray!5,colframe=black!70,fonttitle=\bfseries]
-
-\begin{tabularx}{\textwidth}{lX}
-\textbf{Área} & Aplicación móvil \\
-\textbf{Responsable} & Ignacio Martínez Díaz \\
-\textbf{Prioridad} & Crítica \\
-\textbf{Dependencias} & T08, T10 \\
-\end{tabularx}
-
-\vspace{0.2cm}
-
-\textbf{Objetivo}
-
-Integrar la captura de coordenadas GPS dentro del flujo de sesiones y observaciones,
-permitiendo registrar la localización exacta tanto del inicio de la sesión de
-muestreo como de cada observación individual.
-
-\vspace{0.15cm}
-
-\textbf{Valor aportado}
-
-Permite georreferenciar la información científica recopilada y facilita su análisis
-posterior mediante herramientas cartográficas.
-
-\end{tcolorbox}
-
-\begin{tcolorbox}[title=T12 -- Fotos por observación y metadatos,colback=gray!5,colframe=black!70,fonttitle=\bfseries]
-
-\begin{tabularx}{\textwidth}{lX}
-\textbf{Área} & Aplicación móvil + Backend \\
-\textbf{Responsable} & Ignacio Martínez Díaz \\
-\textbf{Prioridad} & Alta \\
-\textbf{Dependencias} & T09, T10, T11 \\
-\end{tabularx}
-
-\vspace{0.2cm}
-
-\textbf{Objetivo}
-
-Permitir la captura y asociación de fotografías a cada observación registrada,
-almacenando además metadatos relevantes como tamaño, formato, dimensiones,
-fecha de captura y otra información técnica asociada.
-
-\vspace{0.15cm}
-
-\textbf{Valor aportado}
-
-Aporta evidencia visual a las observaciones y mejora los procesos de validación
-científica posteriores.
-
-\end{tcolorbox}
-
-\begin{tcolorbox}[title={T13 -- Revisión, edición y eliminación antes de sincronizar},colback=gray!5,colframe=black!70,fonttitle=\bfseries]
-
-\begin{tabularx}{\textwidth}{lX}
-\textbf{Área} & Aplicación móvil \\
-\textbf{Responsable} & Ignacio Martínez Díaz \\
-\textbf{Prioridad} & Alta \\
-\textbf{Dependencias} & T08, T10, T12 \\
-\end{tabularx}
-
-\vspace{0.2cm}
-
-\textbf{Objetivo}
-
-Permitir al usuario revisar las observaciones almacenadas localmente antes de
-sincronizarlas con el servidor, incorporando capacidades de edición y eliminación.
-
-\vspace{0.15cm}
-
-\textbf{Valor aportado}
-
-Mejora la calidad de los datos enviados al sistema central y reduce errores
-producidos durante la captura en campo.
-
-\end{tcolorbox}
-
-\begin{tcolorbox}[title=T14 -- Validación científica y permisos de observaciones,colback=gray!5,colframe=black!70,fonttitle=\bfseries]
-
-\begin{tabularx}{\textwidth}{lX}
-\textbf{Área} & Backend \\
-\textbf{Responsable} & Alejandro \\
-\textbf{Prioridad} & Crítica \\
-\textbf{Dependencias} & T09, T10, T11, T12 \\
-\end{tabularx}
-
-\vspace{0.2cm}
-
-\textbf{Objetivo}
-
-Implementar mecanismos de validación y autorización que garanticen la consistencia
-de los datos científicos y el cumplimiento de los permisos definidos para cada rol.
-
-\vspace{0.15cm}
-
-\textbf{Valor aportado}
-
-Protege la integridad de la información registrada y evita modificaciones no
-autorizadas dentro del sistema.
-
-\end{tcolorbox}
-
-\begin{tcolorbox}[title=T15 -- Persistencia offline del flujo de campo,colback=gray!5,colframe=black!70,fonttitle=\bfseries]
-
-\begin{tabularx}{\textwidth}{lX}
-\textbf{Área} & Aplicación móvil \\
-\textbf{Responsable} & Ignacio Martínez Díaz \\
-\textbf{Prioridad} & Crítica \\
-\textbf{Dependencias} & T07, T08, T10, T11, T12 \\
-\end{tabularx}
-
-\vspace{0.2cm}
-
-\textbf{Objetivo}
-
-Garantizar el funcionamiento completo de la aplicación móvil en ausencia de
-conectividad mediante almacenamiento local de sesiones, observaciones,
-fotografías y coordenadas GPS.
-
-\vspace{0.15cm}
-
-\textbf{Valor aportado}
-
-Permite utilizar OmniLitter en entornos remotos donde no existe cobertura de red
-estable, manteniendo la continuidad del trabajo de campo.
-
-\end{tcolorbox}
-
-\begin{tcolorbox}[title=T16 -- Listado de sesiones y observaciones con filtros,colback=gray!5,colframe=black!70,fonttitle=\bfseries]
-
-\begin{tabularx}{\textwidth}{lX}
-\textbf{Área} & Web + Backend \\
-\textbf{Responsable} & Alejandro \\
-\textbf{Prioridad} & Alta \\
-\textbf{Dependencias} & T04, T05, T09, T14 \\
-\end{tabularx}
-
-\vspace{0.2cm}
-
-\textbf{Objetivo}
-
-Desarrollar una interfaz web que permita consultar sesiones y observaciones
-registradas mediante filtros y mecanismos de búsqueda avanzados.
-
-\vspace{0.15cm}
-
-\textbf{Valor aportado}
-
-Facilita el acceso a la información recopilada y mejora las capacidades de
-análisis por parte de investigadores y administradores.
-
-\end{tcolorbox}
-
-\begin{tcolorbox}[title=T17 -- Ficha de observación con fotografías,colback=gray!5,colframe=black!70,fonttitle=\bfseries]
-
-\begin{tabularx}{\textwidth}{lX}
-\textbf{Área} & Web \\
-\textbf{Responsable} & Alejandro \\
-\textbf{Prioridad} & Alta \\
-\textbf{Dependencias} & T12, T16 \\
-\end{tabularx}
-
-\vspace{0.2cm}
-
-\textbf{Objetivo}
-
-Implementar una vista detallada de observación en el portal web que permita
-consultar todos los atributos registrados junto con las fotografías asociadas.
-
-\vspace{0.15cm}
-
-\textbf{Valor aportado}
-
-Facilita la validación visual de los registros y completa el ciclo de captura,
-sincronización y revisión de observaciones.
-
-\end{tcolorbox}
-
-\section{Gestión de reuniones}
-
-Las reuniones con el cliente han tenido un papel central en la definición del
-alcance. La primera reunión permitió identificar el problema y las funcionalidades
-esperadas. Posteriormente, una segunda reunión sirvió para revisar los prototipos,
-confirmar la cobertura de los flujos principales y reforzar prioridades como el
-funcionamiento sin conexión, la separación por grupos y la trazabilidad científica.
-
-Estas reuniones se documentan en la Sección~\ref{sec:requisitos} y en el Anexo~\ref{sec:anexo_requisitos_detallados},
-donde se relacionan las necesidades detectadas con los requisitos del sistema.
-
-\section{Gestión de riesgos}
-
-\section{Gestión del alcance}
-
-El alcance se ha dividido en dos niveles:
-
-\begin{itemize}
-  \item \textbf{Alcance funcional validado mediante prototipos:} portal web y aplicación
-    móvil con flujos navegables, datos de ejemplo, roles simulados y pantallas
-    principales implementadas.
-  \item \textbf{Alcance de implementación final:} backend REST, base de datos,
-    autenticación, sincronización offline, persistencia de observaciones y conexión
-    progresiva de los clientes al backend.
+\subsection{Adaptación de Scrum}
+
+Para la organización del trabajo se tomó Scrum como referencia metodológica, pero
+se aplicó de forma adaptada a las condiciones reales del proyecto. OmniLitter no
+se desarrolló dentro de un equipo Scrum completo, sino como un trabajo académico
+realizado por dos personas, en coordinación con un cliente externo y bajo la
+supervisión del tutor. Por tanto, la metodología se utilizó como marco de trabajo
+iterativo e incremental, no como una implantación estricta de todos sus roles,
+eventos y artefactos.
+
+La principal adaptación afectó a los roles. El cliente asumió una función próxima
+a la de \textit{Product Owner}, ya que aportó la visión de dominio, explicó las
+necesidades científicas del sistema, validó los prototipos y ayudó a priorizar las
+funcionalidades con mayor valor para el uso real de la plataforma. Esta figura fue
+especialmente importante en aspectos como la captura de datos en campo, la
+organización por sesiones de muestreo, la taxonomía de residuos, el funcionamiento
+sin conexión y la utilidad posterior de los datos exportados. Sin embargo, al
+tratarse de un proyecto académico, la responsabilidad final de planificación,
+desarrollo y documentación permaneció en el equipo de trabajo.
+
+No existió una figura formal de \textit{Scrum Master}. Las tareas habituales de
+seguimiento, eliminación de bloqueos y coordinación se repartieron entre los dos
+integrantes del equipo. Esta decisión resultó coherente con el tamaño del proyecto:
+introducir un rol específico de facilitación habría sido poco realista para un
+equipo tan reducido. En su lugar, se mantuvo una coordinación directa y continua,
+centrada en revisar avances, detectar dependencias entre backend, portal web y
+aplicación móvil, y ajustar el reparto de tareas según la carga de cada momento.
+
+La planificación se estructuró en sprints, entendidos como bloques de trabajo con
+objetivos funcionales concretos. No obstante, su duración no se fijó de manera
+completamente rígida. El calendario académico, la disponibilidad de los miembros
+del equipo, las reuniones con cliente y tutor, y la complejidad variable de algunas
+tareas obligaron a adaptar la duración efectiva de cada iteración. Por este
+motivo, los sprints se utilizaron principalmente para ordenar el avance
+incremental del producto: primero la base funcional del sistema, después la captura
+de campo y el análisis inicial, posteriormente la sincronización, mapas y
+exportación, y finalmente el cierre funcional y refinamiento.
+
+También se adaptaron los eventos de Scrum. El \textit{Daily Scrum} no se realizó
+como una reunión diaria formal, ya que el equipo estaba formado únicamente por dos
+personas. En la práctica, se sustituyó por una coordinación constante mediante
+comunicación directa, revisión frecuente del estado de las tareas y resolución
+rápida de dudas técnicas. Este formato permitió mantener visibilidad sobre el
+progreso sin introducir una ceremonia artificial que no aportaba valor adicional al
+tamaño del equipo.
+
+Las revisiones de sprint se realizaron cuando fue posible con la participación del
+cliente y del tutor. Estas sesiones permitieron contrastar incrementos funcionales,
+validar decisiones de diseño y ajustar el backlog a partir de la retroalimentación
+recibida. Cuando no fue viable realizar una revisión formal al cierre exacto de una
+iteración, la validación se produjo mediante reuniones de seguimiento, revisión de
+prototipos, comprobación de funcionalidades implementadas o discusión de cambios en
+los requisitos. De esta forma, se conservó el principio de inspección y adaptación
+propio de Scrum, aunque con una ejecución flexible.
+
+En conjunto, la adaptación de Scrum permitió mantener una forma de trabajo
+ordenada, incremental y revisable, adecuada tanto al contexto académico como a la
+existencia de un cliente real. La metodología ayudó a dividir el desarrollo en
+entregas parciales, priorizar funcionalidades según su valor, incorporar cambios de
+requisitos sin romper la planificación general y conservar trazabilidad entre
+necesidades, backlog, implementación y validación.
+
+\section{Planificación Inicial}
+
+La planificación inicial de OmniLitter tuvo como objetivo transformar los
+requisitos obtenidos con el cliente en un conjunto de bloques funcionales
+ordenados, asumibles por un equipo de dos personas y coherentes con el calendario
+académico. Desde el inicio se identificó que el proyecto no consistía en una única
+aplicación aislada, sino en una plataforma formada por tres piezas principales:
+backend, portal web y aplicación móvil. Por ello, la planificación se centró en
+reducir riesgos de integración y en construir primero las capacidades sobre las
+que dependían las funcionalidades posteriores.
+
+La planificación no se entendió como un documento cerrado, sino como una línea de
+trabajo inicial revisable. Las reuniones con el cliente, la validación de
+prototipos, las restricciones técnicas del entorno móvil y la evolución del alcance
+hicieron necesario ajustar prioridades durante el desarrollo. Aun así, se mantuvo
+una estructura común: identificar los bloques principales, ordenar sus
+dependencias, repartir el trabajo por sprints y revisar los riesgos más relevantes
+en cada etapa.
+
+\subsection{Identificación de bloques funcionales}
+
+El primer paso consistió en agrupar los requisitos en bloques funcionales. Esta
+agrupación permitió evitar una planificación basada únicamente en tareas pequeñas
+y facilitó razonar sobre qué partes del sistema aportaban valor de forma conjunta.
+Los bloques identificados fueron los siguientes:
+
+\begin{itemize}[leftmargin=1.4em]
+\item \textbf{Autenticación, usuarios y permisos.} Incluye registro, inicio de
+sesión, cierre de sesión, roles, grupos de trabajo y control de acceso. Este bloque
+era necesario para poder asociar datos a usuarios reales y separar la información
+entre grupos.
+
+\item \textbf{Gestión de campañas y sesiones de muestreo.} Define el contexto
+organizativo y científico de la captura de datos. Las campañas agrupan el trabajo
+de campo y las sesiones representan actividades concretas de recogida.
+
+\item \textbf{Captura de observaciones en aplicación móvil.} Comprende el registro
+de residuos, selección de taxonomía, cantidades, notas, coordenadas y fotografías.
+Es el bloque central desde la perspectiva del usuario de campo.
+
+\item \textbf{Persistencia local y sincronización.} Permite trabajar sin conexión,
+almacenar datos pendientes y sincronizarlos posteriormente con el backend. Se
+identificó desde el inicio como una de las áreas de mayor complejidad técnica.
+
+\item \textbf{Consulta, mapa, analítica y exportación.} Agrupa las funcionalidades
+del portal web orientadas a revisar, interpretar y reutilizar los datos recogidos:
+listados, filtros, visualización geográfica, métricas y exportaciones.
+
+\item \textbf{Administración, configuración y despliegue.} Incluye la gestión
+operativa de usuarios, grupos, catálogo científico, preferencias, documentación
+técnica y preparación del sistema para su ejecución en entornos reales.
 \end{itemize}
 
-Esta separación permite demostrar primero la experiencia de uso y después construir
-la infraestructura técnica necesaria para convertir el prototipo en una aplicación
-real.
+Esta división ayudó a mantener la trazabilidad entre requisitos, backlog,
+implementación y pruebas. Además, permitió distinguir entre funcionalidades
+fundacionales, como autenticación y permisos, y funcionalidades de valor final,
+como sincronización, mapas o exportación científica.
+
+\subsection{Dependencias entre módulos}
+
+La planificación inicial tuvo en cuenta que muchos módulos no podían desarrollarse
+de forma completamente independiente. El backend actuaba como capa común de datos y
+reglas de negocio, mientras que el portal web y la aplicación móvil consumían sus
+servicios desde perspectivas distintas. Por este motivo, se priorizó construir
+primero los contratos, modelos y permisos compartidos antes de abordar flujos más
+avanzados.
+
+\begin{table}[H]
+\centering
+\caption{Dependencias principales consideradas en la planificación inicial}
+\label{tab:dependencias_planificacion_inicial}
+\small
+\renewcommand{\arraystretch}{1.18}
+\begin{tabularx}{\textwidth}{p{3.2cm}X X}
+\toprule
+\textbf{Módulo o bloque} & \textbf{Dependencias principales} & \textbf{Justificación de planificación} \\
+\midrule
+Autenticación y permisos & Ninguna dependencia funcional previa relevante. & Debía implementarse al inicio para proteger rutas, asociar datos a usuarios y aplicar visibilidad por grupos. \\
+Grupos y membresías & Autenticación. & Los grupos determinan el alcance de campañas, sesiones, observaciones, métricas y administración. \\
+Campañas y sesiones & Autenticación, grupos y permisos. & Cada sesión necesita un contexto de grupo, campaña, usuario observador y reglas de acceso. \\
+Observaciones y fotografías & Sesiones, taxonomía, permisos y almacenamiento. & Las observaciones solo tienen sentido dentro de una sesión y deben conservar trazabilidad científica. \\
+Persistencia offline & Modelos de campañas, sesiones, observaciones y usuario autenticado. & La copia local debía reflejar el modelo del backend para poder sincronizar sin pérdida de información. \\
+Sincronización & Persistencia offline, API de sesiones y observaciones, estados locales y remotos. & Era necesario disponer antes de captura local y contratos estables para resolver el envío de cambios pendientes. \\
+Portal de consulta y análisis & Observaciones sincronizadas, permisos y filtros por grupo. & El portal depende de datos ya consolidados para listados, métricas, mapa y exportaciones. \\
+Despliegue y operación & Backend, web, configuración de entorno y build móvil. & La puesta en marcha requiere que los módulos principales estén integrados y documentados. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Estas dependencias condicionaron el orden de los sprints. En particular, no era
+conveniente abordar la sincronización antes de disponer de captura local, ni
+desarrollar el análisis web antes de contar con observaciones suficientemente
+estructuradas. Del mismo modo, los permisos por grupo debían estar presentes desde
+las primeras iteraciones, ya que afectaban transversalmente a casi todos los
+módulos.
+
+\subsection{División inicial en sprints}
+
+La planificación se organizó en cuatro sprints principales. Cada sprint se definió
+como un incremento con un objetivo funcional reconocible, evitando que las
+iteraciones fueran simples agrupaciones técnicas sin valor observable. La duración
+real de cada sprint se ajustó a la disponibilidad del equipo y al calendario
+académico, pero la secuencia prevista se mantuvo como guía general del desarrollo.
+
+\begin{table}[H]
+\centering
+\caption{División inicial del trabajo por sprints}
+\label{tab:division_inicial_sprints}
+\small
+\renewcommand{\arraystretch}{1.18}
+\begin{tabularx}{\textwidth}{p{2.1cm}p{4.0cm}X}
+\toprule
+\textbf{Sprint} & \textbf{Objetivo principal} & \textbf{Bloques funcionales previstos} \\
+\midrule
+Sprint 1 & Base funcional del sistema. & Autenticación, usuarios, grupos, permisos, campañas, sesiones iniciales, taxonomía y primeras observaciones. \\
+Sprint 2 & Captura de campo y análisis inicial. & Mejora de sesiones y observaciones, GPS, fotografías, validaciones, persistencia local inicial y consulta web de datos capturados. \\
+Sprint 3 & Sincronización, mapas y exportación científica. & Cola de sincronización, publicación de datos offline, visualización geográfica, métricas, exportación CSV/JSON/GeoJSON y preferencias de uso. \\
+Sprint 4 & Cierre funcional y refinamiento. & Administración, ajustes de campañas y sesiones, catálogo científico, correcciones finales, pruebas regresivas, documentación y preparación de despliegue. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Esta división permitió construir el sistema de forma incremental. El primer sprint
+dejaba una arquitectura mínima conectada; el segundo acercaba la aplicación móvil
+al trabajo real de campo; el tercero cerraba el ciclo entre captura offline,
+sincronización y explotación de datos; y el cuarto estabilizaba la plataforma para
+su entrega y validación final.
+
+\subsection{Riesgos identificados}
+
+Durante la planificación inicial se identificaron varios riesgos que podían afectar
+al alcance, al calendario o a la calidad del producto. Estos riesgos se revisaron
+durante el desarrollo y explican algunas decisiones de priorización, como construir
+primero una base técnica estable, validar pronto el flujo móvil o reservar margen
+para integración y despliegue.
+
+\begin{table}[H]
+\centering
+\caption{Riesgos principales identificados en la planificación inicial}
+\label{tab:riesgos_planificacion_inicial}
+\small
+\renewcommand{\arraystretch}{1.18}
+\begin{tabularx}{\textwidth}{p{3.7cm}p{1.8cm}X}
+\toprule
+\textbf{Riesgo} & \textbf{Impacto} & \textbf{Medidas de mitigación} \\
+\midrule
+Cambios de requisitos del cliente & Alto & Mantener un backlog revisable, validar prototipos e incrementos funcionales y documentar la evolución de requisitos. \\
+Complejidad de sincronización offline & Alto & Desarrollar primero persistencia local, separar estados de sincronización, probar recorridos manuales completos y limitar el alcance a los flujos principales. \\
+Coordinación entre portal web y aplicación móvil & Alto & Centralizar reglas en el backend, compartir contratos y esquemas cuando fuese posible, y validar los flujos de extremo a extremo. \\
+Curva de aprendizaje de Expo, React Native y emuladores & Medio & Reservar tiempo para configuración, pruebas en emulador y dispositivo real, y priorizar funcionalidades móviles críticas antes del cierre. \\
+Problemas de despliegue e infraestructura & Medio & Documentar entornos, utilizar configuración reproducible, preparar despliegue progresivo de backend, web y build móvil, y dejar constancia de limitaciones operativas. \\
+Sobrecarga por equipo reducido & Medio & Repartir tareas por módulos, mantener coordinación constante y priorizar funcionalidades imprescindibles frente a mejoras secundarias. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+El riesgo más relevante desde el punto de vista técnico fue la sincronización
+\textit{offline-first}, porque implicaba coordinar almacenamiento local, estados
+pendientes, API remota, reintentos y validación de datos. Desde el punto de vista
+de gestión, el riesgo principal fue la evolución de requisitos, propia de un
+proyecto con cliente real y dominio científico específico. La planificación trató
+ambos riesgos mediante iteraciones cortas, revisiones frecuentes y una separación
+clara entre el núcleo funcional imprescindible y las ampliaciones deseables.
+
+\section{Gestión y herramientas de seguimiento}
+
+\subsection{Gestión de la comunicación}
+
+La comunicación del proyecto se organizó diferenciando entre la coordinación
+externa, con cliente y tutor, y la coordinación interna del equipo. Para las
+reuniones formales y las cuestiones rápidas con el cliente y el tutor se utilizaron
+principalmente Microsoft Teams y Outlook. Teams permitió mantener reuniones de
+seguimiento, revisar dudas funcionales y compartir aclaraciones sobre requisitos,
+mientras que Outlook se empleó para comunicaciones más formales, convocatoria de
+reuniones y envío de información relevante.
+
+Entre los dos integrantes del equipo se emplearon canales informales, principalmente
+WhatsApp, para coordinar avances diarios, resolver dudas rápidas y avisar de
+bloqueos. Esta comunicación directa resultó adecuada para un equipo pequeño, ya
+que redujo el coste de coordinación y permitió reaccionar con rapidez ante cambios
+de planificación o problemas técnicos.
+
+\begin{figure}[H]
+\centering
+\fbox{%
+\parbox{0.86\textwidth}{%
+\centering
+\vspace{1.2cm}
+Captura pendiente: canales de comunicación utilizados en Microsoft Teams, Outlook
+o ejemplo de reunión de seguimiento.
+\vspace{1.2cm}
+}}
+\caption{Herramientas utilizadas para la comunicación con cliente y tutor.}
+\label{fig:comunicacion_teams_outlook}
+\end{figure}
+
+\subsection{Gestión del backlog}
+
+La gestión del backlog se realizó mediante GitHub Projects, utilizando un tablero
+Kanban asociado al repositorio del proyecto. En este tablero se registraron las
+tareas planificadas, incidencias, mejoras y ajustes detectados durante los
+sprints. La organización visual por columnas permitió conocer el estado de cada
+elemento de trabajo y mantener una visión compartida del avance del proyecto.
+
+Para que las tareas fueran homogéneas y trazables, se definió una plantilla de
+GitHub Issues para nuevas tareas dentro del repositorio. Esta plantilla incluía
+campos como resumen, módulo afectado, tipo de tarea, prioridad, sprint,
+estimación, rama sugerida, dependencias y Definition of Done. Además, se siguió
+una identificación organizada de las tareas, reflejada también en los nombres de
+ramas del repositorio mediante patrones como \path{feature/tXX-descripcion} o
+\path{fix/bugXX-descripcion}. Esta convención facilitó relacionar cada issue con
+su rama, su Pull Request y el incremento funcional correspondiente.
+
+\begin{figure}[H]
+\centering
+\fbox{%
+\parbox{0.86\textwidth}{%
+\centering
+\vspace{1.2cm}
+Captura pendiente: tablero Kanban de GitHub Projects con columnas de seguimiento
+y tareas del proyecto.
+\vspace{1.2cm}
+}}
+\caption{Tablero Kanban utilizado para la gestión del backlog.}
+\label{fig:github_project_kanban}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\fbox{%
+\parbox{0.86\textwidth}{%
+\centering
+\vspace{1.2cm}
+Captura pendiente: plantilla de issue para tareas
+\texttt{.github/ISSUE\_TEMPLATE/task.yml}.
+\vspace{1.2cm}
+}}
+\caption{Plantilla de tarea utilizada para homogeneizar el backlog.}
+\label{fig:template_tareas_github}
+\end{figure}
+
+\subsection{Gestión documental}
+
+La gestión documental combinó varias herramientas según la fase del proyecto. Al
+inicio, la memoria se redactó en Overleaf, lo que facilitaba la edición colaborativa
+en LaTeX y la revisión rápida del documento. Sin embargo, a medida que la memoria
+creció en tamaño, número de capítulos, tablas y anexos, aparecieron limitaciones de
+compilación. Por este motivo, la documentación principal se trasladó a un
+repositorio de GitHub, manteniendo el control de versiones de los ficheros
+\texttt{.tex}, figuras, anexos y PDF generado.
+
+Además, se creó una carpeta compartida en OneDrive para conservar documentos
+iniciales de planificación y trabajo, elaborados principalmente con Microsoft Word.
+Esta carpeta sirvió como espacio de apoyo para materiales previos, borradores,
+actas o documentos que todavía no formaban parte de la memoria final en LaTeX.
+
+\begin{figure}[H]
+\centering
+\fbox{%
+\parbox{0.86\textwidth}{%
+\centering
+\vspace{1.2cm}
+Captura pendiente: estructura documental en Overleaf, repositorio de memoria en
+GitHub o carpeta compartida en OneDrive.
+\vspace{1.2cm}
+}}
+\caption{Herramientas utilizadas para la gestión documental del proyecto.}
+\label{fig:gestion_documental}
+\end{figure}
+
+\subsection{Gestión del código fuente}
+
+El código fuente de OmniLitter se gestionó mediante un repositorio centralizado en
+GitHub dentro de la organización \texttt{Omnilitter-TFG}. El repositorio principal,
+\texttt{OmniLitter}, agrupó las distintas partes del sistema: backend, portal web,
+aplicación móvil, paquete compartido, configuración de despliegue y documentación
+técnica auxiliar. Esta estructura permitió trabajar con una visión de monorepo y
+mantener en un mismo espacio los contratos compartidos entre API, web y móvil.
+
+Para el control de versiones se utilizó Git. El flujo de trabajo se apoyó en ramas
+por funcionalidad o corrección, con prefijos como \texttt{feature/} y \texttt{fix/}.
+Las ramas se integraban mediante Pull Requests hacia \texttt{develop} y, una vez
+acumulado un incremento estable, hacia \texttt{main}. En el historial del repositorio
+se observa este patrón mediante múltiples merges de Pull Request desde ramas como
+\path{feature/t21-sync-batch}, \path{feature/t34-entorno-sesion-y-rangos-tamano}
+o \path{fix/bug07-graficas-dashboard-movil}.
+
+También se aplicó una convención de mensajes próxima a Conventional Commits, usando
+prefijos como \texttt{feat:}, \texttt{fix:}, \texttt{test:} o \texttt{docs:}. Esta
+práctica facilitó interpretar el historial, distinguir nuevas funcionalidades de
+correcciones y relacionar los cambios con tareas del backlog.
+
+\begin{figure}[H]
+\centering
+\fbox{%
+\parbox{0.86\textwidth}{%
+\centering
+\vspace{1.2cm}
+Captura pendiente: repositorio GitHub de la organización
+\texttt{Omnilitter-TFG/OmniLitter}, ramas o historial de Pull Requests.
+\vspace{1.2cm}
+}}
+\caption{Repositorio centralizado utilizado para la gestión del código fuente.}
+\label{fig:repositorio_codigo_fuente}
+\end{figure}
+
+\subsection{Gestión de versiones y releases}
+
+La evolución del producto se documentó mediante versiones asociadas a incrementos
+del desarrollo. Se generaron releases intermedias por sprint, utilizando etiquetas
+como \texttt{v0.1.0}, \texttt{v0.2.0} y \texttt{v0.3.0}, y una versión final
+\texttt{v.1.0.0}, correspondiente al cierre funcional del proyecto. Estas versiones
+permitieron marcar puntos estables del repositorio y relacionar cada entrega con
+un conjunto de funcionalidades ya integradas.
+
+Las releases se gestionaron con herramientas de GitHub. El repositorio incluye un
+workflow de GitHub Actions que crea una release al publicar una etiqueta que
+coincida con el patrón \texttt{v*}, generando notas básicas a partir de commits y
+Pull Requests. Además, se incorporaron otros flujos de integración y despliegue,
+como validación continua, construcción de imágenes Docker y generación manual de
+una build Android de previsualización con Expo/EAS.
+
+\begin{table}[H]
+\centering
+\caption{Versiones principales publicadas durante el desarrollo}
+\label{tab:versiones_releases}
+\small
+\renewcommand{\arraystretch}{1.18}
+\begin{tabularx}{\textwidth}{p{2.2cm}p{3.2cm}X}
+\toprule
+\textbf{Versión} & \textbf{Momento} & \textbf{Finalidad} \\
+\midrule
+\texttt{v0.1.0} & Release intermedia & Marcar una primera base funcional integrada del sistema. \\
+\texttt{v0.2.0} & Release intermedia & Consolidar avances de captura de campo, persistencia inicial y módulos web asociados. \\
+\texttt{v0.3.0} & Release intermedia & Recoger funcionalidades avanzadas de sincronización, mapas, análisis y exportación. \\
+\texttt{v.1.0.0} & Release final & Señalar la versión final del proyecto tras el cierre funcional, refinamiento y validación. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\fbox{%
+\parbox{0.86\textwidth}{%
+\centering
+\vspace{1.2cm}
+Captura pendiente: sección de releases de GitHub con las etiquetas
+\texttt{v0.1.0}, \texttt{v0.2.0}, \texttt{v0.3.0} y \texttt{v.1.0.0}.
+\vspace{1.2cm}
+}}
+\caption{Releases publicadas mediante GitHub.}
+\label{fig:github_releases}
+\end{figure}
+
+\subsection{Gestión de incidencias}
+
+La gestión de incidencias se integró en el mismo sistema de seguimiento utilizado
+para el backlog. Los errores detectados durante el desarrollo o durante las pruebas
+manuales se registraron en GitHub Issues y se visualizaron en el tablero Kanban de
+GitHub Projects. De esta forma, las incidencias podían priorizarse junto con el
+resto de tareas, asignarse a un sprint y seguirse hasta su resolución.
+
+Para homogeneizar el reporte de errores se creó una plantilla específica de bug en
+el repositorio. Esta plantilla recogía la descripción del problema, pasos para
+reproducirlo, comportamiento esperado, comportamiento actual, módulo afectado,
+sprint y severidad. También incluía una Definition of Done orientada a confirmar
+que el error había sido corregido, probado localmente, revisado y fusionado en
+\texttt{develop}. El repositorio conserva ramas de corrección con nombres como
+\path{fix/bug01-responsive-portal}, \path{fix/bug02-roles-web} o
+\path{fix/bug07-graficas-dashboard-movil}, lo que muestra la relación entre
+incidencia, rama y Pull Request.
+
+\begin{figure}[H]
+\centering
+\fbox{%
+\parbox{0.86\textwidth}{%
+\centering
+\vspace{1.2cm}
+Captura pendiente: plantilla de incidencia
+\texttt{.github/ISSUE\_TEMPLATE/bug.yml} o ejemplo de bug en el tablero Kanban.
+\vspace{1.2cm}
+}}
+\caption{Plantilla y seguimiento de incidencias en GitHub.}
+\label{fig:template_incidencias_github}
+\end{figure}
+
