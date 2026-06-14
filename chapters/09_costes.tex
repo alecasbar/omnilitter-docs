@@ -1,0 +1,253 @@
+% ============================================================
+%  Capítulo -- Costes
+% ============================================================
+
+\chapter{Costes}
+\label{sec:costes}
+
+Este capítulo presenta una estimación económica del proyecto OmniLitter. Al
+tratarse de un Trabajo de Fin de Grado, una parte importante de los recursos no ha
+supuesto un desembolso directo, ya que se han utilizado equipos personales,
+servicios con planes gratuitos y herramientas disponibles para uso académico. No
+obstante, resulta útil valorar el coste equivalente del proyecto para comprender
+su dimensión real y justificar el esfuerzo necesario para construir una plataforma
+compuesta por backend, portal web, aplicación móvil, documentación y despliegue.
+
+Las estimaciones se han realizado diferenciando entre costes de personal,
+infraestructura, herramientas software, equipamiento y otros costes operativos. En
+los casos en los que no existió un gasto directo, se indica como coste imputado o
+amortizado, ya que representa el valor económico aproximado de los recursos
+utilizados durante el desarrollo.
+
+\section{Costes de personal}
+
+El coste principal del proyecto corresponde al tiempo dedicado por los dos
+integrantes del equipo. Aunque no se trata de un coste salarial real, se ha
+estimado su valor económico utilizando una tarifa de referencia de
+\textbf{15 EUR/hora}, razonable para un perfil junior o en prácticas dentro de un
+proyecto académico de ingeniería del software.
+
+La estimación de horas se basa en la duración del trabajo, la división en cuatro
+sprints principales y las actividades realizadas: análisis de requisitos, diseño,
+implementación de los tres módulos principales, integración, pruebas, despliegue y
+elaboración de la memoria. Se considera una dedicación aproximada de
+\textbf{300 horas por persona}, lo que da un total de \textbf{600 horas} de trabajo.
+
+\begin{table}[H]
+\centering
+\caption{Estimación de costes de personal por actividad}
+\label{tab:costes_personal}
+\small
+\renewcommand{\arraystretch}{1.18}
+\begin{tabularx}{\textwidth}{p{4.3cm}p{2.4cm}p{2.4cm}X}
+\toprule
+\textbf{Actividad} & \textbf{Horas estimadas} & \textbf{Coste estimado} & \textbf{Justificación} \\
+\midrule
+Análisis, planificación y reuniones & 70 h & 1.050 EUR & Incluye reuniones con cliente y tutor, adaptación de requisitos, planificación de sprints y gestión del backlog. \\
+Diseño funcional y técnico & 60 h & 900 EUR & Comprende arquitectura, modelo de datos, contratos entre módulos, diseño de flujos y decisiones de interfaz. \\
+Desarrollo backend & 110 h & 1.650 EUR & Implementación de API, autenticación, permisos, entidades, persistencia, servicios y lógica de negocio. \\
+Desarrollo portal web & 90 h & 1.350 EUR & Construcción de pantallas de administración, consulta, mapas, métricas, exportación y consumo de API. \\
+Desarrollo aplicación móvil & 130 h & 1.950 EUR & Incluye navegación, captura de datos, GPS, fotografías, persistencia local y funcionamiento offline. \\
+Integración, pruebas y despliegue & 80 h & 1.200 EUR & Validación de flujos extremo a extremo, corrección de incidencias, configuración de entornos y releases. \\
+Documentación y memoria & 60 h & 900 EUR & Redacción de memoria, anexos, revisión documental, evidencias, manuales y preparación de entrega. \\
+\midrule
+\textbf{Total} & \textbf{600 h} & \textbf{9.000 EUR} & Coste imputado del esfuerzo de desarrollo del equipo. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Esta partida concentra la mayor parte del presupuesto porque OmniLitter es un
+proyecto intensivo en desarrollo software. La existencia de varios módulos
+conectados entre sí incrementó el esfuerzo de integración, especialmente en la
+sincronización \textit{offline-first} y en la coordinación entre backend, web y
+móvil.
+
+\section{Costes de infraestructura y despliegue}
+
+La infraestructura utilizada durante el desarrollo se apoyó principalmente en
+servicios con planes gratuitos o recursos de bajo coste. GitHub se empleó para el
+repositorio, gestión de issues, tablero Kanban, releases y automatizaciones.
+Además, el despliegue se planteó con servicios adecuados para un proyecto
+académico, como Vercel, Render, Railway o entornos equivalentes.
+
+Durante el desarrollo, estos servicios no generaron un coste directo relevante. A
+efectos de estimación, se contempla un escenario de uso académico durante seis
+meses, con infraestructura en planes gratuitos y sin contratación de dominio
+propio.
+
+\begin{table}[H]
+\centering
+\caption{Estimación de costes de infraestructura}
+\label{tab:costes_infraestructura}
+\small
+\renewcommand{\arraystretch}{1.18}
+\begin{tabularx}{\textwidth}{p{4.0cm}p{2.5cm}p{2.5cm}X}
+\toprule
+\textbf{Recurso} & \textbf{Periodo} & \textbf{Coste estimado} & \textbf{Justificación} \\
+\midrule
+Repositorio GitHub y GitHub Projects & 6 meses & 0 EUR & Uso de funcionalidades gratuitas para repositorio, issues, tablero Kanban, Pull Requests y releases. \\
+GitHub Actions & 6 meses & 0 EUR & Uso dentro de los límites gratuitos disponibles para automatizaciones ligeras de CI/CD. \\
+Hosting portal web & 6 meses & 0 EUR & Despliegue compatible con planes gratuitos de servicios como Vercel o equivalentes. \\
+Backend y API & 6 meses & 0 EUR & Entorno de despliegue académico o gratuito, suficiente para validación y demostración. \\
+Base de datos PostgreSQL & 6 meses & 0 EUR & Uso de instancia gratuita o entorno local durante desarrollo y pruebas. \\
+Dominio propio & No contratado & 0 EUR & No fue necesario adquirir un dominio para la entrega académica del proyecto. \\
+\midrule
+\textbf{Total} & -- & \textbf{0 EUR} & Sin gasto directo de infraestructura durante el desarrollo académico. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+En un escenario de operación real, estos costes podrían aumentar por la
+contratación de una base de datos persistente, almacenamiento de fotografías,
+dominio propio, copias de seguridad y mayor capacidad de cómputo. Sin embargo,
+para el alcance del trabajo de fin de grado, los planes gratuitos fueron suficientes para validar la
+solución.
+
+\section{Costes de herramientas software}
+
+Las herramientas de desarrollo y documentación seleccionadas se eligieron también
+con criterios de coste. Se priorizaron tecnologías libres, servicios gratuitos o
+licencias disponibles para estudiantes. Esto permitió reducir el presupuesto sin
+limitar la calidad técnica del producto.
+
+\begin{table}[H]
+\centering
+\caption{Estimación de costes de herramientas software}
+\label{tab:costes_herramientas}
+\small
+\renewcommand{\arraystretch}{1.18}
+\begin{tabularx}{\textwidth}{p{4.0cm}p{2.7cm}X}
+\toprule
+\textbf{Herramienta} & \textbf{Coste estimado} & \textbf{Uso en el proyecto} \\
+\midrule
+Visual Studio Code & 0 EUR & Entorno principal de desarrollo y edición de código. \\
+Git y GitHub & 0 EUR & Control de versiones, repositorio centralizado, issues, Pull Requests y releases. \\
+Node.js, TypeScript, React, Express y Expo & 0 EUR & Stack principal de desarrollo, basado en tecnologías de código abierto. \\
+PostgreSQL y SQLite & 0 EUR & Persistencia remota y local mediante motores gratuitos. \\
+Overleaf & 0 EUR & Redacción inicial de la memoria mediante plan gratuito. \\
+LaTeX local & 0 EUR & Compilación final de la memoria tras las limitaciones de Overleaf. \\
+Microsoft Teams, Outlook, Word y OneDrive & 0 EUR & Herramientas disponibles mediante cuentas académicas o personales para comunicación y documentación. \\
+\midrule
+\textbf{Total} & \textbf{0 EUR} & No se contrataron licencias específicas para el proyecto. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+La ausencia de coste de licencias fue posible porque el proyecto se apoyó en un
+ecosistema ampliamente disponible para desarrollo web y móvil. La principal
+limitación no fue económica, sino de aprendizaje, configuración y coordinación
+entre herramientas.
+
+\section{Costes de equipamiento}
+
+El desarrollo se realizó con equipos personales ya disponibles. Por ello, no hubo
+un gasto de adquisición específico. Aun así, para valorar económicamente el uso de
+estos recursos se aplica una estimación por amortización, considerando el tiempo de
+uso durante el proyecto frente a la vida útil aproximada de los dispositivos.
+
+Se asume un periodo de proyecto de seis meses, una vida útil de cuatro años para
+los ordenadores portátiles y tres años para el dispositivo móvil utilizado en
+pruebas. Esta estimación no representa dinero desembolsado, sino el coste
+proporcional de uso del equipamiento.
+
+\begin{table}[H]
+\centering
+\caption{Estimación de costes de equipamiento amortizado}
+\label{tab:costes_equipamiento}
+\small
+\renewcommand{\arraystretch}{1.18}
+\begin{tabularx}{\textwidth}{p{3.7cm}p{2.0cm}p{2.7cm}p{2.6cm}X}
+\toprule
+\textbf{Recurso} & \textbf{Unidades} & \textbf{Valor unitario} & \textbf{Coste imputado} & \textbf{Justificación} \\
+\midrule
+Ordenadores portátiles & 2 & 900 EUR & 225 EUR & Amortización de 6 meses sobre una vida útil estimada de 48 meses. \\
+Dispositivo Android de pruebas & 1 & 300 EUR & 50 EUR & Amortización de 6 meses sobre una vida útil estimada de 36 meses. \\
+Conexión a Internet y electricidad & 1 & -- & 60 EUR & Estimación proporcional del consumo y conectividad durante el trabajo. \\
+\midrule
+\textbf{Total} & -- & -- & \textbf{335 EUR} & Coste imputado de recursos físicos y operativos. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Estos costes son reducidos en comparación con el esfuerzo humano, ya que el
+proyecto no requirió hardware específico ni servidores propios. El elemento más
+relevante fue disponer de al menos un dispositivo móvil real para validar
+funcionalidades como GPS, cámara, almacenamiento local y sincronización.
+
+\section{Plan de contingencia}
+
+Además de los costes estimados, se contempla una reserva de contingencia para
+cubrir desviaciones razonables durante el desarrollo. En un proyecto de estas
+características, los principales factores de incertidumbre no proceden de la
+compra de licencias o infraestructura, sino del tiempo adicional necesario para
+resolver problemas técnicos, adaptar requisitos o estabilizar la integración entre
+módulos.
+
+La contingencia se calcula como un \textbf{10\%} sobre el coste base estimado del
+proyecto, excluyendo únicamente costes no previstos que requerirían una decisión
+externa, como contratar un servicio de pago o adquirir nuevo equipamiento. Esta
+reserva se considera adecuada para un trabajo académico con alcance controlado,
+pero con riesgos técnicos relevantes asociados al funcionamiento offline, el
+despliegue y la coordinación entre backend, web y aplicación móvil.
+
+\begin{table}[H]
+\centering
+\caption{Plan de contingencia del proyecto}
+\label{tab:plan_contingencia}
+\small
+\renewcommand{\arraystretch}{1.18}
+\begin{tabularx}{\textwidth}{p{4.1cm}p{1.5cm}p{2.2cm}X}
+\toprule
+\textbf{Riesgo cubierto} & \textbf{Prob.} & \textbf{Reserva} & \textbf{Aplicación prevista} \\
+\midrule
+Cambios de requisitos del cliente & Media & 300 EUR & Revisión de funcionalidades, ajustes de alcance, adaptación del backlog y pequeñas modificaciones de flujo. \\
+Complejidad de sincronización offline & Alta & 350 EUR & Tiempo adicional para depurar estados locales, reintentos, conflictos y validación de datos sincronizados. \\
+Problemas de integración entre módulos & Media & 150 EUR & Corrección de incompatibilidades entre backend, portal web, aplicación móvil y contratos compartidos. \\
+Incidencias de despliegue o configuración & Media & 85 EUR & Ajustes de variables de entorno, builds, servicios externos y documentación operativa. \\
+Margen general de cierre & Baja & 48,50 EUR & Correcciones menores, revisión final, pruebas regresivas y ajustes documentales de última hora. \\
+\midrule
+\textbf{Total contingencia} & -- & \textbf{933,50 EUR} & Reserva equivalente al 10\% del coste base del proyecto. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Este plan no implica que la contingencia deba consumirse obligatoriamente. Su
+función es reflejar una práctica de planificación prudente: reservar margen ante
+riesgos identificados, evitar que una desviación técnica afecte al cierre del
+proyecto y disponer de una valoración económica más realista si OmniLitter se
+plantease como un desarrollo profesional.
+
+\section{Costes globales del proyecto}
+
+El coste global se obtiene sumando las partidas anteriores y la reserva de
+contingencia definida. La mayor parte del importe corresponde al esfuerzo humano,
+mientras que infraestructura y licencias presentan coste directo nulo gracias al
+uso de herramientas gratuitas o ya disponibles.
+
+\begin{table}[H]
+\centering
+\caption{Resumen global de costes del proyecto}
+\label{tab:costes_globales}
+\small
+\renewcommand{\arraystretch}{1.18}
+\begin{tabularx}{0.85\textwidth}{X>{\raggedleft\arraybackslash}p{3.0cm}}
+\toprule
+\textbf{Categoría de coste} & \textbf{Importe estimado} \\
+\midrule
+Costes de personal & 9.000 EUR \\
+Costes de infraestructura y despliegue & 0 EUR \\
+Costes de herramientas software & 0 EUR \\
+Costes de equipamiento y operación & 335 EUR \\
+Reserva de contingencia & 933,50 EUR \\
+\midrule
+\textbf{Coste total estimado} & \textbf{10.268,50 EUR} \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Por tanto, el coste económico estimado de OmniLitter asciende a
+\textbf{10.268,50 EUR} incluyendo contingencia. Esta cifra debe interpretarse como
+una valoración del proyecto, no como un gasto real efectuado. El desembolso directo
+fue muy reducido, pero el coste imputado refleja mejor la magnitud del trabajo
+realizado y permite comparar el proyecto con un desarrollo software equivalente en
+un entorno profesional.
