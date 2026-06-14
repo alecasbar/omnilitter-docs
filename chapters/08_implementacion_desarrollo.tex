@@ -167,13 +167,12 @@ En el primer sprint se validó la base funcional del sistema. Las pruebas se cen
 \toprule
 Tarea o funcionalidad & Cobertura automatizada & Comprobación principal & Resultado \\
 \midrule
-Login, registro y cierre de sesión & SCH-01, SCH-02 & Validación del registro con contraseña robusta, confirmación coincidente y rechazo de contraseñas débiles o confirmaciones incorrectas. & Correcto \\
-Portal de administración de usuarios & USR-01, USR-03 & Bloqueo de correos duplicados y creación de usuarios con o sin membresías iniciales. & Correcto \\
-Gestión de grupos y membresías & GRP-06, GRP-07 & Restauración de grupos, permisos de administración y rechazo de acciones realizadas por usuarios sin autorización. & Correcto \\
-Campañas y sesiones backend & SCH-04 a SCH-13, CMP-01 & Estados válidos de campañas, referencias de catálogo y reglas de geometría para sesiones libres, por cuadrícula o por transecto. & Correcto \\
-Catálogo científico & CAT-01 a CAT-08 & Creación, actualización, detección de duplicados, borrado y restricciones por uso de entornos y tipologías. & Correcto \\
-API de observaciones y adjuntos & SCH-14 a SCH-23, OBS-04 a OBS-06 & Observaciones con ítems obligatorios, coordenadas válidas, cantidades positivas, tipos de imagen soportados y control de acceso a observaciones propias o ajenas. & Correcto \\
-Formulario móvil de observación & SCH-14 a SCH-16 & Validación compartida de sesión, taxonomía, coordenadas, ítems y cantidades utilizada por el formulario móvil. & Correcto \\
+Login, registro y recuperación de contraseña & \texttt{auth.service} (6) y esquemas de auth en \texttt{schemas} & Login con credenciales válidas e inválidas, registro con contraseña robusta y flujo de recuperación. & Correcto \\
+Administración de usuarios & \texttt{users.service} (11) & Creación de usuarios, bloqueo de correos duplicados y consultas de administración. & Correcto \\
+Grupos y membresías & \texttt{groups.service} (40) & Acceso por grupo, gestión de miembros, permisos de administración y alcance por grupo activo. & Correcto \\
+Campañas y sesiones de muestreo & \texttt{campaigns.service} (8) y \texttt{sessions.service} (7), con esquemas en \texttt{schemas} & Estados de campaña, referencias de catálogo y geometría de sesiones libres, por cuadrícula y por transecto. & Correcto \\
+Taxonomía & \texttt{taxonomy.service} (3) & Estructura jerárquica y versión de la taxonomía. & Correcto \\
+API de observaciones y adjuntos & \texttt{observations.service} (25) y esquemas de observación en \texttt{schemas} & Ítems obligatorios, coordenadas válidas, cantidades positivas y acceso a observaciones propias o ajenas. & Correcto \\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -222,6 +221,25 @@ La iteración permitió validar las decisiones de base del proyecto. La separaci
 
 Como conclusión, el sprint cumplió su función de arranque del desarrollo incremental. Dejó una arquitectura verificable, un modelo de dominio más coherente y un primer recorrido funcional suficiente para abordar con mayor seguridad las capacidades posteriores: captura avanzada de datos, persistencia local, sincronización, análisis y administración más completa.
 
+
+\begin{figure}[H]
+\centering
+\begin{subfigure}{0.72\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{figures/inicio-sesion-web.png}
+    \caption{Acceso al portal web.}
+\end{subfigure}
+
+\vspace{0.45em}
+
+\begin{subfigure}{0.30\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{figures/inicio-sesion-movil.png}
+    \caption{Acceso desde la aplicación móvil.}
+\end{subfigure}
+\caption{Evidencia visual del flujo de autenticación implementado en el Sprint 1.}
+\label{fig:evidencia_sprint1_autenticacion}
+\end{figure}
 
 \sprintHoursTable{1}{80 h}{39,50 h}{38,75 h}{78,25 h}{80 h}{78,25 h}
 
@@ -390,11 +408,11 @@ El segundo sprint reforzó la captura de datos de campo y el análisis inicial. 
 \toprule
 Tarea o funcionalidad & Cobertura automatizada & Comprobación principal & Resultado \\
 \midrule
-GPS en sesión y observación & WEB-SES-01 a WEB-SES-03 & Cálculo de distancia para rutas vacías, rutas con un único punto y suma de distancia Haversine entre puntos consecutivos. & Correcto \\
-Fotografías por observación y metadatos & SCH-17 a SCH-23 & Aceptación de formatos de imagen soportados y rechazo de tipos MIME no permitidos. & Correcto \\
-Validación científica de observaciones & SCH-14 a SCH-16 & Existencia de ítems, coordenadas válidas y cantidades positivas antes de aceptar una observación. & Correcto \\
-Permisos de observaciones & OBS-01 a OBS-06 & Alcance de observaciones por usuario, visibilidad ampliada para gestores y bloqueo de observaciones ajenas sin permisos. & Correcto \\
-Dashboard de métricas científicas & WEB-EXP-01 a WEB-EXP-12 & Formatos soportados, persistencia de preferencias en \texttt{localStorage} y recuperación ante valores obsoletos. & Correcto \\
+GPS y rutas de muestreo & \texttt{sessionService} (web, 4) & Cálculo de distancia para rutas vacías, de un único punto y suma de distancia Haversine entre puntos consecutivos. & Correcto \\
+Fotografías por observación y metadatos & \texttt{observations.service} (servicio de fotos) y esquema de subida en \texttt{schemas} & Tipos MIME de imagen soportados y rechazo de los no permitidos, con los metadatos de la foto. & Correcto \\
+Validación científica de observaciones & \texttt{observations.service} (25) y esquemas de observación en \texttt{schemas} & Existencia de ítems, coordenadas válidas y cantidades positivas antes de aceptar una observación. & Correcto \\
+Permisos de observaciones & \texttt{observations.service} (permisos) & Alcance de observaciones por usuario, visibilidad ampliada para gestores y bloqueo de observaciones ajenas. & Correcto \\
+Métricas y dashboard científico & \texttt{metrics.service} (3) & Métricas agregadas del dashboard y datos por observación de la analítica. & Correcto \\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -441,6 +459,25 @@ La principal conclusión técnica fue que la arquitectura definida en el sprint 
 
 En conjunto, el sprint tuvo un cumplimiento adecuado y dejó el sistema en un estado más representativo del uso previsto. OmniLitter pasó a registrar datos más completos, verificables y preparados para explotación, y quedó lista la base necesaria para abordar en la siguiente iteración el ciclo completo entre trabajo offline, sincronización, visualización espacial y exportación.
 
+
+\begin{figure}[H]
+\centering
+\begin{subfigure}{0.30\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{figures/creacion-observacion-movil.png}
+    \caption{Registro móvil de una observación con datos de campo.}
+\end{subfigure}
+
+\vspace{0.45em}
+
+\begin{subfigure}{0.72\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{figures/observaciones-web.png}
+    \caption{Consulta web de observaciones registradas.}
+\end{subfigure}
+\caption{Evidencia visual de la captura de observaciones y su revisión en el portal durante el Sprint 2.}
+\label{fig:evidencia_sprint2_observaciones}
+\end{figure}
 
 \sprintHoursTable{2}{85 h}{42,00 h}{42,50 h}{84,50 h}{165 h}{162,75 h}
 
@@ -594,15 +631,16 @@ El tercer sprint estuvo orientado a sincronización, mapas y exportación cient�
 \toprule
 Tarea o funcionalidad & Cobertura automatizada & Comprobación principal & Resultado \\
 \midrule
-Exportación CSV y soporte de rutas & WEB-SES-01 a WEB-SES-03 & Cálculo de distancia de tracks como soporte para visualización, análisis de recorridos y exportación de información asociada a sesiones. & Correcto \\
-Preferencias de exportación científica & WEB-EXP-01 a WEB-EXP-12 & Formatos admitidos, persistencia de la preferencia de exportación y recuperación ante formatos no soportados. & Correcto \\
-Configuración y cambio de contraseña & SCH-03, USR-04 a USR-06 & Rechazo de reutilización de contraseña, usuario inexistente, contraseña actual incorrecta y guardado seguro del nuevo hash. & Correcto \\
-Sincronización móvil-backend & Sin suite automatizada específica & La sincronización se validó mediante pruebas manuales de flujo completo. No se atribuye cobertura automatizada inexistente. & Manual \\
+Sincronización (servicio backend) & \texttt{sync.service} (2) & Procesamiento del lote de sincronización y resultado por elemento. & Correcto \\
+Exportación científica & \texttt{dashboardExport} (web, 16) & Formatos admitidos, persistencia de la preferencia de exportación y generación de las descargas. & Correcto \\
+Rutas y distancias en el mapa & \texttt{sessionService} (web, 4) & Distancia de tracks como soporte de rutas y áreas de muestreo. & Correcto \\
+Configuración y cambio de contraseña & \texttt{users.service} (cambio de contraseña) & Rechazo de reutilización de contraseña, contraseña actual incorrecta y guardado seguro del nuevo hash. & Correcto \\
+Integración móvil-backend de sincronización & Sin prueba de integración automática & El recorrido completo móvil-API se validó de forma manual; no existe un test de integración contra una base de datos real. & Manual \\
 \bottomrule
 \end{tabularx}
 \end{table}
 
-La ausencia de una prueba automatizada específica para sincronización se considera una limitación de la validación automática. No obstante, se documenta de forma explícita para mantener la trazabilidad y evitar que la memoria presente como automatizada una comprobación que realmente fue funcional y manual.
+El servicio de sincronización del backend cuenta con pruebas unitarias propias (\texttt{sync.service}), pero no existe una prueba de integración automática que ejercite el recorrido completo entre la aplicación móvil, la API y una base de datos real. Esa comprobación de extremo a extremo se validó de forma manual. Se documenta de forma explícita para mantener la trazabilidad y no presentar como automatizada una verificación que realmente fue funcional y manual.
 
 \subsection{Desviaciones e incidencias}
 
@@ -644,6 +682,25 @@ El resultado más relevante fue la integración real entre captura, consolidaci�
 
 Las desviaciones del sprint se concentraron en la coordinación entre datos locales y remotos, el refinamiento visual y la validación del flujo de sincronización. No modificaron el objetivo de la iteración, pero sí dejaron una conclusión importante: el recorrido funcional estaba validado manualmente de extremo a extremo, aunque la sincronización seguía siendo una zona donde sería conveniente incorporar pruebas automatizadas específicas. El sprint cerró con las funcionalidades centrales implementadas y con el trabajo final orientado ya a estabilización, refinamiento y despliegue.
 
+
+\begin{figure}[H]
+\centering
+\begin{subfigure}{0.72\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{figures/mapa-web.png}
+    \caption{Visualización geográfica de observaciones en el portal.}
+\end{subfigure}
+
+\vspace{0.45em}
+
+\begin{subfigure}{0.30\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{figures/sincronizacion-movil.png}
+    \caption{Pantalla móvil de sincronización de datos.}
+\end{subfigure}
+\caption{Evidencia visual del ciclo de sincronización y explotación espacial consolidado en el Sprint 3.}
+\label{fig:evidencia_sprint3_sincronizacion_mapa}
+\end{figure}
 
 \sprintHoursTable{3}{90 h}{45,25 h}{46,50 h}{91,75 h}{255 h}{254,50 h}
 
@@ -783,15 +840,36 @@ El cuarto sprint correspondió al cierre funcional y al refinamiento del sistema
 \toprule
 Tarea o funcionalidad & Cobertura automatizada & Comprobación principal & Resultado \\
 \midrule
-Página de configuración web & USR-02, USR-04 a USR-06, GRP-01 a GRP-15, CMP-02 a CMP-04, OBS-01 a OBS-06 & Permisos por rol, vista agregada de superadministrador, participación en campañas, archivado y restauración de grupos, membresías y alcance de observaciones. & Correcto \\
-Entorno en sesión y rangos científicos & CAT-01 a CAT-08, SCH-08 a SCH-13 & Validación de entornos, tipologías, referencias de catálogo y reglas compartidas que condicionan campañas y sesiones. & Correcto \\
-Cierre funcional y refinamiento & Suite completa & Reejecución de las pruebas de API, web y shared para comprobar que los ajustes finales no rompen funcionalidades previamente validadas. & Correcto \\
-Aplicación móvil & Sin suite automatizada específica & Los ajustes visuales y funcionales de la aplicación móvil se validaron mediante recorridos manuales. & Manual \\
+Catálogo de entornos y tipologías & \texttt{catalog.service} (14) & Creación, actualización, detección de duplicados, borrado y restricciones por uso de entornos y tipologías. & Correcto \\
+Permisos y administración de grupos & \texttt{groups.service} (40) & Archivado y restauración de grupos, invitaciones, gestión de miembros y alcance por rol. & Correcto \\
+Regresión completa & Suite completa (161 en 13 ficheros) & Reejecución de las pruebas de \texttt{shared}, \texttt{web} y \texttt{api} para comprobar que los cambios finales no rompen funcionalidades previas. & Correcto \\
+Aplicación móvil & Sin suite automatizada & Los ajustes de la aplicación móvil se validaron mediante recorridos manuales; el paquete móvil no tiene tests automatizados configurados. & Manual \\
 \bottomrule
 \end{tabularx}
 \end{table}
 
 Esta validación permitió comprobar que las reglas principales del sistema seguían funcionando tras los cambios finales. Se mantiene como limitación que la aplicación móvil no dispone de una suite automatizada configurada.
+
+La suite automatizada completa, reejecutada en el cierre con \textit{Vitest}, está formada por 161 pruebas distribuidas en 13 ficheros, todas correctas, como resume la tabla~\ref{tab:resultado_global_pruebas}.
+
+\begin{table}[H]
+\centering
+\caption{Resultado global de la suite de pruebas automatizadas}
+\label{tab:resultado_global_pruebas}
+\small
+\begin{tabularx}{\textwidth}{X p{2.4cm} p{1.8cm} p{2.4cm}}
+\toprule
+Paquete & Ficheros de test & Casos & Resultado \\
+\midrule
+\texttt{@omnilitter/shared} & 1 & 22 & Correcto \\
+\texttt{@omnilitter/web} & 2 & 20 & Correcto \\
+\texttt{@omnilitter/api} & 10 & 119 & Correcto \\
+\texttt{@omnilitter/mobile} & 0 & 0 & Sin tests \\
+\midrule
+\textbf{Total} & \textbf{13} & \textbf{161} & \textbf{Correcto} \\
+\bottomrule
+\end{tabularx}
+\end{table}
 
 \subsection{Desviaciones e incidencias}
 
@@ -832,6 +910,25 @@ La conclusión principal de la iteración es que OmniLitter alcanzó un estado c
 Las incidencias fueron reducidas y propias de una fase de estabilización: refactorizaciones, adaptación de pruebas y correcciones menores de coherencia visual o funcional. El sprint se considera cumplido con un grado alto, ya que permitió transformar el prototipo funcional acumulado durante el desarrollo en una versión final más ordenada, documentada y con una base técnica preparada para futuras ampliaciones.
 
 
+\begin{figure}[H]
+\centering
+\begin{subfigure}{0.72\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{figures/configuracion-web.png}
+    \caption{Configuración de cuenta y preferencias desde el portal.}
+\end{subfigure}
+
+\vspace{0.45em}
+
+\begin{subfigure}{0.72\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{figures/usuarios-web.png}
+    \caption{Gestión administrativa de usuarios.}
+\end{subfigure}
+\caption{Evidencia visual de las funcionalidades de cierre, configuración y administración reforzadas en el Sprint 4.}
+\label{fig:evidencia_sprint4_configuracion_administracion}
+\end{figure}
+
 \sprintHoursTable{4}{75 h}{35,75 h}{36,25 h}{72,00 h}{330 h}{326,50 h}
 
 \clearpage
@@ -839,6 +936,25 @@ Las incidencias fueron reducidas y propias de una fase de estabilización: refac
 \subsection{Pruebas manuales funcionales}
 
 Las pruebas manuales realizadas sobre OmniLitter tienen como objetivo validar el comportamiento funcional del sistema desde la perspectiva del usuario final, comprobando que los principales flujos de la aplicación se ejecutan correctamente en condiciones reales de uso. Estas pruebas abarcan tanto el portal web como la aplicación móvil, incluyendo autenticación, gestión de grupos y campañas, creación de sesiones de muestreo, registro de observaciones, funcionamiento sin conexión, sincronización posterior de datos y consulta de la información registrada. Para facilitar su trazabilidad dentro de la memoria, las pruebas se organizan por casos de uso, permitiendo justificar de forma clara qué partes del sistema han sido verificadas.
+
+\begin{figure}[H]
+\centering
+\begin{subfigure}{0.72\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{figures/detalle-observacion-web.png}
+    \caption{Revisión detallada de una observación desde el portal web.}
+\end{subfigure}
+
+\vspace{0.45em}
+
+\begin{subfigure}{0.30\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{figures/crear-sesion-movil.png}
+    \caption{Creación de una sesión de muestreo desde la aplicación móvil.}
+\end{subfigure}
+\caption{Evidencias visuales utilizadas como apoyo a la validación funcional global.}
+\label{fig:evidencias_pruebas_globales}
+\end{figure}
 
 {\footnotesize
 \setlength{\tabcolsep}{5pt}
