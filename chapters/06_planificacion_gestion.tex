@@ -237,106 +237,123 @@ clara entre el núcleo funcional imprescindible y las ampliaciones deseables.
 
 \subsection{Gestión de la comunicación}
 
-La comunicación del proyecto se organizó diferenciando entre la coordinación
-externa, con cliente y tutor, y la coordinación interna del equipo. Para las
-reuniones formales y las cuestiones rápidas con el cliente y el tutor se utilizaron
-principalmente Microsoft Teams y Outlook. Teams permitió mantener reuniones de
-seguimiento, revisar dudas funcionales y compartir aclaraciones sobre requisitos,
-mientras que Outlook se empleó para comunicaciones más formales, convocatoria de
-reuniones y envío de información relevante.
+La comunicación del proyecto se organizó separando los canales según el nivel de
+formalidad, el tipo de interlocutor y la necesidad de trazabilidad. Esta separación
+evitó mezclar decisiones funcionales con coordinación operativa diaria, y permitió
+mantener un flujo de comunicación ligero pero suficientemente controlado.
 
-Entre los dos integrantes del equipo se emplearon canales informales, principalmente
-WhatsApp, para coordinar avances diarios, resolver dudas rápidas y avisar de
-bloqueos. Esta comunicación directa resultó adecuada para un equipo pequeño, ya
-que redujo el coste de coordinación y permitió reaccionar con rapidez ante cambios
-de planificación o problemas técnicos.
+Con el cliente y el tutor se utilizó Microsoft Teams como canal principal de
+comunicación síncrona. A través de esta herramienta se realizaron reuniones de
+seguimiento, revisiones de avance, aclaración de requisitos, validación de
+decisiones funcionales y resolución rápida de dudas. Teams funcionó, por tanto,
+como espacio de coordinación externa y como mecanismo de revisión incremental del
+producto.
 
 \begin{figure}[H]
 \centering
-\fbox{%
-\parbox{0.86\textwidth}{%
+\includegraphics[width=0.9\textwidth]{figures/reunion-teams.png}
+\caption{Uso de Microsoft Teams para reuniones de seguimiento y validación.}
+\label{fig:comunicacion_teams}
+\end{figure}
+
+Outlook se reservó para comunicaciones con mayor valor documental: convocatorias,
+confirmaciones, envío de documentos y acuerdos relevantes. De este modo, Teams
+asumió el papel de canal ágil de interacción y Outlook el de canal formal de
+comunicación y archivo.
+
+Entre los dos integrantes del equipo se emplearon canales informales,
+principalmente WhatsApp, para coordinación diaria, desbloqueo de tareas,
+sincronización de disponibilidad y revisión rápida de incidencias. Este esquema se
+aproxima a una comunicación de baja ceremonia, adecuada para equipos reducidos:
+menos carga administrativa, más frecuencia de contacto y mayor capacidad de
+reacción ante cambios de prioridad o problemas técnicos.
+
+\begin{figure}[H]
 \centering
-\vspace{1.2cm}
-Captura pendiente: canales de comunicación utilizados en Microsoft Teams, Outlook
-o ejemplo de reunión de seguimiento.
-\vspace{1.2cm}
-}}
-\caption{Herramientas utilizadas para la comunicación con cliente y tutor.}
-\label{fig:comunicacion_teams_outlook}
+\includegraphics[width=0.9\textwidth]{figures/outlook_conversation.png}
+\caption{Uso de Outlook para comunicaciones formales y trazabilidad documental.}
+\label{fig:comunicacion_outlook}
 \end{figure}
 
 \subsection{Gestión del backlog}
 
 La gestión del backlog se realizó mediante GitHub Projects, utilizando un tablero
-Kanban asociado al repositorio del proyecto. En este tablero se registraron las
-tareas planificadas, incidencias, mejoras y ajustes detectados durante los
-sprints. La organización visual por columnas permitió conocer el estado de cada
-elemento de trabajo y mantener una visión compartida del avance del proyecto.
-
-Para que las tareas fueran homogéneas y trazables, se definió una plantilla de
-GitHub Issues para nuevas tareas dentro del repositorio. Esta plantilla incluía
-campos como resumen, módulo afectado, tipo de tarea, prioridad, sprint,
-estimación, rama sugerida, dependencias y Definition of Done. Además, se siguió
-una identificación organizada de las tareas, reflejada también en los nombres de
-ramas del repositorio mediante patrones como \path{feature/tXX-descripcion} o
-\path{fix/bugXX-descripcion}. Esta convención facilitó relacionar cada issue con
-su rama, su Pull Request y el incremento funcional correspondiente.
+Kanban asociado al repositorio del proyecto. El tablero actuó como radiador de
+información del desarrollo: permitía visualizar el flujo de trabajo, identificar
+tareas pendientes, trabajo en curso, elementos bloqueados y tareas completadas. De
+esta forma, el backlog no se limitó a una lista de funcionalidades, sino que se
+convirtió en una herramienta de seguimiento operativo por sprint.
 
 \begin{figure}[H]
 \centering
-\fbox{%
-\parbox{0.86\textwidth}{%
-\centering
-\vspace{1.2cm}
-Captura pendiente: tablero Kanban de GitHub Projects con columnas de seguimiento
-y tareas del proyecto.
-\vspace{1.2cm}
-}}
-\caption{Tablero Kanban utilizado para la gestión del backlog.}
+\includegraphics[width=0.95\textwidth]{figures/kanban.png}
+\caption{Tablero Kanban utilizado para visualizar el flujo de trabajo del backlog.}
 \label{fig:github_project_kanban}
 \end{figure}
 
+Cada elemento del backlog se registró como una issue de GitHub para mantener
+trazabilidad entre planificación e implementación. Para homogeneizar la información
+se definió una plantilla específica de tareas, con campos de resumen, módulo
+afectado, tipo de tarea, prioridad, sprint, estimación, rama sugerida, dependencias
+o bloqueos y Definition of Done. Esta estructura permitió aplicar una técnica de
+refinamiento ligero del backlog: cada tarea debía estar suficientemente descrita
+para poder implementarse, revisarse y cerrarse sin ambigüedad.
+
 \begin{figure}[H]
 \centering
-\fbox{%
-\parbox{0.86\textwidth}{%
-\centering
-\vspace{1.2cm}
-Captura pendiente: plantilla de issue para tareas
-\texttt{.github/ISSUE\_TEMPLATE/task.yml}.
-\vspace{1.2cm}
-}}
+\includegraphics[width=0.9\textwidth]{figures/task_template.png}
 \caption{Plantilla de tarea utilizada para homogeneizar el backlog.}
 \label{fig:template_tareas_github}
 \end{figure}
 
+Además, se utilizó una identificación organizada de tareas y ramas mediante
+patrones como \path{feature/tXX-descripcion} o \path{fix/bugXX-descripcion}. Con
+ello se obtuvo trazabilidad horizontal entre issue, rama de trabajo, Pull Request,
+commit funcional, sprint y release. Esta relación resultó útil para reconstruir la
+evolución del producto y justificar qué incremento incorporaba cada funcionalidad.
+
 \subsection{Gestión documental}
 
 La gestión documental combinó varias herramientas según la fase del proyecto. Al
-inicio, la memoria se redactó en Overleaf, lo que facilitaba la edición colaborativa
-en LaTeX y la revisión rápida del documento. Sin embargo, a medida que la memoria
-creció en tamaño, número de capítulos, tablas y anexos, aparecieron limitaciones de
-compilación. Por este motivo, la documentación principal se trasladó a un
-repositorio de GitHub, manteniendo el control de versiones de los ficheros
-\texttt{.tex}, figuras, anexos y PDF generado.
-
-Además, se creó una carpeta compartida en OneDrive para conservar documentos
-iniciales de planificación y trabajo, elaborados principalmente con Microsoft Word.
-Esta carpeta sirvió como espacio de apoyo para materiales previos, borradores,
-actas o documentos que todavía no formaban parte de la memoria final en LaTeX.
+inicio, la memoria se redactó en Overleaf, lo que facilitaba la edición
+colaborativa en LaTeX y la revisión rápida del documento. Sin embargo, a medida que
+la memoria creció en tamaño, número de capítulos, tablas, figuras y anexos,
+aparecieron limitaciones de compilación. Por este motivo, la documentación
+principal se trasladó posteriormente a un repositorio de GitHub.
 
 \begin{figure}[H]
 \centering
-\fbox{%
-\parbox{0.86\textwidth}{%
+\includegraphics[width=0.9\textwidth]{figures/overleaf.png}
+\caption{Uso inicial de Overleaf para la redacción colaborativa de la memoria.}
+\label{fig:documentacion_overleaf}
+\end{figure}
+
+GitHub se utilizó como fuente versionada de la memoria, manteniendo control sobre
+los ficheros \texttt{.tex}, la bibliografía, las figuras, los anexos y el PDF
+generado. Este cambio convirtió la memoria en un artefacto de configuración del
+proyecto, con un flujo similar al del código fuente: cambios incrementales,
+historial recuperable y posibilidad de revisar diferencias entre versiones. La
+documentación quedó así alineada con la evolución real del sistema y no como un
+entregable aislado al final del desarrollo.
+
+\begin{figure}[H]
 \centering
-\vspace{1.2cm}
-Captura pendiente: estructura documental en Overleaf, repositorio de memoria en
-GitHub o carpeta compartida en OneDrive.
-\vspace{1.2cm}
-}}
-\caption{Herramientas utilizadas para la gestión documental del proyecto.}
-\label{fig:gestion_documental}
+\includegraphics[width=0.9\textwidth]{figures/repo_latex_github.png}
+\caption{Repositorio de documentación utilizado como fuente versionada de la memoria.}
+\label{fig:documentacion_github}
+\end{figure}
+
+Además, se creó una carpeta compartida en OneDrive para conservar documentos
+iniciales de planificación y trabajo, elaborados principalmente con Microsoft Word.
+Esta carpeta sirvió como repositorio documental auxiliar para borradores,
+planificaciones iniciales, notas de reunión y materiales que todavía no formaban
+parte de la memoria final en LaTeX.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{figures/onedrive.png}
+\caption{Repositorio documental auxiliar en OneDrive.}
+\label{fig:documentacion_onedrive}
 \end{figure}
 
 \subsection{Gestión del código fuente}
@@ -345,51 +362,72 @@ El código fuente de OmniLitter se gestionó mediante un repositorio centralizad
 GitHub dentro de la organización \texttt{Omnilitter-TFG}. El repositorio principal,
 \texttt{OmniLitter}, agrupó las distintas partes del sistema: backend, portal web,
 aplicación móvil, paquete compartido, configuración de despliegue y documentación
-técnica auxiliar. Esta estructura permitió trabajar con una visión de monorepo y
-mantener en un mismo espacio los contratos compartidos entre API, web y móvil.
-
-Para el control de versiones se utilizó Git. El flujo de trabajo se apoyó en ramas
-por funcionalidad o corrección, con prefijos como \texttt{feature/} y \texttt{fix/}.
-Las ramas se integraban mediante Pull Requests hacia \texttt{develop} y, una vez
-acumulado un incremento estable, hacia \texttt{main}. En el historial del repositorio
-se observa este patrón mediante múltiples merges de Pull Request desde ramas como
-\path{feature/t21-sync-batch}, \path{feature/t34-entorno-sesion-y-rangos-tamano}
-o \path{fix/bug07-graficas-dashboard-movil}.
-
-También se aplicó una convención de mensajes próxima a Conventional Commits, usando
-prefijos como \texttt{feat:}, \texttt{fix:}, \texttt{test:} o \texttt{docs:}. Esta
-práctica facilitó interpretar el historial, distinguir nuevas funcionalidades de
-correcciones y relacionar los cambios con tareas del backlog.
+técnica auxiliar. Esta estructura responde a una estrategia de monorepo: todos los
+módulos evolucionan en un mismo repositorio, lo que facilita coordinar cambios
+transversales y mantener contratos compartidos entre API, web y móvil.
 
 \begin{figure}[H]
 \centering
-\fbox{%
-\parbox{0.86\textwidth}{%
-\centering
-\vspace{1.2cm}
-Captura pendiente: repositorio GitHub de la organización
-\texttt{Omnilitter-TFG/OmniLitter}, ramas o historial de Pull Requests.
-\vspace{1.2cm}
-}}
+\includegraphics[width=0.9\textwidth]{figures/repo_codigofuente.png}
 \caption{Repositorio centralizado utilizado para la gestión del código fuente.}
 \label{fig:repositorio_codigo_fuente}
 \end{figure}
 
+Para el control de versiones se utilizó Git, sistema distribuido que modela el
+historial como una secuencia de instantáneas y permite trabajar con ramas locales y
+remotas. El flujo seguido puede entenderse como un GitFlow
+simplificado: \texttt{main} actuó como rama estable, \texttt{develop} como rama de
+integración y las ramas \texttt{feature/} y \texttt{fix/} como ramas temporales para
+nuevas funcionalidades y correcciones. Las integraciones se realizaron mediante
+Pull Requests hacia \texttt{develop} y, al consolidar un incremento, hacia
+\texttt{main}.
+
+Los Pull Requests actuaron como mecanismo de control de cambios. Antes de integrar
+una rama se revisaba su alcance, se comprobaba su relación con la tarea del
+backlog, se validaba que no rompiera funcionalidades existentes y se dejaba rastro
+del merge en el historial. En el repositorio se observa este patrón mediante merges
+desde ramas \texttt{feature/} y \texttt{fix/} asociadas a tareas e incidencias
+concretas.
+
+También se aplicó una convención de mensajes próxima a Conventional Commits, cuyo
+objetivo es aportar significado legible por personas y herramientas al historial de
+commits \cite{conventionalcommits}. Se utilizaron prefijos como \texttt{feat:},
+\texttt{fix:}, \texttt{test:}, \texttt{docs:} o \texttt{ci:}, lo que permitió
+distinguir nuevas funcionalidades, correcciones, pruebas, documentación y cambios
+de integración continua. Esta técnica mejora la trazabilidad del historial y
+facilita relacionar commits, tareas, incidencias y releases.
+
 \subsection{Gestión de versiones y releases}
 
 La evolución del producto se documentó mediante versiones asociadas a incrementos
-del desarrollo. Se generaron releases intermedias por sprint, utilizando etiquetas
-como \texttt{v0.1.0}, \texttt{v0.2.0} y \texttt{v0.3.0}, y una versión final
-\texttt{v.1.0.0}, correspondiente al cierre funcional del proyecto. Estas versiones
-permitieron marcar puntos estables del repositorio y relacionar cada entrega con
-un conjunto de funcionalidades ya integradas.
+del desarrollo. Se siguió una estrategia inspirada en el versionado semántico, que
+utiliza la forma \texttt{MAJOR.MINOR.PATCH} para comunicar el tipo de cambio
+incorporado \cite{semver}. En el proyecto se generaron releases intermedias por
+sprint, utilizando etiquetas como \texttt{v0.1.0}, \texttt{v0.2.0} y
+\texttt{v0.3.0}, y una versión final \texttt{v.1.0.0}, correspondiente al cierre
+funcional del proyecto.
+
+Las etiquetas Git funcionaron como puntos de control o baselines del producto. Cada
+release representaba un estado estable del repositorio, asociado a un conjunto de
+funcionalidades integradas y validables. Esta estrategia facilitó reconstruir la
+evolución de OmniLitter por incrementos y separar versiones de desarrollo
+intermedias de la versión final entregable.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{figures/releases.png}
+\caption{Releases publicadas mediante GitHub.}
+\label{fig:github_releases}
+\end{figure}
 
 Las releases se gestionaron con herramientas de GitHub. El repositorio incluye un
 workflow de GitHub Actions que crea una release al publicar una etiqueta que
-coincida con el patrón \texttt{v*}, generando notas básicas a partir de commits y
-Pull Requests. Además, se incorporaron otros flujos de integración y despliegue,
-como validación continua, construcción de imágenes Docker y generación manual de
-una build Android de previsualización con Expo/EAS.
+coincida con el patrón \texttt{v*}. GitHub Actions permite automatizar flujos de
+CI/CD dentro del repositorio mediante workflows definidos en YAML \cite{githubactions}.
+En este caso, la automatización generaba notas básicas a partir de commits y Pull
+Requests. Además, se incorporaron otros flujos de integración y despliegue, como
+validación continua, construcción de imágenes Docker y generación manual de una
+build Android de previsualización con Expo/EAS.
 
 \begin{table}[H]
 \centering
@@ -409,49 +447,31 @@ una build Android de previsualización con Expo/EAS.
 \end{tabularx}
 \end{table}
 
-\begin{figure}[H]
-\centering
-\fbox{%
-\parbox{0.86\textwidth}{%
-\centering
-\vspace{1.2cm}
-Captura pendiente: sección de releases de GitHub con las etiquetas
-\texttt{v0.1.0}, \texttt{v0.2.0}, \texttt{v0.3.0} y \texttt{v.1.0.0}.
-\vspace{1.2cm}
-}}
-\caption{Releases publicadas mediante GitHub.}
-\label{fig:github_releases}
-\end{figure}
-
 \subsection{Gestión de incidencias}
 
 La gestión de incidencias se integró en el mismo sistema de seguimiento utilizado
-para el backlog. Los errores detectados durante el desarrollo o durante las pruebas
-manuales se registraron en GitHub Issues y se visualizaron en el tablero Kanban de
-GitHub Projects. De esta forma, las incidencias podían priorizarse junto con el
-resto de tareas, asignarse a un sprint y seguirse hasta su resolución.
+para el backlog. Los errores detectados durante el desarrollo, las pruebas
+manuales o la revisión de incrementos se registraron en GitHub Issues y se
+visualizaron en el tablero Kanban de GitHub Projects. De esta forma, las
+incidencias se sometían al mismo flujo de trabajo que las tareas funcionales:
+registro, priorización, asignación, resolución, revisión y cierre.
 
 Para homogeneizar el reporte de errores se creó una plantilla específica de bug en
-el repositorio. Esta plantilla recogía la descripción del problema, pasos para
+el repositorio. Esta plantilla recogía descripción del problema, pasos para
 reproducirlo, comportamiento esperado, comportamiento actual, módulo afectado,
-sprint y severidad. También incluía una Definition of Done orientada a confirmar
-que el error había sido corregido, probado localmente, revisado y fusionado en
-\texttt{develop}. El repositorio conserva ramas de corrección con nombres como
-\path{fix/bug01-responsive-portal}, \path{fix/bug02-roles-web} o
-\path{fix/bug07-graficas-dashboard-movil}, lo que muestra la relación entre
-incidencia, rama y Pull Request.
+sprint y severidad. Estos campos permitían realizar un triage básico de
+incidencias, diferenciando errores críticos, altos, medios o bajos según su impacto
+en la demo, en una funcionalidad principal o en aspectos visuales menores.
+
+La plantilla también incluía una Definition of Done orientada a confirmar que el
+error había sido corregido, probado localmente, revisado por el compañero y
+fusionado en \texttt{develop}. El repositorio conserva ramas de corrección siguiendo
+el patrón \path{fix/bugXX-descripcion}, lo que muestra la relación entre
+incidencia, rama, Pull Request y validación regresiva.
 
 \begin{figure}[H]
 \centering
-\fbox{%
-\parbox{0.86\textwidth}{%
-\centering
-\vspace{1.2cm}
-Captura pendiente: plantilla de incidencia
-\texttt{.github/ISSUE\_TEMPLATE/bug.yml} o ejemplo de bug en el tablero Kanban.
-\vspace{1.2cm}
-}}
+\includegraphics[width=0.9\textwidth]{figures/bug_template.png}
 \caption{Plantilla y seguimiento de incidencias en GitHub.}
 \label{fig:template_incidencias_github}
 \end{figure}
-
