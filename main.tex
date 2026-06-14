@@ -139,6 +139,17 @@
     \vspace{0.2cm}
     {\large \textbf{Cliente / entidad colaboradora:} Daniel González Fernández / Universidad de Cádiz \par}
 
+    \ifdefined\tfgDedication
+        \newpage
+        \thispagestyle{empty}
+        
+        \vspace*{\fill}
+        \begin{center}
+        \textit{\tfgDedication}
+        \end{center}
+        \vspace*{\fill}
+    \fi
+
     % Opcional:
     % \vspace{0.3cm}
     % {\large \textbf{Repositorio:} \href{URL}{\texttt{URL}} \par}
@@ -147,15 +158,17 @@
 
 \end{titlepage}
 
+\setDedication{Aquí la dedicatoria del trabajo}
+
 % ── ÍNDICES ──────────────────────────────────────────────────────────────────
 \pagenumbering{roman}
 \pagestyle{plain}
 
-\chapter*{Resumen}
-\clearpage
+\input{chapters/00_agradecimientos}
 
-\chapter*{Abstract}
-\clearpage
+\input{chapters/00_resumen}
+
+\input{chapters/00_abstract}
 
 \tableofcontents
 \clearpage
