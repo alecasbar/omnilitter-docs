@@ -1,1 +1,444 @@
 \chapter{Manual de usuario}
+\label{anexo:manual_usuario}
+
+Este anexo recoge la guía de uso de OmniLitter desde el punto de vista de las
+personas que van a utilizar el sistema. Su objetivo es explicar, de forma sencilla,
+cómo moverse por el portal web y por la aplicación móvil, qué pasos seguir en los
+flujos habituales y qué significa cada apartado de la plataforma.
+
+El manual no describe detalles internos de implementación. Se centra en las
+acciones que realizará el usuario final: entrar en la plataforma, seleccionar su
+grupo de trabajo, consultar resultados, gestionar campañas y registrar datos en
+campo.
+
+\newcommand{\capturapendiente}[2]{
+\begin{figure}[H]
+  \centering
+  \fbox{
+    \begin{minipage}[c][0.22\textheight][c]{0.82\textwidth}
+      \centering
+      \textbf{Captura pendiente}\\[0.4em]
+      #1
+    \end{minipage}
+  }
+  \caption{#2}
+\end{figure}
+}
+
+\newcommand{\capturamanual}[3]{
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=#3\textwidth]{#1}
+  \caption{#2}
+\end{figure}
+}
+
+\section{Conceptos básicos}
+
+OmniLitter organiza el trabajo en torno a grupos, campañas, sesiones de muestreo
+y observaciones.
+
+\begin{description}
+  \item[Grupo.] Equipo de trabajo al que pertenece el usuario. Cada grupo tiene sus
+  propios miembros, campañas y datos. Antes de trabajar, el usuario debe comprobar
+  cuál es su grupo activo.
+  \item[Campaña.] Actividad de muestreo planificada para una zona, periodo o
+  propósito concreto. Por ejemplo, una campaña de primavera en una playa o en una
+  ribera.
+  \item[Sesión.] Jornada o recorrido concreto dentro de una campaña. La sesión
+  indica el entorno, el método de muestreo y el recorrido seguido.
+  \item[Observación.] Registro de un residuo o conjunto de residuos encontrado en
+  campo. Puede incluir ubicación, tipo de residuo, cantidad, notas y fotografías.
+\end{description}
+
+La plataforma contempla tres perfiles de uso:
+
+\begin{itemize}[leftmargin=1.5em]
+  \item \textbf{Investigador de campo}: registra observaciones desde la aplicación
+  móvil y consulta los datos a los que tiene acceso.
+  \item \textbf{Administrador de grupo}: además de lo anterior, puede gestionar
+  miembros del grupo, crear campañas y mantener organizada la información del equipo.
+  \item \textbf{Superadministrador}: puede consultar y administrar la plataforma de
+  forma global, incluyendo todos los grupos activos.
+\end{itemize}
+
+Las opciones visibles pueden variar según el perfil. Si una acción no aparece en
+pantalla, normalmente significa que el usuario no tiene permisos para realizarla en
+ese grupo.
+
+\section{Acceso a OmniLitter}
+
+\subsection{Entrada desde el portal web}
+
+Al abrir el portal web, el usuario llega a una página inicial desde la que puede
+iniciar sesión o crear una cuenta. Para entrar, debe pulsar \textit{Iniciar sesión},
+introducir su correo electrónico y contraseña, y confirmar el acceso.
+
+\capturamanual{figures/pagina-inicial-web.png}{Pantalla de bienvenida del portal web.}{0.95}
+
+Si el usuario todavía no tiene cuenta, puede registrarse desde \textit{Crear cuenta}.
+Si ha olvidado su contraseña, debe usar \textit{¿Olvidaste tu contraseña?} y seguir
+el proceso de recuperación indicado por la plataforma.
+
+\capturamanual{figures/inicio-sesion-web.png}{Acceso de usuario al portal web.}{0.82}
+
+\subsection{Entrada desde la aplicación móvil}
+
+La aplicación móvil utiliza las mismas credenciales que el portal web. En la pantalla
+de inicio de sesión se introduce el correo electrónico y la contraseña. Si el
+dispositivo no tiene conexión, la app permite entrar solo si esa cuenta ya se había
+utilizado antes con conexión en el mismo dispositivo.
+
+\capturamanual{figures/inicio-sesion-movil.png}{Acceso de usuario en la aplicación móvil.}{0.42}
+
+Cuando se trabaja en campo, es recomendable iniciar sesión con conexión antes de
+salir. Así la aplicación puede preparar los datos necesarios para trabajar aunque
+después se pierda la cobertura.
+
+\section{Uso del portal web}
+
+El portal web está pensado para consultar, revisar, analizar y administrar la
+información recogida en campo. Tras iniciar sesión, se muestra un menú lateral con
+los apartados principales y, en la parte superior del menú, el usuario activo y el
+grupo de trabajo seleccionado.
+
+\capturamanual{figures/estructura-web.png}{Estructura principal del portal web.}{0.95}
+
+\subsection{Seleccionar el grupo activo}
+
+El selector de grupo determina qué datos se ven en la mayoría de pantallas. Si el
+usuario pertenece a varios grupos, debe elegir el grupo con el que quiere trabajar
+antes de consultar campañas, observaciones, mapas o métricas.
+
+En el caso del superadministrador, dejar el selector sin un grupo concreto permite
+ver una vista agregada de todos los grupos activos. Para el resto de usuarios, lo
+normal es trabajar siempre con un grupo activo.
+
+\subsection{Dashboard}
+
+El \textit{Dashboard} ofrece una vista rápida del estado del grupo: número de
+observaciones, residuos registrados, fotografías, sesiones, campañas, evolución
+temporal y rankings principales.
+
+Para consultar un periodo concreto, el usuario puede usar los campos \textit{Desde}
+y \textit{Hasta}. Si quiere volver a la vista completa, debe pulsar \textit{Limpiar}.
+Cuando hay datos disponibles, el panel permite exportar la información en CSV o JSON.
+
+Este apartado resulta útil para responder preguntas rápidas, por ejemplo cuántas
+observaciones se han registrado en una campaña, qué materiales aparecen con más
+frecuencia o cómo evoluciona la actividad del grupo.
+
+\subsection{Campañas}
+
+La pantalla \textit{Campañas} muestra las campañas del grupo activo. El usuario puede
+buscar por nombre, filtrar por estado y consultar las observaciones asociadas a cada
+campaña.
+
+\capturamanual{figures/campañas-web.png}{Pantalla de campañas del portal web.}{0.95}
+
+Los administradores pueden crear una nueva campaña desde \textit{Nueva campaña}. El
+formulario solicita el nombre, una descripción opcional, el estado inicial y las
+fechas de inicio y fin. Una campaña nueva puede quedar como borrador o activarse
+directamente.
+
+\capturamanual{figures/editar-campaña.png}{Alta y edición de campañas.}{0.86}
+
+En el listado, los administradores pueden editar o eliminar campañas. Los
+investigadores de campo tienen una vista más orientada a la consulta: pueden ver sus
+campañas y otras campañas del grupo, pero no modificar la planificación si no tienen
+permisos de administración.
+
+\subsection{Observaciones}
+
+La pantalla \textit{Observaciones} permite consultar los registros creados durante el
+trabajo de campo. Cada fila muestra el tipo de residuo, la cantidad, la sesión y
+campaña asociadas, el entorno, el autor, la fecha y si tiene fotografías.
+
+\capturamanual{figures/observaciones-web.png}{Consulta de observaciones en el portal web.}{0.95}
+
+El usuario puede filtrar por campaña, sesión, entorno, autor, presencia de fotos y
+rango de fechas. También puede usar el buscador para localizar una observación por
+tipo de residuo, nombre de campaña, sesión, autor o nota.
+
+Al pulsar una observación se abre su detalle. En esta vista se consultan las
+coordenadas, el observador, los elementos registrados, las notas y las fotografías
+asociadas. Las fotografías pueden ampliarse para revisarlas con más detalle.
+
+\capturamanual{figures/detalle-observacion-web.png}{Detalle de observación y evidencias fotográficas.}{0.9}
+
+\subsection{Mapa}
+
+El apartado \textit{Mapa} muestra las observaciones geolocalizadas. Dispone de tres
+modos:
+
+\begin{itemize}[leftmargin=1.5em]
+  \item \textbf{Marcadores}: cada punto representa una observación. Al pulsarlo se
+  muestran sus datos básicos y, si existe, una fotografía.
+  \item \textbf{Densidad}: muestra las zonas con mayor concentración de residuos.
+  \item \textbf{Rutas}: representa los recorridos de las sesiones de muestreo, las
+  áreas cubiertas y las observaciones tomadas durante el recorrido.
+\end{itemize}
+
+\capturamanual{figures/mapa-web.png}{Mapa de observaciones y rutas de muestreo.}{0.95}
+
+Los filtros permiten acotar por fechas, campaña, entorno y categoría de residuo. Si
+se necesita trabajar con los datos en otra herramienta, el mapa permite exportar el
+resultado en formato GeoJSON.
+
+\subsection{Analítica}
+
+La pantalla \textit{Analítica} ofrece una vista más detallada que el dashboard. Está
+pensada para explorar los datos antes de preparar informes o exportaciones.
+
+\capturamanual{figures/analititca-web.png}{Analítica avanzada del portal web.}{0.95}
+
+El usuario puede filtrar por campaña, sesión, entorno, autor y fechas. A partir de
+esos filtros, el portal muestra indicadores resumidos, un ranking de materiales, un
+desglose por categorías y una tabla con el detalle de las observaciones.
+
+Al pulsar una barra del ranking o una categoría, la tabla inferior se centra en ese
+subconjunto. Esta interacción ayuda a revisar de forma rápida de dónde vienen los
+datos que aparecen en las gráficas.
+
+Desde \textit{Exportar}, el usuario puede descargar observaciones, detalle de
+residuos, resúmenes y ficheros preparados para análisis científico. Las exportaciones
+científicas incluyen un diccionario de columnas para facilitar la interpretación de
+los datos fuera de OmniLitter.
+
+\subsection{Grupos}
+
+El apartado \textit{Grupos} permite consultar y administrar los equipos de trabajo.
+El listado separa los grupos activos de los archivados e incluye buscador, filtro de
+estado y opciones de ordenación.
+
+\capturamanual{figures/grupos-web.png}{Gestión de grupos de trabajo.}{0.95}
+
+Al abrir un grupo se puede revisar su descripción, miembros y campañas asociadas. Los
+administradores pueden editar el grupo, añadir miembros, enviar invitaciones,
+archivar el grupo o restaurarlo si estaba archivado.
+
+\capturamanual{figures/detalles-grupos-web.png}{Detalle y miembros de un grupo.}{0.9}
+
+Un usuario también puede abandonar un grupo si ya no participa en él. Si lo abandona
+por error, el portal ofrece durante unos minutos la opción de volver a unirse.
+
+\subsection{Usuarios}
+
+La pantalla \textit{Usuarios} muestra las cuentas de la plataforma o del grupo activo,
+según el perfil del usuario. El superadministrador puede crear usuarios, activar o
+desactivar cuentas, cambiar roles y gestionar la pertenencia a grupos.
+
+\capturamanual{figures/usuarios-web.png}{Gestión de usuarios en el portal web.}{0.95}
+
+Los administradores de grupo tienen una vista centrada en los miembros de su grupo.
+Desde ella pueden invitar usuarios, cambiar el rol dentro del grupo y expulsar a
+miembros cuando sea necesario. Los investigadores de campo pueden consultar la
+información disponible, pero no realizar acciones de gestión.
+
+\subsection{Configuración}
+
+En \textit{Configuración} el usuario puede actualizar su perfil, cambiar el idioma de
+la interfaz, modificar la contraseña y revisar invitaciones pendientes a grupos.
+
+\capturamanual{figures/configuracion-web.png}{Configuración del usuario en el portal web.}{0.95}
+
+También se puede elegir el formato de exportación preferido. Los administradores de
+grupo pueden descargar una copia administrativa de su grupo, y el superadministrador
+puede descargar una copia global de los grupos activos. El superadministrador cuenta,
+además, con un apartado para gestionar el catálogo de entornos y tipologías usado en
+las campañas.
+
+\section{Uso de la aplicación móvil}
+
+La aplicación móvil está pensada para el trabajo en campo. Permite preparar campañas,
+abrir sesiones de muestreo, registrar observaciones con GPS, añadir fotografías y
+sincronizar los datos cuando haya conexión.
+
+La navegación principal está en la parte inferior de la pantalla y contiene cinco
+apartados: \textit{Inicio}, \textit{Campañas}, \textit{Mapa}, \textit{Sincronización}
+y \textit{Perfil}.
+
+\capturamanual{figures/inicio-navegacion-movil.png}{Navegación principal de la aplicación móvil.}{0.42}
+
+\subsection{Inicio}
+
+La pantalla de inicio muestra el grupo activo, el estado de conexión, las sesiones
+recientes y un acceso directo a las campañas. También indica si existen datos
+pendientes de sincronizar.
+
+\capturamanual{figures/inicio-navegacion-movil.png}{Pantalla de inicio de la aplicación móvil.}{0.42}
+
+Si el dispositivo está sin conexión, aparece un aviso indicando que los datos se
+guardarán localmente. El usuario puede continuar trabajando y sincronizar más tarde.
+
+\subsection{Perfil y grupos}
+
+Desde \textit{Perfil} se revisan los datos personales, el rol del usuario y el grupo
+activo. El usuario puede seleccionar otro grupo, trabajar sin grupo activo, crear un
+grupo nuevo o aceptar invitaciones pendientes.
+
+\capturamanual{figures/perfil-movil.png}{Perfil de usuario en la aplicación móvil.}{0.42}
+\capturamanual{figures/grupos-movil.png}{Selección y gestión de grupos en la aplicación móvil.}{0.42}
+
+Antes de registrar datos, es importante comprobar que el grupo activo es el correcto.
+Las campañas, sesiones y observaciones quedarán asociadas a ese contexto de trabajo.
+
+Los administradores de grupo pueden invitar usuarios desde el perfil. Para enviar o
+responder invitaciones se necesita conexión, porque la invitación debe validarse en
+la plataforma.
+
+\subsection{Campañas en la app móvil}
+
+El apartado \textit{Campañas} reúne el flujo completo de trabajo en campo. Desde esta
+pantalla el usuario puede seleccionar una campaña, crear una sesión y registrar
+observaciones.
+
+\capturamanual{figures/campañas-movil.png}{Campañas en la aplicación móvil.}{0.42}
+
+Si el usuario tiene permisos de administración, puede crear campañas desde la app.
+El formulario solicita el nombre, la descripción, el entorno, la fecha de inicio y
+el estado. Si no hay conexión, la campaña puede quedar guardada localmente hasta que
+se sincronice.
+
+\capturamanual{figures/crear-campaña.png}{Creación de campaña desde la aplicación móvil.}{0.42}
+\capturamanual{figures/crear-campaña2.png}{Detalle del formulario de campaña en la aplicación móvil.}{0.42}
+
+\subsection{Crear y finalizar una sesión de muestreo}
+
+Dentro de una campaña, el usuario puede abrir una nueva sesión de muestreo. Para
+crear una sesión debe indicar un nombre, el entorno, la tipología si aplica y el
+método de muestreo.
+
+La aplicación contempla tres métodos:
+
+\begin{itemize}[leftmargin=1.5em]
+  \item \textbf{Libre}: recorrido abierto sin una forma predeterminada.
+  \item \textbf{Transecto}: recorrido lineal con un ancho de banda definido.
+  \item \textbf{Cuadrícula}: muestreo por celdas regulares.
+\end{itemize}
+
+\capturamanual{figures/seleccion-entorno-movil.png}{Selección del entorno de muestreo en la aplicación móvil.}{0.42}
+\capturamanual{figures/seleccion-tipologia-movil.png}{Selección de tipología de muestreo en la aplicación móvil.}{0.42}
+\capturamanual{figures/crear-sesion-movil.png}{Creación de una sesión de muestreo.}{0.42}
+
+Al crear la sesión, la app solicita permiso de ubicación para guardar el punto GPS de
+inicio. Durante la sesión, el usuario puede consultar el mapa del recorrido y añadir
+observaciones. Al terminar el trabajo de campo debe pulsar \textit{Finalizar sesión}.
+La sesión quedará marcada como finalizada y conservará el recorrido realizado.
+
+\capturamanual{figures/seguimiento-sesion-movil.png}{Seguimiento y cierre de una sesión de muestreo.}{0.42}
+
+\subsection{Registrar una observación}
+
+Una observación se crea desde una sesión o mediante la opción de observación rápida.
+El usuario debe escoger la campaña y la sesión correspondientes, seleccionar el tipo
+de residuo y completar la información observada.
+
+\capturamanual{figures/creacion-observacion-movil.png}{Registro de observación en campo.}{0.42}
+
+Para elegir el tipo de residuo, la app muestra un selector con buscador, favoritos y
+categorías. El usuario puede buscar por nombre o código y seleccionar el elemento que
+mejor describa el residuo encontrado.
+
+\capturamanual{figures/seleccion-residuo-movil.png}{Selección del tipo de residuo.}{0.42}
+
+Después se indica la cantidad y, cuando proceda, detalles como tamaño, color o notas.
+La app permite añadir fotografías desde la cámara o desde la galería, con un máximo
+de cinco fotos por observación. Si se quieren registrar varios residuos seguidos,
+puede usarse la opción \textit{Guardar y añadir otra}.
+
+\capturamanual{figures/creacion-observacion-movil2.png}{Fotografías asociadas a una observación.}{0.42}
+
+\subsection{Mapa móvil}
+
+El apartado \textit{Mapa} permite consultar las campañas, sesiones, observaciones,
+recorridos y áreas muestreadas desde el dispositivo. También muestra la última
+posición conocida cuando la ubicación está disponible.
+
+\capturamanual{figures/mapa-movil.png}{Mapa de trabajo en campo.}{0.42}
+
+Este mapa es especialmente útil durante una sesión activa, porque ayuda al usuario a
+mantener la orientación y comprobar por dónde se ha realizado el muestreo.
+
+\subsection{Sincronización}
+
+La pantalla \textit{Sincronización} muestra si existen datos pendientes de subida:
+grupos, campañas, sesiones, observaciones o fotografías. Cuando el dispositivo vuelve
+a tener conexión, el usuario puede pulsar \textit{Sincronizar ahora}. Si la
+sincronización automática está activada, la app intentará subir los pendientes al
+recuperar conexión.
+
+\capturamanual{figures/sincronizacion-movil.png}{Sincronización de datos pendientes.}{0.42}
+
+Durante la sincronización se muestra el progreso. Si el usuario ha configurado la
+opción de sincronizar solo por Wi-Fi, la subida se bloqueará hasta que el dispositivo
+esté conectado a una red Wi-Fi.
+
+\subsection{Configuración móvil}
+
+Desde el perfil se accede a \textit{Configuración}. En este apartado el usuario puede
+cambiar el idioma de la app, activar o desactivar la sincronización automática,
+indicar si quiere sincronizar solo con Wi-Fi y activar el uso de ubicación precisa.
+
+\capturamanual{figures/configuracion-movil.png}{Preferencias locales de la aplicación móvil.}{0.42}
+
+Estas preferencias se guardan en el dispositivo. Cambiarlas no afecta a otros
+usuarios ni al portal web, salvo el idioma de la interfaz cuando se use la misma
+cuenta en ese dispositivo.
+
+\section{Trabajo sin conexión}
+
+OmniLitter permite seguir trabajando aunque se pierda la conexión durante el trabajo
+de campo. En ese caso, la aplicación móvil guarda los datos localmente y los marca
+como pendientes de sincronización.
+
+Para reducir problemas, se recomienda preparar la salida de campo con estos pasos:
+
+\begin{enumerate}[leftmargin=1.5em]
+  \item Iniciar sesión con conexión antes de salir.
+  \item Seleccionar el grupo activo correcto.
+  \item Abrir el apartado de campañas para cargar la información del grupo.
+  \item Comprobar que las campañas y sesiones necesarias aparecen en la app.
+  \item Revisar que el dispositivo tiene permisos de ubicación y cámara.
+\end{enumerate}
+
+Si se crean datos sin conexión, estos seguirán disponibles en el dispositivo. No
+aparecerán en el portal web hasta que la aplicación se sincronice correctamente. Por
+ese motivo, después de una jornada de campo conviene abrir \textit{Sincronización} y
+confirmar que no quedan elementos pendientes.
+
+\section{Recomendaciones de uso}
+
+\begin{itemize}[leftmargin=1.5em]
+  \item Comprobar siempre el grupo activo antes de crear campañas, sesiones u
+  observaciones.
+  \item Registrar las observaciones desde la sesión correcta para mantener el
+  contexto del muestreo.
+  \item Añadir fotografías cuando ayuden a validar o interpretar el residuo.
+  \item Finalizar la sesión al terminar el recorrido.
+  \item Revisar la pantalla de sincronización al volver a tener conexión.
+  \item Usar los filtros del portal web antes de exportar datos, para descargar
+  exactamente el conjunto que se desea analizar.
+\end{itemize}
+
+\section{Problemas frecuentes}
+
+\begin{description}
+  \item[No aparecen campañas u observaciones.] Revisar que el grupo activo es el
+  correcto. En el portal, el selector está en el menú lateral; en la app móvil, en
+  el perfil.
+  \item[No puedo crear o editar una campaña.] La acción está reservada a
+  administradores de grupo o superadministradores. Si la opción no aparece, el
+  usuario solo tiene permisos de consulta.
+  \item[La app no deja enviar una invitación.] Las invitaciones necesitan conexión a
+  internet.
+  \item[La ubicación no se guarda.] Comprobar que el dispositivo tiene el GPS activo
+  y que OmniLitter tiene permiso para acceder a la ubicación.
+  \item[Las fotos no se añaden.] Revisar los permisos de cámara o galería. Cada
+  observación admite hasta cinco fotografías.
+  \item[Los datos de campo no aparecen en el portal.] Entrar en
+  \textit{Sincronización} desde la app móvil y comprobar si quedan elementos
+  pendientes.
+  \item[No puedo iniciar sesión sin conexión.] La cuenta debe haberse usado al menos
+  una vez con conexión en ese dispositivo.
+\end{description}
