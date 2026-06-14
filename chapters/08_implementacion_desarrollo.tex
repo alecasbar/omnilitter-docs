@@ -1,7 +1,7 @@
 \chapter{Desarrollo, implantación y validación}
 \label{sec:desarrollo_implantacion_validacion}
 
-\newcommand{\sprintHoursTable}[1]{%
+\newcommand{\sprintHoursTable}[7]{%
 \begin{table}[H]
 \centering
 \caption{Resumen de horas reales del Sprint #1.}
@@ -12,12 +12,12 @@
 \toprule
 \multicolumn{2}{c}{\textbf{Horas del Sprint #1}} \\
 \midrule
-Horas planificadas del Sprint & X \\
-Horas reales (Alejandro Castilla) & X \\
-Horas reales (Ignacio Martínez Díaz) & X \\
-Horas reales totales del Sprint & X \\
-Horas acumuladas planificadas hasta este Sprint & X \\
-Horas acumuladas reales hasta este Sprint & X \\
+Horas planificadas del Sprint & #2 \\
+Horas reales (Alejandro Castilla) & #3 \\
+Horas reales (Ignacio Martínez Díaz) & #4 \\
+Horas reales totales del Sprint & #5 \\
+Horas acumuladas planificadas hasta este Sprint & #6 \\
+Horas acumuladas reales hasta este Sprint & #7 \\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -223,7 +223,7 @@ La iteración permitió validar las decisiones de base del proyecto. La separaci
 Como conclusión, el sprint cumplió su función de arranque del desarrollo incremental. Dejó una arquitectura verificable, un modelo de dominio más coherente y un primer recorrido funcional suficiente para abordar con mayor seguridad las capacidades posteriores: captura avanzada de datos, persistencia local, sincronización, análisis y administración más completa.
 
 
-\sprintHoursTable{1}
+\sprintHoursTable{1}{80 h}{39,50 h}{38,75 h}{78,25 h}{80 h}{78,25 h}
 
 \clearpage
 \section{Sprint 2: Captura de campo y análisis inicial}
@@ -442,7 +442,7 @@ La principal conclusión técnica fue que la arquitectura definida en el sprint 
 En conjunto, el sprint tuvo un cumplimiento adecuado y dejó el sistema en un estado más representativo del uso previsto. OmniLitter pasó a registrar datos más completos, verificables y preparados para explotación, y quedó lista la base necesaria para abordar en la siguiente iteración el ciclo completo entre trabajo offline, sincronización, visualización espacial y exportación.
 
 
-\sprintHoursTable{2}
+\sprintHoursTable{2}{85 h}{42,00 h}{42,50 h}{84,50 h}{165 h}{162,75 h}
 
 \clearpage
 \section{Sprint 3: Sincronización, mapas y exportación científica}
@@ -645,7 +645,7 @@ El resultado más relevante fue la integración real entre captura, consolidaci�
 Las desviaciones del sprint se concentraron en la coordinación entre datos locales y remotos, el refinamiento visual y la validación del flujo de sincronización. No modificaron el objetivo de la iteración, pero sí dejaron una conclusión importante: el recorrido funcional estaba validado manualmente de extremo a extremo, aunque la sincronización seguía siendo una zona donde sería conveniente incorporar pruebas automatizadas específicas. El sprint cerró con las funcionalidades centrales implementadas y con el trabajo final orientado ya a estabilización, refinamiento y despliegue.
 
 
-\sprintHoursTable{3}
+\sprintHoursTable{3}{90 h}{45,25 h}{46,50 h}{91,75 h}{255 h}{254,50 h}
 
 \clearpage
 \section{Sprint 4: Cierre funcional y refinamiento}
@@ -832,7 +832,7 @@ La conclusión principal de la iteración es que OmniLitter alcanzó un estado c
 Las incidencias fueron reducidas y propias de una fase de estabilización: refactorizaciones, adaptación de pruebas y correcciones menores de coherencia visual o funcional. El sprint se considera cumplido con un grado alto, ya que permitió transformar el prototipo funcional acumulado durante el desarrollo en una versión final más ordenada, documentada y con una base técnica preparada para futuras ampliaciones.
 
 
-\sprintHoursTable{4}
+\sprintHoursTable{4}{75 h}{35,75 h}{36,25 h}{72,00 h}{330 h}{326,50 h}
 
 \clearpage
 \section{Pruebas globales y validación funcional}

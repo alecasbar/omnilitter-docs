@@ -30,8 +30,8 @@ proyecto académico de ingeniería del software.
 La estimación de horas se basa en la duración del trabajo, la división en cuatro
 sprints principales y las actividades realizadas: análisis de requisitos, diseño,
 implementación de los tres módulos principales, integración, pruebas, despliegue y
-elaboración de la memoria. Se considera una dedicación aproximada de
-\textbf{300 horas por persona}, lo que da un total de \textbf{600 horas} de trabajo.
+elaboración de la memoria. La dedicación registrada entre los dos integrantes del
+equipo asciende a \textbf{593,26 horas} de trabajo.
 
 \begin{table}[H]
 \centering
@@ -39,19 +39,21 @@ elaboración de la memoria. Se considera una dedicación aproximada de
 \label{tab:costes_personal}
 \small
 \renewcommand{\arraystretch}{1.18}
-\begin{tabularx}{\textwidth}{p{4.3cm}p{2.4cm}p{2.4cm}X}
+\begin{tabularx}{\textwidth}{p{4.2cm}p{2.2cm}p{2.4cm}X}
 \toprule
 \textbf{Actividad} & \textbf{Horas estimadas} & \textbf{Coste estimado} & \textbf{Justificación} \\
 \midrule
-Análisis, planificación y reuniones & 70 h & 1.050 EUR & Incluye reuniones con cliente y tutor, adaptación de requisitos, planificación de sprints y gestión del backlog. \\
-Diseño funcional y técnico & 60 h & 900 EUR & Comprende arquitectura, modelo de datos, contratos entre módulos, diseño de flujos y decisiones de interfaz. \\
-Desarrollo backend & 110 h & 1.650 EUR & Implementación de API, autenticación, permisos, entidades, persistencia, servicios y lógica de negocio. \\
-Desarrollo portal web & 90 h & 1.350 EUR & Construcción de pantallas de administración, consulta, mapas, métricas, exportación y consumo de API. \\
-Desarrollo aplicación móvil & 130 h & 1.950 EUR & Incluye navegación, captura de datos, GPS, fotografías, persistencia local y funcionamiento offline. \\
-Integración, pruebas y despliegue & 80 h & 1.200 EUR & Validación de flujos extremo a extremo, corrección de incidencias, configuración de entornos y releases. \\
-Documentación y memoria & 60 h & 900 EUR & Redacción de memoria, anexos, revisión documental, evidencias, manuales y preparación de entrega. \\
+Planificación inicial & 42,50 h & 637,50 EUR & Incluye reuniones iniciales, análisis del alcance, organización del backlog y planificación de sprints. \\
+Sprint inicial & 64,75 h & 971,25 EUR & Arquitectura, configuración, CI/CD, repositorio, Docker, Prisma y estructura inicial del proyecto. \\
+Sprint 1 & 78,25 h & 1.173,75 EUR & Base funcional del sistema: autenticación, usuarios, grupos, campañas, sesiones y primeras observaciones. \\
+Sprint 2 & 84,50 h & 1.267,50 EUR & Captura de campo, fotografías, GPS, validaciones, persistencia local inicial y consulta web. \\
+Sprint 3 & 91,75 h & 1.376,25 EUR & Sincronización, mapas, métricas, exportaciones y consolidación del flujo offline. \\
+Sprint 4 & 72,00 h & 1.080,00 EUR & Cierre funcional, administración, ajustes finales, pruebas regresivas y estabilización. \\
+Mockups y diseño UI/UX & 48,75 h & 731,25 EUR & Diseño y revisión de prototipos del portal web y de la aplicación móvil. \\
+Despliegue y preparación de releases & 36,51 h & 547,65 EUR & Configuración de entornos, publicación de versiones, builds y preparación de entregables. \\
+Memoria y documentación & 74,25 h & 1.113,75 EUR & Redacción de memoria, anexos, manuales, evidencias y revisión documental. \\
 \midrule
-\textbf{Total} & \textbf{600 h} & \textbf{9.000 EUR} & Coste imputado del esfuerzo de desarrollo del equipo. \\
+\textbf{Total} & \textbf{593,26 h} & \textbf{8.898,90 EUR} & Coste imputado del esfuerzo de desarrollo del equipo. \\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -200,13 +202,13 @@ despliegue y la coordinación entre backend, web y aplicación móvil.
 \toprule
 \textbf{Riesgo cubierto} & \textbf{Prob.} & \textbf{Reserva} & \textbf{Aplicación prevista} \\
 \midrule
-Cambios de requisitos del cliente & Media & 300 EUR & Revisión de funcionalidades, ajustes de alcance, adaptación del backlog y pequeñas modificaciones de flujo. \\
-Complejidad de sincronización offline & Alta & 350 EUR & Tiempo adicional para depurar estados locales, reintentos, conflictos y validación de datos sincronizados. \\
-Problemas de integración entre módulos & Media & 150 EUR & Corrección de incompatibilidades entre backend, portal web, aplicación móvil y contratos compartidos. \\
+Cambios de requisitos del cliente & Media & 295 EUR & Revisión de funcionalidades, ajustes de alcance, adaptación del backlog y pequeñas modificaciones de flujo. \\
+Complejidad de sincronización offline & Alta & 345 EUR & Tiempo adicional para depurar estados locales, reintentos, conflictos y validación de datos sincronizados. \\
+Problemas de integración entre módulos & Media & 148 EUR & Corrección de incompatibilidades entre backend, portal web, aplicación móvil y contratos compartidos. \\
 Incidencias de despliegue o configuración & Media & 85 EUR & Ajustes de variables de entorno, builds, servicios externos y documentación operativa. \\
-Margen general de cierre & Baja & 48,50 EUR & Correcciones menores, revisión final, pruebas regresivas y ajustes documentales de última hora. \\
+Margen general de cierre & Baja & 50,39 EUR & Correcciones menores, revisión final, pruebas regresivas y ajustes documentales de última hora. \\
 \midrule
-\textbf{Total contingencia} & -- & \textbf{933,50 EUR} & Reserva equivalente al 10\% del coste base del proyecto. \\
+\textbf{Total contingencia} & -- & \textbf{923,39 EUR} & Reserva equivalente al 10\% del coste base del proyecto. \\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -234,19 +236,19 @@ uso de herramientas gratuitas o ya disponibles.
 \toprule
 \textbf{Categoría de coste} & \textbf{Importe estimado} \\
 \midrule
-Costes de personal & 9.000 EUR \\
+Costes de personal & 8.898,90 EUR \\
 Costes de infraestructura y despliegue & 0 EUR \\
 Costes de herramientas software & 0 EUR \\
 Costes de equipamiento y operación & 335 EUR \\
-Reserva de contingencia & 933,50 EUR \\
+Reserva de contingencia & 923,39 EUR \\
 \midrule
-\textbf{Coste total estimado} & \textbf{10.268,50 EUR} \\
+\textbf{Coste total estimado} & \textbf{10.157,29 EUR} \\
 \bottomrule
 \end{tabularx}
 \end{table}
 
 Por tanto, el coste económico estimado de OmniLitter asciende a
-\textbf{10.268,50 EUR} incluyendo contingencia. Esta cifra debe interpretarse como
+\textbf{10.157,29 EUR} incluyendo contingencia. Esta cifra debe interpretarse como
 una valoración del proyecto, no como un gasto real efectuado. El desembolso directo
 fue muy reducido, pero el coste imputado refleja mejor la magnitud del trabajo
 realizado y permite comparar el proyecto con un desarrollo software equivalente en
