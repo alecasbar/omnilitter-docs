@@ -5,7 +5,7 @@
 \usepackage[spanish]{babel}
 \usepackage{geometry}
 \usepackage{graphicx}
-\usepackage{hyperref}
+\usepackage[pagebackref=true]{hyperref}
 \usepackage{xcolor}
 \usepackage{float}
 \usepackage{booktabs}
@@ -67,6 +67,13 @@
   citebordercolor=white,
   pdftitle={OmniLitter — Sistema multiplataforma para la gestión y análisis de datos de contaminación por residuos},
   pdfauthor={Alejandro Castilla, Ignacio Martínez Díaz}
+}
+
+\renewcommand*{\backrefalt}[4]{%
+  \ifcase #1
+  \or \par\small\textit{Citado en la página #2.}%
+  \else \par\small\textit{Citado en las páginas #2.}%
+  \fi
 }
 
 % ── Cabecera y pie de página ─────────────────────────────────────────────────
@@ -220,7 +227,6 @@
 \clearpage
 \phantomsection
 \addcontentsline{toc}{chapter}{Bibliografía}
-\nocite{*}
 \bibliographystyle{plain}
 \bibliography{bibliografia}
 \newpage
