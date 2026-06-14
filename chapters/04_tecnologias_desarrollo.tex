@@ -24,8 +24,8 @@ Los criterios utilizados para seleccionar las tecnologías han sido los siguient
   \item \textbf{Madurez del ecosistema:} se eligen tecnologías ampliamente usadas,
     con documentación suficiente y comunidad activa.
   \item \textbf{Facilidad de despliegue:} el sistema debe poder desplegarse en
-    servicios accesibles para un proyecto académico, como Vercel, Render, Railway
-    o una máquina virtual sencilla.
+    servicios accesibles para un proyecto académico, como Render o Microsoft Azure,
+    a partir de imágenes de contenedor.
   \item \textbf{Escalabilidad razonable:} aunque el proyecto no persigue una escala
     industrial, el diseño debe permitir incorporar nuevos grupos, campañas y datos
     de campo sin rehacer la arquitectura.
@@ -72,14 +72,15 @@ grupos, visualizar mapas y exportar datos.
     \toprule
     \textbf{Tecnología} & \textbf{Responsabilidad} \\
     \midrule
-    React & Construcción de componentes reutilizables y pantallas del portal. \\
+    React 18 & Construcción de componentes reutilizables y pantallas del portal. \\
     TypeScript & Definición de tipos de dominio, respuestas de API y props de componentes. \\
     Vite & Compilación, servidor de desarrollo y generación del bundle final. \\
     Tailwind CSS & Sistema visual responsive y consistente con los prototipos. \\
-    React Router & Gestión de rutas públicas y protegidas. \\
-    Axios / Fetch API & Comunicación con la API REST del backend. \\
-    Leaflet / React Leaflet & Visualización geográfica de observaciones en mapas interactivos. \\
-    Recharts & Dashboards, rankings y tendencias temporales. \\
+    Enrutado propio (History API) & Gestión de rutas públicas y protegidas en el cliente, sin librería de enrutado externa. \\
+    Fetch API & Comunicación con la API REST del backend. \\
+    Leaflet y React Leaflet & Mapa interactivo de observaciones con agrupación de marcadores (\textit{clustering}) y capa de densidad (\textit{heatmap}). \\
+    Recharts & Gráficos del dashboard y de la analítica. \\
+    i18next / react-i18next & Interfaz en español e inglés. \\
     \bottomrule
   \end{tabularx}
 \end{table}
@@ -100,13 +101,17 @@ conexión a Internet.
     \textbf{Tecnología} & \textbf{Responsabilidad} \\
     \midrule
     React Native & Desarrollo multiplataforma para Android e iOS. \\
-    Expo & Toolchain de desarrollo, compilación y acceso a módulos nativos. \\
+    Expo (\textit{bare workflow}, \texttt{expo-dev-client}) & Toolchain de desarrollo y compilación con acceso a módulos nativos. \\
     TypeScript & Tipado de pantallas, servicios, modelos locales y respuestas de API. \\
-    \texttt{expo-sqlite} / SQLite & Persistencia local de sesiones, observaciones, fotografías pendientes y cola de sincronización. \\
-    expo-location & Captura de coordenadas GPS asociadas a sesiones y observaciones. \\
-    expo-camera & Captura de fotografías y obtención de metadatos cuando sea posible. \\
-    expo-task-manager / expo-background-task & Ejecución de tareas de sincronización en segundo plano cuando el sistema operativo lo permita. \\
-    React Navigation & Navegación entre pantallas principales y flujos de captura. \\
+    \texttt{expo-sqlite} / SQLite & Persistencia local de sesiones, observaciones, residuos, taxonomía y cola de sincronización. \\
+    \texttt{expo-location} & Captura de coordenadas GPS asociadas a sesiones y observaciones. \\
+    \texttt{expo-camera} / \texttt{expo-image-picker} & Captura de fotografías con la cámara y selección desde la galería. \\
+    \texttt{expo-file-system} & Almacenamiento local de las fotografías en el dispositivo. \\
+    \texttt{expo-secure-store} & Guardado seguro de credenciales y \textit{token} para el inicio de sesión sin conexión. \\
+    \texttt{@react-native-community/netinfo} & Detección del estado de conectividad para disparar la sincronización al recuperar cobertura. \\
+    \texttt{react-native-webview} & Mapa de sesión embebido para mostrar el recorrido y el área muestreada. \\
+    i18next / react-i18next & Interfaz en español e inglés. \\
+    Navegación propia (estado de React) & Cambio entre las pestañas principales y los flujos de captura, sin librería de navegación externa. \\
     \bottomrule
   \end{tabularx}
 \end{table}
@@ -125,19 +130,48 @@ plantea como una API REST desarrollada con Node.js, Express y TypeScript.
     \toprule
     \textbf{Tecnología} & \textbf{Responsabilidad} \\
     \midrule
-    Node.js & Entorno de ejecución del backend. \\
+    Node.js 20 & Entorno de ejecución del backend. \\
     Express & Definición de rutas, middlewares y controladores REST. \\
-    TypeScript & Tipado de servicios, DTOs, entidades y errores. \\
-    PostgreSQL & Base de datos relacional principal del sistema. \\
-    Prisma & ORM para modelar entidades, migraciones y acceso a datos. \\
-    JWT & Autenticación mediante tokens de acceso y refresco. \\
-    bcrypt & Almacenamiento seguro de contraseñas mediante hash. \\
-    multer / almacenamiento de ficheros & Recepción y almacenamiento de fotografías asociadas a observaciones. \\
+    TypeScript & Tipado de servicios, entidades y errores. \\
+    PostgreSQL 16 & Base de datos relacional principal del sistema. \\
+    Prisma & ORM para modelar entidades, generar migraciones y acceder a los datos. \\
+    Zod & Validación de esquemas de entrada, compartida entre cliente y servidor. \\
+    JWT (\texttt{jsonwebtoken}) & Autenticación mediante \textit{tokens} de acceso y refresco. \\
+    \texttt{bcryptjs} & Almacenamiento de contraseñas mediante \textit{hash}. \\
+    Nodemailer & Envío de correo para la recuperación de contraseña. \\
+    swagger-ui-express (OpenAPI) & Documentación interactiva de la API en \texttt{/api/docs}. \\
+    Helmet, CORS y Morgan & Cabeceras de seguridad, control de origen y registro de peticiones. \\
+    Almacenamiento de ficheros & Las fotografías llegan codificadas en \textit{base64} y se guardan en el sistema de archivos con el módulo de ficheros de Node. \\
     \bottomrule
   \end{tabularx}
 \end{table}
 
 \section{Despliegue y herramientas auxiliares}
+
+Además de las tecnologías propias de cada componente, el proyecto se apoya en un
+conjunto de herramientas de organización, calidad, pruebas y despliegue. La
+tabla~\ref{tab:stack_aux} las recoge.
+
+\begin{table}[H]
+  \centering
+  \caption{Herramientas auxiliares, pruebas y despliegue.}
+  \label{tab:stack_aux}
+  \begin{tabularx}{\textwidth}{lX}
+    \toprule
+    \textbf{Tecnología} & \textbf{Responsabilidad} \\
+    \midrule
+    pnpm \textit{workspaces} & Gestión del monorepo con los paquetes de API, portal web, móvil y código compartido. \\
+    TypeScript & Lenguaje común de todos los paquetes, con un paquete compartido de tipos y esquemas. \\
+    ESLint y Prettier & Análisis estático y formateo homogéneo del código. \\
+    Vitest & Pruebas automatizadas de la API, el portal web y el paquete compartido, con medición de cobertura. \\
+    Docker y Docker Compose & Empaquetado y orquestación de PostgreSQL, la API y el portal web. \\
+    Nginx & Servidor del portal web dentro de su contenedor. \\
+    Git, GitHub y GitHub Actions & Control de versiones e integración continua: validación, publicación de imágenes y generación de versiones. \\
+    EAS (Expo Application Services) & Compilación del APK de Android de la aplicación móvil. \\
+    Render y Microsoft Azure & Despliegue del sistema en los entornos de preproducción y producción. \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
 
 \section{Alternativas consideradas}
 

@@ -421,7 +421,7 @@ atiende cada conjunto de operaciones.
 \texttt{GET} & \path{/api/observations} & Usuario & Lista observaciones con filtros \\
 \texttt{POST} & \path{/api/observations} & Usuario & Registra una observación \\
 \texttt{GET} & \path{/api/observations/:id/photos} & Usuario & Lista fotos de una observación \\
-\texttt{POST} & \path{/api/observations/:id/photos} & Usuario & Sube una foto \textit{multipart} \\
+\texttt{POST} & \path{/api/observations/:id/photos} & Usuario & Sube una foto (base64 en el cuerpo) \\
 \texttt{GET} & \path{/api/observations/:id/photos/:pid/file} & Usuario & Sirve el archivo de imagen \\
 \end{tabularx}
 \end{tcolorbox}
