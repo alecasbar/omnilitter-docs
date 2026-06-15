@@ -27,23 +27,24 @@ estimado su valor económico utilizando una tarifa de referencia de
 \textbf{15 EUR/hora}, razonable para un perfil junior o en prácticas dentro de un
 proyecto académico de ingeniería del software.
 
-La estimación de horas se basa en la duración del trabajo, la división en cuatro
-sprints principales y las actividades realizadas: análisis de requisitos, diseño,
-implementación de los tres módulos principales, integración, pruebas, despliegue y
-elaboración de la memoria. La dedicación registrada entre los dos integrantes del
-equipo asciende a \textbf{593,26 horas} de trabajo.
+La valoración de horas se basa en la dedicación real registrada durante el
+proyecto y no en la estimación inicial de planificación. Incluye análisis de
+requisitos, diseño, implementación de los tres módulos principales, integración,
+pruebas, despliegue, elaboración de la memoria, revisión final y preparación de
+los materiales de defensa. La dedicación registrada entre los dos integrantes del
+equipo asciende a \textbf{603,34 horas} de trabajo.
 
 \begin{table}[H]
 \centering
-\caption{Estimación de costes de personal por actividad}
+\caption{Costes de personal imputados a partir de horas reales por actividad}
 \label{tab:costes_personal}
 \small
 \renewcommand{\arraystretch}{1.18}
 \begin{tabularx}{\textwidth}{p{4.2cm}p{2.2cm}p{2.4cm}X}
 \toprule
-\textbf{Actividad} & \textbf{Horas estimadas} & \textbf{Coste estimado} & \textbf{Justificación} \\
+\textbf{Actividad} & \textbf{Horas reales} & \textbf{Coste imputado} & \textbf{Justificación} \\
 \midrule
-Planificación inicial & 42,50 h & 637,50 EUR & Incluye reuniones iniciales, análisis del alcance, organización del backlog y planificación de sprints. \\
+Planificación inicial & 42,50 h & 637,50 EUR & Incluye reuniones iniciales, análisis del alcance, organización del backlog y planificación general. \\
 Sprint inicial & 64,75 h & 971,25 EUR & Arquitectura, configuración, CI/CD, repositorio, Docker, Prisma y estructura inicial del proyecto. \\
 Sprint 1 & 78,25 h & 1.173,75 EUR & Base funcional del sistema: autenticación, usuarios, grupos, campañas, sesiones y primeras observaciones. \\
 Sprint 2 & 84,50 h & 1.267,50 EUR & Captura de campo, fotografías, GPS, validaciones, persistencia local inicial y consulta web. \\
@@ -52,8 +53,9 @@ Sprint 4 & 72,00 h & 1.080,00 EUR & Cierre funcional, administración, ajustes f
 Mockups y diseño UI/UX & 48,75 h & 731,25 EUR & Diseño y revisión de prototipos del portal web y de la aplicación móvil. \\
 Despliegue y preparación de releases & 36,51 h & 547,65 EUR & Configuración de entornos, publicación de versiones, builds y preparación de entregables. \\
 Memoria y documentación & 74,25 h & 1.113,75 EUR & Redacción de memoria, anexos, manuales, evidencias y revisión documental. \\
+Revisión final, vídeo y presentación & 10,08 h & 151,20 EUR & Correcciones finales de la memoria, preparación del vídeo demostrativo y elaboración de la presentación de defensa. \\
 \midrule
-\textbf{Total} & \textbf{593,26 h} & \textbf{8.898,90 EUR} & Coste imputado del esfuerzo de desarrollo del equipo. \\
+\textbf{Total} & \textbf{603,34 h} & \textbf{9.050,10 EUR} & Coste imputado del esfuerzo de desarrollo del equipo. \\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -206,9 +208,9 @@ Cambios de requisitos del cliente & Media & 295 EUR & Revisión de funcionalidad
 Complejidad de sincronización offline & Alta & 345 EUR & Tiempo adicional para depurar estados locales, reintentos, conflictos y validación de datos sincronizados. \\
 Problemas de integración entre módulos & Media & 148 EUR & Corrección de incompatibilidades entre backend, portal web, aplicación móvil y contratos compartidos. \\
 Incidencias de despliegue o configuración & Media & 85 EUR & Ajustes de variables de entorno, builds, servicios externos y documentación operativa. \\
-Margen general de cierre & Baja & 50,39 EUR & Correcciones menores, revisión final, pruebas regresivas y ajustes documentales de última hora. \\
+Margen general de cierre & Baja & 65,51 EUR & Correcciones menores, revisión final, pruebas regresivas y ajustes documentales de última hora. \\
 \midrule
-\textbf{Total contingencia} & -- & \textbf{923,39 EUR} & Reserva equivalente al 10\% del coste base del proyecto. \\
+\textbf{Total contingencia} & -- & \textbf{938,51 EUR} & Reserva equivalente al 10\% del coste base del proyecto. \\
 \bottomrule
 \end{tabularx}
 \end{table}
@@ -236,19 +238,19 @@ uso de herramientas gratuitas o ya disponibles.
 \toprule
 \textbf{Categoría de coste} & \textbf{Importe estimado} \\
 \midrule
-Costes de personal & 8.898,90 EUR \\
+Costes de personal & 9.050,10 EUR \\
 Costes de infraestructura y despliegue & 0 EUR \\
 Costes de herramientas software & 0 EUR \\
 Costes de equipamiento y operación & 335 EUR \\
-Reserva de contingencia & 923,39 EUR \\
+Reserva de contingencia & 938,51 EUR \\
 \midrule
-\textbf{Coste total estimado} & \textbf{10.157,29 EUR} \\
+\textbf{Coste total estimado} & \textbf{10.323,61 EUR} \\
 \bottomrule
 \end{tabularx}
 \end{table}
 
 Por tanto, el coste económico estimado de OmniLitter asciende a
-\textbf{10.157,29 EUR} incluyendo contingencia. Esta cifra debe interpretarse como
+\textbf{10.323,61 EUR} incluyendo contingencia. Esta cifra debe interpretarse como
 una valoración del proyecto, no como un gasto real efectuado. El desembolso directo
 fue muy reducido, pero el coste imputado refleja mejor la magnitud del trabajo
 realizado y permite comparar el proyecto con un desarrollo software equivalente en

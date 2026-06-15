@@ -85,7 +85,7 @@ trabajo inicial revisable. Las reuniones con el cliente, la validación de
 prototipos, las restricciones técnicas del entorno móvil y la evolución del alcance
 hicieron necesario ajustar prioridades durante el desarrollo. Aun así, se mantuvo
 una estructura común: identificar los bloques principales, ordenar sus
-dependencias, repartir el trabajo por sprints y revisar los riesgos más relevantes
+dependencias, repartir el trabajo en incrementos manejables y revisar los riesgos más relevantes
 en cada etapa.
 
 \subsection{Identificación de bloques funcionales}
@@ -158,44 +158,60 @@ Despliegue y operación & Backend, web, configuración de entorno y build móvil
 \end{tabularx}
 \end{table}
 
-Estas dependencias condicionaron el orden de los sprints. En particular, no era
+Estas dependencias condicionaron el orden de desarrollo previsto. En particular, no era
 conveniente abordar la sincronización antes de disponer de captura local, ni
 desarrollar el análisis web antes de contar con observaciones suficientemente
 estructuradas. Del mismo modo, los permisos por grupo debían estar presentes desde
 las primeras iteraciones, ya que afectaban transversalmente a casi todos los
 módulos.
 
-\subsection{División inicial en sprints}
+\subsection{Estimación inicial de esfuerzo}
 
-La planificación se organizó en cuatro sprints principales. Cada sprint se definió
-como un incremento con un objetivo funcional reconocible, evitando que las
-iteraciones fueran simples agrupaciones técnicas sin valor observable. La duración
-real de cada sprint se ajustó a la disponibilidad del equipo y al calendario
-académico, pero la secuencia prevista se mantuvo como guía general del desarrollo.
+En la fase de análisis no se conocía todavía el detalle de todas las tareas que
+sería necesario abordar durante el desarrollo. Por este motivo, la planificación
+inicial no se formuló como una distribución cerrada por sprints, sino como una
+estimación por bloques de trabajo. Los sprints se utilizaron posteriormente como
+mecanismo operativo de seguimiento y adaptación del backlog, pero no como una
+predicción rígida definida al comienzo del proyecto.
+
+La estimación inicial se realizó a partir del alcance previsto y de la carga
+esperada para un proyecto desarrollado por dos personas. Se consideró un esfuerzo
+global de 600 horas, distribuidas entre análisis, diseño, implementación, pruebas,
+despliegue, documentación, revisión final de la memoria y preparación de los
+materiales de defensa.
 
 \begin{table}[H]
 \centering
-\caption{División inicial del trabajo por sprints}
-\label{tab:division_inicial_sprints}
+\caption{Estimación inicial de esfuerzo por bloques de trabajo}
+\label{tab:estimacion_inicial_esfuerzo}
 \small
 \renewcommand{\arraystretch}{1.18}
-\begin{tabularx}{\textwidth}{p{2.1cm}p{4.0cm}X}
+\begin{tabularx}{\textwidth}{X>{\raggedleft\arraybackslash}p{2.4cm}X}
 \toprule
-\textbf{Sprint} & \textbf{Objetivo principal} & \textbf{Bloques funcionales previstos} \\
+\textbf{Bloque de trabajo planificado} & \textbf{Horas estimadas} & \textbf{Justificación} \\
 \midrule
-Sprint 1 & Base funcional del sistema. & Autenticación, usuarios, grupos, permisos, campañas, sesiones iniciales, taxonomía y primeras observaciones. \\
-Sprint 2 & Captura de campo y análisis inicial. & Mejora de sesiones y observaciones, GPS, fotografías, validaciones, persistencia local inicial y consulta web de datos capturados. \\
-Sprint 3 & Sincronización, mapas y exportación científica. & Cola de sincronización, publicación de datos offline, visualización geográfica, métricas, exportación CSV/JSON/GeoJSON y preferencias de uso. \\
-Sprint 4 & Cierre funcional y refinamiento. & Administración, ajustes de campañas y sesiones, catálogo científico, correcciones finales, pruebas regresivas, documentación y preparación de despliegue. \\
+Análisis, planificación y gestión del proyecto & 48,00 h & Reuniones iniciales, definición de alcance, organización del backlog y coordinación con cliente y tutor. \\
+Diseño funcional, UX y prototipado & 48,00 h & Mockups, revisión de flujos de usuario y validación temprana de la solución. \\
+Arquitectura, configuración y base técnica & 62,00 h & Monorepo, entorno de desarrollo, CI/CD, Docker, Prisma y estructura común del sistema. \\
+Implementación de backend y modelo de datos & 72,00 h & API, autenticación, permisos, entidades principales, validaciones y persistencia en PostgreSQL. \\
+Implementación del portal web & 58,00 h & Gestión, consulta, filtros, administración, visualización y explotación de datos desde navegador. \\
+Implementación de la aplicación móvil y soporte offline & 82,00 h & Captura en campo, sesiones, observaciones, fotografías, GPS, SQLite y funcionamiento sin conexión. \\
+Integración, sincronización, analítica y exportación & 68,00 h & Conexión entre módulos, sincronización diferida, mapas, métricas y exportaciones científicas. \\
+Pruebas, validación y estabilización & 52,00 h & Pruebas automatizadas, pruebas manuales, corrección de incidencias y regresión funcional. \\
+Despliegue, releases y documentación técnica & 32,00 h & Preparación de entornos, publicación de versiones, builds y manuales técnicos. \\
+Memoria, revisión final, vídeo y presentación & 78,00 h & Redacción de la memoria, anexos, revisión final, preparación del vídeo y presentación de defensa. \\
+\midrule
+\textbf{Total estimado} & \textbf{600,00 h} & Estimación inicial del esfuerzo completo del proyecto para el equipo de trabajo. \\
 \bottomrule
 \end{tabularx}
 \end{table}
 
-Esta división permitió construir el sistema de forma incremental. El primer sprint
-dejaba una arquitectura mínima conectada; el segundo acercaba la aplicación móvil
-al trabajo real de campo; el tercero cerraba el ciclo entre captura offline,
-sincronización y explotación de datos; y el cuarto estabilizaba la plataforma para
-su entrega y validación final.
+Esta estimación sirvió como referencia inicial para valorar la viabilidad del
+proyecto y reservar margen suficiente para actividades que no forman parte directa
+de la programación, pero que resultan necesarias en un proyecto académico de estas
+características: validación con el cliente, documentación, revisión de la memoria y
+preparación de la defensa. La medición real de horas se presenta posteriormente en
+las conclusiones, separada de esta planificación inicial.
 
 \subsection{Riesgos identificados}
 
