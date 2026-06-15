@@ -12,7 +12,9 @@ entre ejecutar el sistema en una máquina de desarrollo y hacerlo en la nube.
 
 La separación en entornos permite trabajar sin riesgo sobre el código, validar los
 cambios en un servidor real antes de la entrega y reservar la producción para una
-versión estable. La tabla~\ref{tab:entornos_despliegue} resume cada entorno.
+versión estable. La tabla~\ref{tab:entornos_despliegue} resume cada entorno y la
+figura~\ref{fig:despliegue_entornos} muestra la relación entre los servicios
+principales.
 
 \begin{table}[H]
 \centering
@@ -35,6 +37,13 @@ web junto con una base de datos PostgreSQL gestionada. \\
 \bottomrule
 \end{tabularx}
 \end{table}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{figures/despliegue_entornos.png}
+    \caption{Esquema de despliegue de OmniLitter por entornos.}
+    \label{fig:despliegue_entornos}
+\end{figure}
 
 \section{Entorno local de desarrollo}
 

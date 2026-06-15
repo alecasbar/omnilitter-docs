@@ -105,8 +105,17 @@
 \captionsetup[table]{labelfont=bf, position=above}
 \captionsetup[figure]{labelfont=bf, position=below}
 
+% ── Dedicatoria (opcional) ───────────────────────────────────────────────────
+% \setDedication{texto} define \tfgDedication. La portada añade una página de
+% dedicatoria justo después del título únicamente si \tfgDedication está definido.
+\newcommand{\setDedication}[1]{\def\tfgDedication{#1}}
+
 % ═════════════════════════════════════════════════════════════════════════════
 \begin{document}
+
+% Para activar la página de dedicatoria, descomenta la línea siguiente y edita el texto.
+% Debe ir aquí, antes de la portada, para que aparezca correctamente:
+% \setDedication{A nuestras familias, por su apoyo durante todo el grado.}
 
 % ── PORTADA ──────────────────────────────────────────────────────────────────
 \begin{titlepage}

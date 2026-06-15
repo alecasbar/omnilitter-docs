@@ -240,7 +240,59 @@ alcance operativo posterior a la entrega.
 Los casos de uso de referencia permiten relacionar los requisitos funcionales
 finales con interacciones concretas del sistema. La relación se ha actualizado a
 partir del documento específico de casos de uso, que organiza OmniLitter en torno
-a catorce flujos principales.
+a catorce flujos principales. La tabla~\ref{tab:casos_uso_perfil} resume qué
+bloques funcionales resultan más relevantes para cada perfil de usuario.
+
+\begin{table}[H]
+\centering
+\caption{Casos de uso de referencia por perfil.}
+\label{tab:casos_uso_perfil}
+\scriptsize
+\renewcommand{\arraystretch}{1.25}
+\begin{tabularx}{\textwidth}{
+  >{\raggedright\arraybackslash}p{2.35cm}
+  >{\raggedright\arraybackslash}X
+  >{\raggedright\arraybackslash}X
+  >{\raggedright\arraybackslash}X
+  >{\raggedright\arraybackslash}X}
+\toprule
+\textbf{Perfil} & \textbf{Acceso y cuenta} & \textbf{Gestión} &
+\textbf{Trabajo de campo} & \textbf{Consulta y explotación} \\
+\midrule
+Usuario sin grupo activo &
+CU-01, CU-02 &
+-- &
+-- &
+-- \\
+\addlinespace
+Investigador de campo &
+CU-01, CU-02, CU-14 &
+-- &
+CU-06, CU-07, CU-08, CU-09 &
+CU-10, CU-11 \\
+\addlinespace
+Administrador de grupo &
+CU-01, CU-02 &
+CU-03, CU-05 &
+Seguimiento de sesiones del grupo &
+CU-10, CU-11, CU-12, CU-13 \\
+\addlinespace
+Superadmin. &
+CU-01 &
+CU-04 &
+-- &
+Consulta global y soporte a la administración \\
+\bottomrule
+\end{tabularx}
+\vspace{0.2cm}
+\begin{minipage}{0.94\textwidth}
+\scriptsize
+\textbf{Relaciones internas.} CU-07 se apoya en una sesión creada en CU-06 e
+incluye la captura de evidencias, posición y datos taxonómicos. CU-09 cubre el
+funcionamiento sin conexión y la sincronización posterior. CU-13 parte de la
+consulta previa de datos desde el portal.
+\end{minipage}
+\end{table}
 
 \begin{itemize}
 \item \textbf{CU-01 -- Registrarse, autenticarse y gestionar la sesión.} El
